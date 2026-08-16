@@ -83,7 +83,7 @@ test('memory routes expose compact cards individually and as JSONL', async () =>
   assert.ok(Math.ceil(JSON.stringify(card).length / 4) <= 150)
   const response = await app.request('/memory.jsonl')
   assert.match(response.headers.get('content-type') ?? '', /application\/x-ndjson/)
-  assert.equal((await response.text()).trim().split('\n').length, 11)
+  assert.equal((await response.text()).trim().split('\n').length, 15)
 })
 
 test('report endpoint retrieves but cannot claim persistence', async () => {
@@ -147,6 +147,26 @@ test('HTTP trust and contribution routes expose bounded machine work', async () 
   assert.equal(citation.id, 'AF-0008')
   assert.match(citation.corpus_revision, /^sha256:/)
   assert.equal((citation as unknown as { stewardship: { identity_status: string } }).stewardship.identity_status, 'public')
+})
+
+test('HTTP exposes guardrail interoperability and freshness contracts', async () => {
+  const contract = await (await app.request('/guardrail-contract.json')).json() as { authority: string, schema: string }
+  assert.equal(contract.authority, 'none')
+  assert.match(contract.schema, /guardrail-finding\.schema\.json$/)
+  assert.equal((await app.request('/schemas/guardrail-finding.schema.json')).status, 200)
+  const freshness = await (await app.request('/freshness.json')).json() as { newest_incident_date: string, stale_after: string, stale: boolean }
+  assert.equal(freshness.newest_incident_date, '2026-07-27')
+  assert.equal(freshness.stale_after, '2026-09-10')
+  assert.equal(freshness.stale, false)
+})
+
+test('HTTP exposes agent contribution and adoption contracts', async () => {
+  const contribution = await (await app.request('/contribution-contract.json')).json() as { authority: string, public_route_status: string }
+  assert.equal(contribution.authority, 'none')
+  assert.equal(contribution.public_route_status, 'git-pull-request-after-publication')
+  const adoption = await (await app.request('/adoption-kit.json')).json() as { surfaces: Array<{ id: string, status: string }> }
+  assert.ok(adoption.surfaces.some(surface => surface.id === 'agent-skill' && surface.status === 'ready-from-git'))
+  assert.equal((await app.request('/schemas/evidence-candidate.schema.json')).status, 200)
 })
 
 test('HTTP steward routes keep identity explicit and contact read-only', async () => {

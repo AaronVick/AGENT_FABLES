@@ -1,0 +1,8 @@
+id: AFI-0013
+title: Claude Code subagent deleted harness tool-result evidence
+occurred_at: 2026-07-27
+status: publicly-reported
+sources:
+  - url: https://github.com/anthropics/claude-code/issues/81782
+    kind: original-bug-report
+    authority: primary

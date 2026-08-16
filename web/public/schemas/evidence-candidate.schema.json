@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentfables.org/schemas/evidence-candidate.schema.json",
+  "title": "Agent Fables minimized evidence candidate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["kind", "source_url", "title"],
+  "properties": {
+    "kind": { "enum": ["new-incident", "source-addition", "exact-artifact", "retrieval-miss", "integration-mapping"] },
+    "source_url": { "type": "string", "format": "uri", "pattern": "^https://" },
+    "title": { "type": "string", "minLength": 3, "maxLength": 160 },
+    "target_id": { "type": "string", "pattern": "^(?:AF|AFI)-[0-9]{4}$" },
+    "occurred_at": { "type": "string", "format": "date" },
+    "framework": { "type": "string", "maxLength": 80 },
+    "version": { "type": "string", "maxLength": 80 },
+    "failure_mode_guess": { "type": "string", "maxLength": 80 },
+    "generic_signatures": { "type": "array", "maxItems": 5, "items": { "type": "string", "minLength": 1, "maxLength": 160 } }
+  }
+}

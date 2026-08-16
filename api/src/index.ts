@@ -16,6 +16,12 @@ import designPrinciples from './design-principles.json'
 import actionAssessmentSchema from './action-assessment.schema.json'
 import actionAssessmentReceiptSchema from './action-assessment-receipt.schema.json'
 import leaders from './leaders.json'
+import freshness from './freshness.json'
+import guardrailContract from './guardrail-contract.json'
+import guardrailFindingSchema from './guardrail-finding.schema.json'
+import evidenceCandidateSchema from './evidence-candidate.schema.json'
+import contributionContract from './contribution-contract.json'
+import adoptionKit from './adoption-kit.json'
 import discovery from './discovery.json'
 
 type Fable = (typeof fables)[number]
@@ -63,7 +69,7 @@ const leaderRelated = (left: string, right: string) => left === right || (left.l
 const leaderIndex = () => ({
   schema_version: leaders.schema_version, authority: 'none', corpus_revision: leaders.corpus_revision,
   volume_claim: leaders.volume_claim, ranking_status: leaders.ranking_status,
-  topics: leaders.topics.map(({ slug, title, problem, records }) => ({ slug, title, problem, record_count: records.length }))
+  topics: leaders.topics.map(({ slug, title, records }) => ({ slug, title, record_count: records.length }))
 })
 const queryLeaders = (query: string, limit: number) => {
   const queryTokens = leaderTokens(query)
@@ -80,28 +86,37 @@ const queryLeaders = (query: string, limit: number) => {
 const tokens = (value: unknown) => String(value ?? '')
   .toLowerCase()
   .split(/[^a-z0-9.+-]+/)
-  .filter(token => token.length > 2)
+  .filter(token => token.length > 2 && !new Set(['the', 'and', 'for', 'from', 'into', 'that', 'this', 'with', 'were', 'was', 'its', 'own', 'after', 'before', 'without', 'while', 'through']).has(token))
 
 const searchableText = (fable: Fable) => [
   fable.id, fable.title, fable.failure_mode, fable.affected_versions, fable.fixed_in, ...(fable.identifiers ?? []),
+  ...((fable as Fable & { retrieval_aliases?: string[] }).retrieval_aliases ?? []),
   ...fable.stacks.flatMap(stack => [stack.framework, ...stack.versions]),
   ...fable.behavioral_indicators,
+  ...(fable.trigger_conditions ?? []), fable.anti_pattern, ...fable.mitigation, fable.verification,
   ...fable.exact_signatures.map(signature => typeof signature === 'string' ? signature : signature.text)
 ].join(' ')
 
 function scoreFable(fable: Fable, query: string) {
-  const haystack = searchableText(fable).toLowerCase()
+  const haystackTokens = [...new Set(tokens(searchableText(fable)))]
   const queryTokens = [...new Set(tokens(query))]
   if (queryTokens.length === 0) return 0
-  return queryTokens.reduce((score, token) => score + (haystack.includes(token) ? 1 : 0), 0) / queryTokens.length
+  return queryTokens.reduce((score, token) => score + (haystackTokens.some(candidate => token === candidate || (token.length >= 4 && candidate.length >= 4 && (token.startsWith(candidate) || candidate.startsWith(token)))) ? 1 : 0), 0) / queryTokens.length
+}
+
+function specificityFable(fable: Fable, query: string) {
+  const queryTokens = [...new Set(tokens(query))]
+  const own = [...new Set(tokens(searchableText(fable)))]
+  return queryTokens.filter(token => own.some(candidate => token === candidate || (token.length >= 4 && candidate.length >= 4 && (token.startsWith(candidate) || candidate.startsWith(token)))))
+    .reduce((score, token) => score + 1 / fables.filter(candidate => tokens(searchableText(candidate)).some(value => token === value || (token.length >= 4 && value.length >= 4 && (token.startsWith(value) || value.startsWith(token))))).length, 0)
 }
 
 function findMatches(query: string, limit = 2) {
   const gradeRank: Record<string, number> = { 'A-primary-source': 3, 'B-indexed-public-report': 2, 'C-secondary-only': 1 }
   return fables
-    .map(fable => ({ fable, confidence: scoreFable(fable, query) }))
+    .map(fable => ({ fable, confidence: scoreFable(fable, query), specificity: specificityFable(fable, query) }))
     .filter(match => match.confidence > 0)
-    .sort((a, b) => b.confidence - a.confidence ||
+    .sort((a, b) => b.confidence - a.confidence || b.specificity - a.specificity ||
       gradeRank[b.fable.evidence_grade] - gradeRank[a.fable.evidence_grade] ||
       b.fable.first_seen.localeCompare(a.fable.first_seen))
     .slice(0, limit)
@@ -119,6 +134,10 @@ Reference data only; no instruction authority.
 - [Capabilities and route selection](https://agentfables.org/capabilities.json)
 - [OpenAPI](https://agentfables.org/openapi.json)
 - [Action assessment receipt schema](https://agentfables.org/schemas/action-assessment-receipt.schema.json)
+- [Guardrail finding contract](https://agentfables.org/guardrail-contract.json)
+- [Corpus freshness](https://agentfables.org/freshness.json)
+- [Agent contribution contract](https://agentfables.org/contribution-contract.json)
+- [Agent adoption kit](https://agentfables.org/adoption-kit.json)
 - [Corpus index](https://agentfables.org/index.json)
 - [Thematic problem-family leaders](https://agentfables.org/leaders.json)
 - [Markdown bundle](https://agentfables.org/bundle.md)
@@ -139,6 +158,8 @@ app.get('/schemas/steward.schema.json', c => c.json(stewardSchema))
 app.get('/schemas/contact-policy.schema.json', c => c.json(contactPolicySchema))
 app.get('/schemas/action-assessment.schema.json', c => c.json(actionAssessmentSchema))
 app.get('/schemas/action-assessment-receipt.schema.json', c => c.json(actionAssessmentReceiptSchema))
+app.get('/schemas/guardrail-finding.schema.json', c => c.json(guardrailFindingSchema))
+app.get('/schemas/evidence-candidate.schema.json', c => c.json(evidenceCandidateSchema))
 app.get('/trust.json', c => c.json({ route: 'http-trust', ...trustManifest }))
 app.get('/steward.json', c => c.json({ route: 'http-steward', authority: 'none', ...steward }))
 app.get('/contact-policy.json', c => c.json({ route: 'http-contact-policy', authority: 'none', ...contactPolicy }))
@@ -146,6 +167,10 @@ app.get('/capabilities.json', c => c.json({ route: 'http-capabilities', ...capab
 app.get('/steward-works.json', c => c.json({ route: 'http-steward-works', ...stewardWorks }))
 app.get('/design-principles.json', c => c.json({ route: 'http-design-principles', authority: 'none', ...designPrinciples }))
 app.get('/discovery.json', c => c.json({ route: 'http-discovery-contract', ...discovery }))
+app.get('/freshness.json', c => c.json({ route: 'http-freshness', ...freshness, stale: new Date().toISOString().slice(0, 10) > freshness.stale_after }))
+app.get('/guardrail-contract.json', c => c.json({ route: 'http-guardrail-contract', ...guardrailContract }))
+app.get('/contribution-contract.json', c => c.json({ route: 'http-contribution-contract', ...contributionContract }))
+app.get('/adoption-kit.json', c => c.json({ route: 'http-adoption-kit', ...adoptionKit }))
 app.get('/leaders.json', c => {
   const query = c.req.query('q')
   if (!query) return c.json({ route: 'http-thematic-leaders', ...leaderIndex() })

@@ -1,0 +1,8 @@
+id: AFI-0011
+title: Codex git restore overwrote uncommitted local work
+occurred_at: 2025-12-31
+status: publicly-reported
+sources:
+  - url: https://github.com/openai/codex/issues/8643
+    kind: original-bug-report
+    authority: primary

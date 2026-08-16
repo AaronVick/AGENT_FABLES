@@ -1,0 +1,8 @@
+id: AFI-0014
+title: Parallel Claude Code worktree cleanup destroyed main repository
+occurred_at: 2026-04-16
+status: publicly-reported
+sources:
+  - url: https://github.com/anthropics/claude-code/issues/48927
+    kind: original-bug-report-with-reproduction
+    authority: primary

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentfables.org/schemas/guardrail-finding.schema.json",
+  "title": "Agent Fables guardrail finding",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "authority", "authorization", "pattern_id", "corpus_revision", "evidence_grade", "trigger", "canonical_url", "breadcrumb"],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "authority": { "const": "none" },
+    "authorization": { "const": "not-granted" },
+    "pattern_id": { "type": "string", "pattern": "^AF-[0-9]{4}$" },
+    "corpus_revision": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "evidence_grade": { "enum": ["A-primary-source", "B-indexed-public-report", "C-secondary-only"] },
+    "trigger": { "type": "string", "minLength": 1, "maxLength": 160, "description": "Generic detector label; never include matched source content, paths, hostnames, credentials, or commands." },
+    "canonical_url": { "type": "string", "format": "uri", "pattern": "^https://agentfables\\.org/af/AF-[0-9]{4}$" },
+    "breadcrumb": { "type": "string", "maxLength": 240 }
+  }
+}

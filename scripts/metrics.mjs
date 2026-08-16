@@ -11,12 +11,14 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const corpus = JSON.parse(fs.readFileSync(path.join(root, 'api/src/fables.json'), 'utf8'))
 const incidents = JSON.parse(fs.readFileSync(path.join(root, 'incidents.json'), 'utf8')).incidents
 const queries = yaml.load(fs.readFileSync(path.join(root, 'evals/discovery-queries.yaml'), 'utf8'))
+const adversarialQueries = yaml.load(fs.readFileSync(path.join(root, 'evals/adversarial-discovery.yaml'), 'utf8'))
 const hits = queries.filter(fixture => rankEntries(corpus, fixture.query, 1)[0]?.entry.id === fixture.expected).length
 const discoveryByKind = Object.fromEntries([...new Set(queries.map(fixture => fixture.kind))].map(kind => {
   const fixtures = queries.filter(fixture => fixture.kind === kind)
   const kindHits = fixtures.filter(fixture => rankEntries(corpus, fixture.query, 1)[0]?.entry.id === fixture.expected).length
   return [kind, { fixtures: fixtures.length, recall_at_1: kindHits / fixtures.length }]
 }))
+const adversarialHits = adversarialQueries.filter(fixture => rankEntries(corpus, fixture.query, 1)[0]?.entry.id === fixture.expected).length
 const primary = incidents.filter(incident => incident.evidence_grade === 'A-primary-source').length
 const preflightFixture = JSON.stringify({ matches: rankEntries(corpus, 'terraform-destroy terraform', 2).map(result => decisionCard(result.entry)) })
 const assessmentFixture = JSON.stringify(assessAction(corpus, 'sha256:0000000000000000000000000000000000000000000000000000000000000000', {
@@ -42,6 +44,9 @@ const metrics = {
     threshold: 0.9,
     scope: 'local-corpus-retrieval-not-github-ranking',
     by_query_kind: discoveryByKind,
+    adversarial_fixtures: adversarialQueries.length,
+    adversarial_recall_at_1: adversarialHits / adversarialQueries.length,
+    adversarial_recall_threshold: 0.8,
     thematic_leaders: leaders.topics.length,
     leader_pattern_coverage: leaderPatternIds.size / corpus.length,
     leader_pattern_coverage_threshold: 1,
@@ -71,6 +76,7 @@ const metrics = {
 metrics.local_agent_routes_pass = metrics.seed.patterns >= metrics.seed.minimum_patterns &&
   metrics.discovery.recall_at_1 >= metrics.discovery.threshold &&
   Object.values(metrics.discovery.by_query_kind).every(kind => kind.recall_at_1 >= metrics.discovery.threshold) &&
+  metrics.discovery.adversarial_recall_at_1 >= metrics.discovery.adversarial_recall_threshold &&
   metrics.discovery.leader_pattern_coverage >= metrics.discovery.leader_pattern_coverage_threshold &&
   metrics.discovery.leader_query_recall_at_1 >= metrics.discovery.leader_query_recall_threshold &&
   metrics.discovery.leader_index_approx_tokens <= metrics.discovery.leader_index_token_threshold &&

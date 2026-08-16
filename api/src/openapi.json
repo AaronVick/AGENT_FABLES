@@ -17,6 +17,15 @@
     "/discovery.json": {
       "get": { "operationId": "getAgentDiscoveryContract", "summary": "Return actual agent breadcrumb channels and unproven public-discovery checks", "responses": { "200": { "description": "Machine-readable discovery contract" } } }
     },
+    "/freshness.json": {
+      "get": { "operationId": "getCorpusFreshness", "summary": "Return the revision-pinned evidence window and deterministic staleness evaluation", "responses": { "200": { "description": "Freshness contract" } } }
+    },
+    "/guardrail-contract.json": {
+      "get": { "operationId": "getGuardrailFindingContract", "summary": "Return producer and consumer rules for compact AF tool-output breadcrumbs", "responses": { "200": { "description": "Guardrail interoperability contract" } } }
+    },
+    "/schemas/guardrail-finding.schema.json": {
+      "get": { "operationId": "getGuardrailFindingSchema", "summary": "Return the guardrail finding JSON Schema", "responses": { "200": { "description": "JSON Schema" } } }
+    },
     "/leaders.json": {
       "get": {
         "operationId": "findAgentFailureProblemFamilies",

@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0.0",
+  "authority": "none",
+  "repository": "https://github.com/AaronVick/AGENT_FABLES",
+  "surfaces": [
+    {
+      "id": "repository-instruction",
+      "status": "ready",
+      "artifact": "integrations/AGENTS.md.snippet",
+      "use_when": "an agent loads repository instructions before consequential operations"
+    },
+    {
+      "id": "agent-skill",
+      "status": "ready-from-git",
+      "artifact": "skills/agent-fables-preflight/SKILL.md",
+      "use_when": "a harness discovers portable skills by metadata"
+    },
+    {
+      "id": "local-cli",
+      "status": "ready-from-git",
+      "artifact": "bin/agent-fables.mjs",
+      "bootstrap": "git clone https://github.com/AaronVick/AGENT_FABLES.git && cd AGENT_FABLES && npm ci",
+      "use_when": "assessment and repository data must remain local"
+    },
+    {
+      "id": "mcp-stdio",
+      "status": "ready-from-git",
+      "artifact": "integrations/mcp-config.example.json",
+      "use_when": "an MCP host can spawn a local read-only server"
+    },
+    {
+      "id": "guardrail-finding",
+      "status": "ready",
+      "artifact": "guardrail-contract.json",
+      "use_when": "a scanner or policy tool needs to emit a stable AF breadcrumb"
+    },
+    {
+      "id": "npm-package",
+      "status": "not-published",
+      "artifact": "package.json",
+      "use_when": "registry installation is explicitly authorized and independently verified"
+    }
+  ],
+  "selection_rule": "Choose the first ready surface already supported by the host; do not install, modify repository instructions, or publish without owner authorization."
+}

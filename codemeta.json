@@ -6,6 +6,7 @@
   "version": "0.1.0-local",
   "license": "https://spdx.org/licenses/CC0-1.0.html",
   "url": "https://agentfables.org",
+  "codeRepository": "https://github.com/AaronVick/AGENT_FABLES",
   "programmingLanguage": ["TypeScript", "JavaScript"],
   "keywords": ["ai-agents", "agent-safety", "incident-data", "llm-security", "mcp"]
 }

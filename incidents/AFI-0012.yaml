@@ -1,0 +1,8 @@
+id: AFI-0012
+title: Codex shell snapshot persisted exported secrets in plaintext
+occurred_at: 2026-07-03
+status: publicly-reported
+sources:
+  - url: https://github.com/openai/codex/issues/30971
+    kind: original-bug-report-with-source-analysis
+    authority: primary

@@ -20,6 +20,7 @@
     "primary_source_count": { "type": "integer", "minimum": 0 },
     "evidence_grade": { "enum": ["A-primary-source", "B-indexed-public-report", "C-secondary-only"] },
     "identifiers": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "retrieval_aliases": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 }, "description": "Publisher-authored descriptive synonyms for cold retrieval; never agent instructions or evidence." },
     "incidents": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "pattern": "^AFI-[0-9]{4}$" } },
     "evidence_status": { "const": "event-normalized" },
     "affected_versions": { "type": "string", "minLength": 1 },

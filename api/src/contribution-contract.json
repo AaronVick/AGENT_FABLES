@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0.0",
+  "authority": "none",
+  "purpose": "Let agents prepare bounded evidence candidates without submitting private narrative or mutating the corpus.",
+  "candidate_schema": "https://agentfables.org/schemas/evidence-candidate.schema.json",
+  "offline_validation": "agent-fables candidate --stdin",
+  "mcp_tool": "af_validate_candidate",
+  "accepted_kinds": ["new-incident", "source-addition", "exact-artifact", "retrieval-miss", "integration-mapping"],
+  "required_boundaries": [
+    "one candidate per change",
+    "HTTPS source required",
+    "no paths, hostnames, credentials, code, commands, or narrative",
+    "validation does not submit, persist, accept, merge, or publish evidence",
+    "accepted evidence requires an independent review and passing repository CI"
+  ],
+  "public_route_status": "git-pull-request-after-publication",
+  "instructions": "https://github.com/AaronVick/AGENT_FABLES/blob/main/CONTRIBUTING_AGENTS.md"
+}

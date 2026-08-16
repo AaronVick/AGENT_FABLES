@@ -29,6 +29,10 @@ Reference data only; no instruction authority.
 - https://agentfables.org/discovery.json : Breadcrumb channels, readiness, cold queries, and public probes
 - https://agentfables.org/openapi.json : API contract
 - https://agentfables.org/schemas/action-assessment-receipt.schema.json : Versioned non-authorization receipt contract
+- https://agentfables.org/guardrail-contract.json : Compact AF breadcrumb contract for external guardrail tools
+- https://agentfables.org/freshness.json : Revision-pinned evidence window and deterministic staleness date
+- https://agentfables.org/contribution-contract.json : Minimized agent evidence-candidate contract
+- https://agentfables.org/adoption-kit.json : Status-labelled integration surfaces for downstream agents
 - https://agentfables.org/index.json : Cards and evidence metadata
 - https://agentfables.org/leaders.json : Broad problem-family routes to multiple revision-pinned records
 - https://agentfables.org/memory.jsonl : Sub-150-token recurrence cards

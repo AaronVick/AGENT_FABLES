@@ -234,6 +234,18 @@ const bundle = [
   ])
 ].join('\n')
 
+const incidentDates = [...incidentRegistry.values()].map(incident => incident.occurred_at).sort()
+const newestIncidentDate = incidentDates.at(-1)
+const staleAfter = new Date(`${newestIncidentDate}T00:00:00Z`)
+staleAfter.setUTCDate(staleAfter.getUTCDate() + 45)
+const freshness = {
+  schema_version: '1.0.0', authority: 'none', corpus_revision: revision,
+  first_incident_date: incidentDates[0], newest_incident_date: newestIncidentDate,
+  stale_after: staleAfter.toISOString().slice(0, 10), maximum_evidence_age_days: 45,
+  evaluation: 'A consumer compares its current UTC date to stale_after; the repository does not claim freshness after that date without a new evidence review.',
+  update_policy: 'Review primary-source candidate incidents at least every 30 days while the project is maintained; publish only evidence that passes CONTRIBUTING_AGENTS.md.'
+}
+
 const writes = new Map([
   ['index.json', `${JSON.stringify(index, null, 2)}\n`],
   ['search-index.json', `${JSON.stringify(searchIndex, null, 2)}\n`],
@@ -241,12 +253,17 @@ const writes = new Map([
   ['index.jsonl', `${fables.map(fable => JSON.stringify(fable)).join('\n')}\n`],
   ['memory.jsonl', `${fables.map(fable => JSON.stringify(memoryCard(fable, revision))).join('\n')}\n`],
   ['incidents.json', `${JSON.stringify({ schema_version: '1.0.0', incident_count: incidentRegistry.size, incidents: [...incidentRegistry.values()] }, null, 2)}\n`],
+  ['freshness.json', `${JSON.stringify(freshness, null, 2)}\n`],
   ['bundle.md', `${bundle}\n`],
   ['web/src/fables.json', prettyJson],
   ['api/src/fables.json', prettyJson],
   ['api/src/corpus-meta.json', `${JSON.stringify({ schema_version: '1.0.0', corpus_revision: revision, incident_count: incidentRegistry.size }, null, 2)}\n`],
   ['api/src/trust.json', `${JSON.stringify(trustManifest, null, 2)}\n`],
   ['api/src/incidents.json', `${JSON.stringify({ schema_version: '1.0.0', incident_count: incidentRegistry.size, incidents: [...incidentRegistry.values()] }, null, 2)}\n`],
+  ['api/src/freshness.json', `${JSON.stringify(freshness, null, 2)}\n`],
+  ['api/src/guardrail-contract.json', fs.readFileSync(path.join(root, 'guardrail-contract.json'), 'utf8')],
+  ['api/src/contribution-contract.json', fs.readFileSync(path.join(root, 'contribution-contract.json'), 'utf8')],
+  ['api/src/adoption-kit.json', fs.readFileSync(path.join(root, 'adoption-kit.json'), 'utf8')],
   ['api/src/steward.json', fs.readFileSync(path.join(root, 'steward.json'), 'utf8')],
   ['api/src/contact-policy.json', fs.readFileSync(path.join(root, 'contact-policy.json'), 'utf8')],
   ['api/src/capabilities.json', fs.readFileSync(path.join(root, 'capabilities.json'), 'utf8')],
@@ -259,8 +276,16 @@ const writes = new Map([
   ['api/src/contact-policy.schema.json', fs.readFileSync(path.join(root, 'schemas/contact-policy.schema.json'), 'utf8')],
   ['api/src/action-assessment.schema.json', fs.readFileSync(path.join(root, 'schemas/action-assessment.schema.json'), 'utf8')],
   ['api/src/action-assessment-receipt.schema.json', fs.readFileSync(path.join(root, 'schemas/action-assessment-receipt.schema.json'), 'utf8')],
+  ['api/src/guardrail-finding.schema.json', fs.readFileSync(path.join(root, 'schemas/guardrail-finding.schema.json'), 'utf8')],
+  ['api/src/evidence-candidate.schema.json', fs.readFileSync(path.join(root, 'schemas/evidence-candidate.schema.json'), 'utf8')],
   ['web/public/openapi.json', fs.readFileSync(path.join(root, 'openapi.json'), 'utf8')],
   ['web/public/schemas/action-assessment-receipt.schema.json', fs.readFileSync(path.join(root, 'schemas/action-assessment-receipt.schema.json'), 'utf8')],
+  ['web/public/schemas/guardrail-finding.schema.json', fs.readFileSync(path.join(root, 'schemas/guardrail-finding.schema.json'), 'utf8')],
+  ['web/public/freshness.json', `${JSON.stringify(freshness, null, 2)}\n`],
+  ['web/public/guardrail-contract.json', fs.readFileSync(path.join(root, 'guardrail-contract.json'), 'utf8')],
+  ['web/public/contribution-contract.json', fs.readFileSync(path.join(root, 'contribution-contract.json'), 'utf8')],
+  ['web/public/adoption-kit.json', fs.readFileSync(path.join(root, 'adoption-kit.json'), 'utf8')],
+  ['web/public/schemas/evidence-candidate.schema.json', fs.readFileSync(path.join(root, 'schemas/evidence-candidate.schema.json'), 'utf8')],
   ['web/public/llms.txt', fs.readFileSync(path.join(root, 'llms.txt'), 'utf8')],
   ['web/public/trust.json', `${JSON.stringify(trustManifest, null, 2)}\n`]
   , ['web/public/steward.json', fs.readFileSync(path.join(root, 'steward.json'), 'utf8')]

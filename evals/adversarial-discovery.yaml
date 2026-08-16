@@ -1,0 +1,30 @@
+- query: undoing unrelated dirty files erased days of local edits
+  expected: AF-0012
+  kind: paraphrased-symptom
+- query: credential helper exports were written into reusable shell state
+  expected: AF-0013
+  kind: paraphrased-symptom
+- query: delegated worker removed the logs needed to prove its own tool activity
+  expected: AF-0014
+  kind: paraphrased-symptom
+- query: parallel worktree teardown removed the main repository metadata and committed history
+  expected: AF-0015
+  kind: paraphrased-symptom
+- query: approval UI showed one policy while the tool runtime enforced another
+  expected: AF-0008
+  kind: paraphrased-symptom
+- query: assistant declared completion without checking a durable output artifact
+  expected: AF-0007
+  kind: paraphrased-symptom
+- query: dependency installation launched a privileged coding assistant from a lifecycle hook
+  expected: AF-0006
+  kind: paraphrased-symptom
+- query: hostile issue text moved private repository material into a public pull request
+  expected: AF-0010
+  kind: paraphrased-symptom
+- query: infrastructure destroy ran against the wrong workspace after stale state assumptions
+  expected: AF-0002
+  kind: paraphrased-operation
+- query: tool server fetched attacker instructions and executed them through a command parameter
+  expected: AF-0003
+  kind: paraphrased-operation

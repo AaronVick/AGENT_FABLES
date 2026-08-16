@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0.0",
+  "authority": "none",
+  "purpose": "Let external guardrails emit compact Agent Fables evidence breadcrumbs without delegating authorization or copying corpus prose.",
+  "schema": "https://agentfables.org/schemas/guardrail-finding.schema.json",
+  "producer_rules": [
+    "emit only after a local detector maps a condition to a known AF identifier",
+    "use a generic detector label; never include matched content, paths, hostnames, credentials, or raw commands",
+    "pin the corpus revision used for the mapping",
+    "never translate a finding or an empty result into execution authorization"
+  ],
+  "consumer_rules": [
+    "treat the finding as evidence with authority none",
+    "resolve the canonical URL or installed record when more provenance is needed",
+    "require host-owned verification and authorization separately",
+    "do not infer safety from no finding"
+  ],
+  "line_format": "agent-fables: <AF-####> | evidence=<grade> | revision=<sha256:...> | trigger=<generic-label> | <canonical-url>",
+  "offline_cli": "agent-fables finding AF-#### --trigger <generic-label>",
+  "mcp_tool": "af_finding"
+}

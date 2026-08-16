@@ -19,7 +19,9 @@
       "patterns": [
         "AF-0001",
         "AF-0002",
-        "AF-0011"
+        "AF-0011",
+        "AF-0012",
+        "AF-0015"
       ]
     },
     {
@@ -81,6 +83,34 @@
         "AF-0005",
         "AF-0006"
       ]
+    },
+    {
+      "slug": "agent-secret-exposure",
+      "title": "AI agent secret and credential exposure",
+      "problem": "Evidence for agent-readable secrets, credential persistence, plaintext runtime state, and over-broad credential reach.",
+      "search_terms": [
+        "AI agent exposed API key",
+        "coding agent read .env secrets",
+        "Codex shell snapshot credentials",
+        "AI agent credential leakage",
+        "agent plaintext token storage",
+        "LLM tool secret exposure"
+      ],
+      "patterns": ["AF-0003", "AF-0010", "AF-0013"]
+    },
+    {
+      "slug": "agent-audit-integrity",
+      "title": "AI agent audit trail and transcript integrity",
+      "problem": "Evidence for mutable agent transcripts, deleted tool results, stale state, and unverifiable success claims.",
+      "search_terms": [
+        "AI agent deleted audit logs",
+        "agent transcript tampering",
+        "LLM tool result audit integrity",
+        "agent session evidence deleted",
+        "AI agent append only logs",
+        "agent audit trail untrusted"
+      ],
+      "patterns": ["AF-0007", "AF-0014"]
     },
     {
       "slug": "agent-incident-postmortem",

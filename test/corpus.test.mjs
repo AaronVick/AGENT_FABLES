@@ -4,6 +4,7 @@ import path from 'node:path'
 import test from 'node:test'
 import * as yaml from 'js-yaml'
 import crypto from 'node:crypto'
+import { rankEntries } from '../lib/retrieval.mjs'
 
 const root = path.resolve(import.meta.dirname, '..')
 const index = JSON.parse(fs.readFileSync(path.join(root, 'index.json'), 'utf8'))
@@ -71,13 +72,22 @@ test('thematic leaders are bounded, revision-pinned, and route only to known rec
   assert.equal(leaders.corpus_revision, index.corpus_revision)
   assert.equal(leaders.ranking_status, 'unverified-until-publication')
   assert.equal(leaders.volume_claim, 'unmeasured-problem-vocabulary')
-  assert.equal(leaders.topics.length, 6)
+  assert.equal(leaders.topics.length, 8)
   for (const topic of leaders.topics) {
     assert.ok(topic.records.length >= 2)
     assert.ok(topic.search_terms.length >= 4)
     assert.ok(topic.records.every(record => known.has(record.id)))
     assert.ok(fs.existsSync(path.join(root, 'leaders', `${topic.slug}.md`)))
   }
+})
+
+test('portable skill is trigger-rich, compact, and preserves non-authorization', () => {
+  const skill = fs.readFileSync(path.join(root, 'skills', 'agent-fables-preflight', 'SKILL.md'), 'utf8')
+  assert.match(skill, /destructive, irreversible, privileged/)
+  assert.match(skill, /authority: none/)
+  assert.match(skill, /absence of a match is not evidence of safety/)
+  assert.match(skill, /assess --stdin/)
+  assert.ok(Math.ceil(skill.length / 4) <= 700)
 })
 
 test('confirmation denominators are derived from stable incident identities', () => {
@@ -159,6 +169,12 @@ test('generated retrieval records carry no publisher-authored agent commands', (
 test('discovery benchmark returns the expected record first', () => {
   const cases = yaml.load(fs.readFileSync(path.join(root, 'evals/discovery-queries.yaml'), 'utf8'))
   for (const fixture of cases) assert.equal(rank(fixture.query)[0].id, fixture.expected, fixture.query)
+})
+
+test('adversarial paraphrases retrieve evidence without copied identifiers or exact artifacts', () => {
+  const fixtures = yaml.load(fs.readFileSync(path.join(root, 'evals', 'adversarial-discovery.yaml'), 'utf8'))
+  const hits = fixtures.filter(fixture => rankEntries(apiCorpus, fixture.query, 1)[0]?.entry.id === fixture.expected)
+  assert.ok(hits.length / fixtures.length >= 0.8, `adversarial recall was ${hits.length}/${fixtures.length}`)
 })
 
 test('no exact signature is published without structured source evidence', () => {

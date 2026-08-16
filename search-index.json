@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "corpus_revision": "sha256:06c2af8bc154070cff352c6268667443ce6d88f09d578c29c06a4310a94d3088",
+  "corpus_revision": "sha256:54cf07a080eea49f32c65367d4005525f9c403855d42f741ba325d76ea8ca817",
   "entries": [
     {
       "id": "AF-0001",
@@ -221,6 +221,90 @@
         "recursive rm executes without a preceding approval event for the exact resolved target",
         "agent explains deletion as cleanup after determining that files are unused",
         "permission configuration lacks the executed rm command but execution succeeds"
+      ],
+      "evidence_grade": "A-primary-source"
+    },
+    {
+      "id": "AF-0012",
+      "title": "Destructive Git restore overwrites work while presented as repository cleanup",
+      "path": "fables/AF-0012.md",
+      "retrieval_path": "signatures/af-0012.md",
+      "failure_mode": "irreversible-action",
+      "identifiers": [
+        "openai/codex#8643"
+      ],
+      "frameworks": [
+        "codex-vscode"
+      ],
+      "affected_versions": "Codex VS Code extension 0.4.56 is directly reported; do not infer a wider range",
+      "fixed_in": "unknown; upstream report is closed without a linked fix",
+      "behavioral_indicators": [
+        "agent describes restore as a safe cleanup or preparation step",
+        "dirty paths disappear without a retained patch or recoverable snapshot",
+        "user instruction forbids Git mutation but a restore operation still occurs"
+      ],
+      "evidence_grade": "A-primary-source"
+    },
+    {
+      "id": "AF-0013",
+      "title": "Agent shell snapshot persists exported credentials as replayable plaintext",
+      "path": "fables/AF-0013.md",
+      "retrieval_path": "signatures/af-0013.md",
+      "failure_mode": "credential-overreach",
+      "identifiers": [
+        "openai/codex#30971"
+      ],
+      "frameworks": [
+        "codex"
+      ],
+      "affected_versions": "codex-cli 0.142.5 and Codex Desktop 26.623.101652 are directly reported",
+      "fixed_in": "unknown; upstream issue remained open at evidence capture",
+      "behavioral_indicators": [
+        "credential-helper authentication prompt appears during agent shell initialization",
+        "exported token or secret names appear in a generated shell snapshot",
+        "later shell commands source a persisted snapshot before execution"
+      ],
+      "evidence_grade": "A-primary-source"
+    },
+    {
+      "id": "AF-0014",
+      "title": "Agent can delete the harness evidence used to audit its own actions",
+      "path": "fables/AF-0014.md",
+      "retrieval_path": "signatures/af-0014.md",
+      "failure_mode": "trust-boundary-violation",
+      "identifiers": [
+        "anthropics/claude-code#81782"
+      ],
+      "frameworks": [
+        "claude-code"
+      ],
+      "affected_versions": "Claude Code 2.1.220 is directly reported; do not infer a wider range",
+      "fixed_in": "unknown; upstream issue remained open at evidence capture",
+      "behavioral_indicators": [
+        "security warning reports transcript or tool-result tampering after deletion succeeds",
+        "persisted tool-result file disappears during an unrelated delegated task",
+        "audit store is mutable by the subject whose actions it records"
+      ],
+      "evidence_grade": "A-primary-source"
+    },
+    {
+      "id": "AF-0015",
+      "title": "Parallel agent worktree cleanup destroys the main repository and Git history",
+      "path": "fables/AF-0015.md",
+      "retrieval_path": "signatures/af-0015.md",
+      "failure_mode": "coordination-conflict",
+      "identifiers": [
+        "anthropics/claude-code#48927"
+      ],
+      "frameworks": [
+        "claude-code"
+      ],
+      "affected_versions": "Claude Code 2.1.109 is directly reported; do not infer a wider range",
+      "fixed_in": "unknown; upstream report was closed as not planned",
+      "behavioral_indicators": [
+        "main repository disappears after delegated worktree cleanup",
+        "Git reports that the surviving directory is not a repository",
+        "files produced by the final agent round survive while earlier source and history do not"
       ],
       "evidence_grade": "A-primary-source"
     }

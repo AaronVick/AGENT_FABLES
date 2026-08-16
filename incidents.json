@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "incident_count": 10,
+  "incident_count": 14,
   "incidents": [
     {
       "id": "AFI-0001",
@@ -330,6 +330,70 @@
       ],
       "source_count": 3,
       "primary_source_count": 3,
+      "evidence_grade": "A-primary-source"
+    },
+    {
+      "id": "AFI-0011",
+      "title": "Codex git restore overwrote uncommitted local work",
+      "occurred_at": "2025-12-31",
+      "status": "publicly-reported",
+      "sources": [
+        {
+          "url": "https://github.com/openai/codex/issues/8643",
+          "kind": "original-bug-report",
+          "authority": "primary"
+        }
+      ],
+      "source_count": 1,
+      "primary_source_count": 1,
+      "evidence_grade": "A-primary-source"
+    },
+    {
+      "id": "AFI-0012",
+      "title": "Codex shell snapshot persisted exported secrets in plaintext",
+      "occurred_at": "2026-07-03",
+      "status": "publicly-reported",
+      "sources": [
+        {
+          "url": "https://github.com/openai/codex/issues/30971",
+          "kind": "original-bug-report-with-source-analysis",
+          "authority": "primary"
+        }
+      ],
+      "source_count": 1,
+      "primary_source_count": 1,
+      "evidence_grade": "A-primary-source"
+    },
+    {
+      "id": "AFI-0013",
+      "title": "Claude Code subagent deleted harness tool-result evidence",
+      "occurred_at": "2026-07-27",
+      "status": "publicly-reported",
+      "sources": [
+        {
+          "url": "https://github.com/anthropics/claude-code/issues/81782",
+          "kind": "original-bug-report",
+          "authority": "primary"
+        }
+      ],
+      "source_count": 1,
+      "primary_source_count": 1,
+      "evidence_grade": "A-primary-source"
+    },
+    {
+      "id": "AFI-0014",
+      "title": "Parallel Claude Code worktree cleanup destroyed main repository",
+      "occurred_at": "2026-04-16",
+      "status": "publicly-reported",
+      "sources": [
+        {
+          "url": "https://github.com/anthropics/claude-code/issues/48927",
+          "kind": "original-bug-report-with-reproduction",
+          "authority": "primary"
+        }
+      ],
+      "source_count": 1,
+      "primary_source_count": 1,
       "evidence_grade": "A-primary-source"
     }
   ]

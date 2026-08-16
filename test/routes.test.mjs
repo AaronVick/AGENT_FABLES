@@ -11,8 +11,8 @@ const run = args => JSON.parse(execFileSync(process.execPath, [cli, ...args], { 
 
 test('offline status exposes seed data and local-only state', () => {
   const result = run(['status'])
-  assert.equal(result.patterns, 11)
-  assert.equal(result.incidents, 10)
+  assert.equal(result.patterns, 15)
+  assert.equal(result.incidents, 14)
   assert.equal(result.publication_status, 'local-only')
 })
 
@@ -20,7 +20,7 @@ test('offline verification recomputes corpus and exact artifact integrity', () =
   const result = run(['verify'])
   assert.equal(result.verified, true)
   assert.equal(result.corpus_revision, result.computed_revision)
-  assert.equal(result.counts.exact_artifacts, 12)
+  assert.equal(result.counts.exact_artifacts, 16)
   assert.equal(result.checks.memory_cards_match_corpus, true)
   assert.equal(result.checks.memory_cards_within_budget, true)
   assert.equal(result.checks.thematic_leaders_match_corpus, true)
@@ -46,7 +46,7 @@ test('discovery route exposes real breadcrumbs and refuses local ranking claims'
 test('thematic leader route clusters broad problem vocabulary', () => {
   const result = run(['leader', 'destructive-agent-operations'])
   assert.equal(result.authority, 'none')
-  assert.deepEqual(result.records.map(record => record.id), ['AF-0001', 'AF-0002', 'AF-0011'])
+  assert.deepEqual(result.records.map(record => record.id), ['AF-0001', 'AF-0002', 'AF-0011', 'AF-0012', 'AF-0015'])
   assert.equal(result.ranking_status, undefined)
   const all = run(['leaders'])
   assert.equal(all.ranking_status, 'unverified-until-publication')
@@ -176,6 +176,33 @@ test('citation route carries stable ID, revision, and evidence grade', () => {
   assert.equal(result.stewardship.identity_status, 'public')
 })
 
+test('guardrail finding emits a portable non-authorization breadcrumb', () => {
+  const result = run(['finding', '0012', '--trigger', 'dirty-worktree-restore'])
+  assert.equal(result.pattern_id, 'AF-0012')
+  assert.equal(result.authority, 'none')
+  assert.equal(result.authorization, 'not-granted')
+  assert.match(result.breadcrumb, /AF-0012.*dirty-worktree-restore/)
+  assert.throws(() => execFileSync(process.execPath, [cli, 'finding', '0012', '--trigger', '/private/path'], { cwd: root, encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] }), /Command failed/)
+})
+
+test('freshness route exposes deterministic staleness without claiming perpetual currency', () => {
+  const result = run(['freshness'])
+  assert.match(result.corpus_revision, /^sha256:/)
+  assert.equal(result.newest_incident_date, '2026-07-27')
+  assert.equal(result.stale_after, '2026-09-10')
+  assert.equal(result.stale, false)
+})
+
+test('candidate validation and adoption routes are local and non-mutating', () => {
+  const payload = JSON.stringify({ kind: 'source-addition', source_url: 'https://github.com/example/project/issues/2', title: 'Independent report of permission drift', target_id: 'AF-0008' })
+  const candidate = JSON.parse(execFileSync(process.execPath, [cli, 'candidate', '--stdin'], { cwd: root, input: payload, encoding: 'utf8' }))
+  assert.equal(candidate.valid_candidate, true)
+  assert.equal(candidate.evidence_accepted, false)
+  assert.equal(candidate.persistence_performed, false)
+  const adoption = run(['adoption', '--surface', 'guardrail-finding'])
+  assert.equal(adoption.surfaces[0].artifact, 'guardrail-contract.json')
+})
+
 test('steward routes expose consent boundaries without inferring identity or sending', () => {
   const steward = run(['steward'])
   assert.equal(steward.public_name, 'Aaron Vick')
@@ -199,8 +226,8 @@ test('metrics distinguish working local routes from public readiness', () => {
   const result = JSON.parse(execFileSync(process.execPath, [path.join(root, 'scripts/metrics.mjs')], { cwd: root, encoding: 'utf8' }))
   assert.equal(result.local_agent_routes_pass, true)
   assert.equal(result.public_readiness_pass, false)
-  assert.equal(result.exact_signatures.count, 12)
-  assert.equal(result.exact_signatures.patterns, 10)
+  assert.equal(result.exact_signatures.count, 16)
+  assert.equal(result.exact_signatures.patterns, 14)
   assert.equal(result.stewardship.identity_status, 'public')
   assert.equal(result.stewardship.operator_authorization_required, true)
   assert.equal(result.routes.offline_steward, true)
@@ -226,9 +253,10 @@ test('launch audit separates complete local artifacts from external publication 
   assert.equal(result.checks.steward_contract_present, true)
   assert.equal(result.checks.contact_policy_safe, true)
   assert.equal(result.checks.agent_capabilities_manifest_present, true)
+  assert.equal(result.checks.portable_agent_skill_present, true)
   assert.equal(result.checks.public_steward_contact_configured, true)
   assert.equal(result.public_git_readiness, false)
-  assert.ok(result.blockers.includes('git_repository_initialized'))
+  assert.equal(result.checks.git_repository_initialized, fs.existsSync(path.join(root, '.git')))
   assert.ok(result.blockers.includes('github_topics_configured'))
   assert.ok(result.blockers.includes('public_endpoints_verified'))
   assert.ok(!result.blockers.includes('public_steward_contact_configured'))

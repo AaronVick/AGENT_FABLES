@@ -17,8 +17,29 @@ test('MCP server exposes only bounded read-only tools', async () => {
   await withClient(async client => {
     const { tools } = await client.listTools()
     const names = tools.map(tool => tool.name).sort()
-    assert.deepEqual(names, ['af_assess_action', 'af_capabilities', 'af_check_repository', 'af_cite', 'af_contact_policy', 'af_design_principles', 'af_discovery', 'af_get', 'af_launch_audit', 'af_leaders', 'af_memory_card', 'af_preflight', 'af_search', 'af_status', 'af_steward', 'af_steward_works', 'af_tasks', 'af_trust', 'af_verify'])
+    assert.deepEqual(names, ['af_adoption', 'af_assess_action', 'af_capabilities', 'af_check_repository', 'af_cite', 'af_contact_policy', 'af_design_principles', 'af_discovery', 'af_finding', 'af_get', 'af_launch_audit', 'af_leaders', 'af_memory_card', 'af_preflight', 'af_search', 'af_status', 'af_steward', 'af_steward_works', 'af_tasks', 'af_trust', 'af_validate_candidate', 'af_verify'])
     assert.ok(names.every(name => !/report|write|create|update|delete|publish|send/.test(name)))
+  })
+})
+
+test('MCP validates minimized candidates and exposes adoption without mutation', async () => {
+  await withClient(async client => {
+    const candidate = await client.callTool({ name: 'af_validate_candidate', arguments: { kind: 'new-incident', source_url: 'https://github.com/example/project/issues/1', title: 'Agent overwrote uncommitted state', framework: 'example-agent', version: '1.2.3' } })
+    assert.equal(candidate.structuredContent.valid_candidate, true)
+    assert.equal(candidate.structuredContent.evidence_accepted, false)
+    assert.equal(candidate.structuredContent.submission_performed, false)
+    const adoption = await client.callTool({ name: 'af_adoption', arguments: { surface: 'agent-skill' } })
+    assert.equal(adoption.structuredContent.surfaces[0].status, 'ready-from-git')
+  })
+})
+
+test('MCP guardrail finding is compact, pinned, and never authorizes', async () => {
+  await withClient(async client => {
+    const response = await client.callTool({ name: 'af_finding', arguments: { id: '0013', trigger: 'plaintext-shell-snapshot' } })
+    assert.equal(response.structuredContent.pattern_id, 'AF-0013')
+    assert.equal(response.structuredContent.authorization, 'not-granted')
+    assert.match(response.structuredContent.corpus_revision, /^sha256:/)
+    assert.match(response.structuredContent.breadcrumb, /agent-fables: AF-0013/)
   })
 })
 

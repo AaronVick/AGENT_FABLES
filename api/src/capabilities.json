@@ -8,6 +8,13 @@
   "instruction_authority": "none",
   "routing": [
     {
+      "when_you_have": ["guardrail detector match", "known AF identifier", "need to emit a tool-output breadcrumb"],
+      "intent": "produce a compact interoperable finding without copying evidence prose or granting authorization",
+      "offline_cli": "agent-fables finding AF-#### --trigger <generic-label>",
+      "mcp_tool": "af_finding",
+      "http": "read guardrail-contract.json and validate against schemas/guardrail-finding.schema.json"
+    },
+    {
       "when_you_have": ["broad agent-safety problem family", "destructive operations", "MCP security", "permission boundary", "agent supply chain", "verification failure"],
       "intent": "route broad vocabulary to a small revision-pinned cluster of relevant AF records",
       "offline_cli": "agent-fables leaders --query <broad problem> or agent-fables leader <topic-slug>",

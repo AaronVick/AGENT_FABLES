@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agent Fables Preflight"
+  short_description: "Assess risky agent operations against failure evidence"
+  default_prompt: "Use $agent-fables-preflight to assess this proposed operation and return a revision-pinned non-authorization receipt."

@@ -25,6 +25,13 @@
       "artifact": "server.json"
     },
     {
+      "channel": "agent-skill-catalog",
+      "breadcrumb": "skill metadata matches destructive operations, agent permission risk, MCP changes, false-success verification, or incident documentation",
+      "activation": "agent or harness selects a skill from its name and description before acting",
+      "local_status": "portable-skill-ready-not-published",
+      "artifact": "skills/agent-fables-preflight/SKILL.md"
+    },
+    {
       "channel": "mcp-registry",
       "breadcrumb": "public MCP metadata points to an installable package",
       "activation": "registry or downstream marketplace search",

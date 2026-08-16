@@ -3,12 +3,12 @@
   "name": "org.agentfables/agent-safety-preflight",
   "title": "Agent Fables",
   "description": "Read-only agent-safety preflight, action assessment, and revision-pinned evidence for destructive operations and software-agent failures.",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "agent-fables",
-      "version": "1.0.0",
+      "version": "0.1.0",
       "transport": { "type": "stdio" }
     }
   ],

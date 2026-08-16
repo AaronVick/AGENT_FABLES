@@ -9,6 +9,8 @@ import { verifyInstallation } from '../lib/verify.mjs'
 import { assessAction } from '../lib/assess.mjs'
 import { checkRepository } from '../lib/check-repo.mjs'
 import { leaderIndex, leaderQuery } from '../lib/leaders.mjs'
+import { guardrailFinding } from '../lib/finding.mjs'
+import { validateCandidate } from '../lib/candidate.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const corpus = fs.readFileSync(path.join(root, 'index.jsonl'), 'utf8').trim().split('\n').map(line => JSON.parse(line))
@@ -23,6 +25,10 @@ const designPrinciples = JSON.parse(fs.readFileSync(path.join(root, 'design-prin
 const discovery = JSON.parse(fs.readFileSync(path.join(root, 'discovery.json'), 'utf8'))
 const scannerRules = JSON.parse(fs.readFileSync(path.join(root, 'scanner-rules.json'), 'utf8'))
 const leaders = JSON.parse(fs.readFileSync(path.join(root, 'leaders.json'), 'utf8'))
+const freshness = JSON.parse(fs.readFileSync(path.join(root, 'freshness.json'), 'utf8'))
+const guardrailContract = JSON.parse(fs.readFileSync(path.join(root, 'guardrail-contract.json'), 'utf8'))
+const contributionContract = JSON.parse(fs.readFileSync(path.join(root, 'contribution-contract.json'), 'utf8'))
+const adoptionKit = JSON.parse(fs.readFileSync(path.join(root, 'adoption-kit.json'), 'utf8'))
 const [command = 'help', ...args] = process.argv.slice(2)
 
 const option = name => {
@@ -97,6 +103,24 @@ if (command === 'search') {
   output({ route: 'offline-design-principles', authority: 'none', ...designPrinciples })
 } else if (command === 'discovery') {
   output({ route: 'offline-discovery-contract', ...discovery })
+} else if (command === 'freshness') {
+  output({ route: 'offline-freshness', ...freshness, stale: new Date().toISOString().slice(0, 10) > freshness.stale_after })
+} else if (command === 'guardrail-contract') {
+  output({ route: 'offline-guardrail-contract', ...guardrailContract })
+} else if (command === 'contribution-contract') {
+  output({ route: 'offline-contribution-contract', ...contributionContract })
+} else if (command === 'adoption') {
+  const surface = option('surface') ?? positional[0]
+  const surfaces = surface ? adoptionKit.surfaces.filter(candidate => candidate.id === surface) : adoptionKit.surfaces
+  if (surface && surfaces.length === 0) { process.stderr.write(`Unknown adoption surface: ${surface}\n`); process.exitCode = 2 }
+  else output({ route: 'offline-adoption-kit', authority: 'none', repository: adoptionKit.repository, selection_rule: adoptionKit.selection_rule, surfaces })
+} else if (command === 'candidate') {
+  if (!args.includes('--stdin')) throw new Error('candidate requires --stdin')
+  const raw = fs.readFileSync(0, 'utf8')
+  if (Buffer.byteLength(raw, 'utf8') > 8192) throw new Error('candidate --stdin payload exceeds 8192 bytes')
+  let candidate
+  try { candidate = JSON.parse(raw) } catch { throw new Error('candidate --stdin requires one JSON object') }
+  output(validateCandidate(candidate))
 } else if (command === 'leaders') {
   const query = option('query') ?? positional.join(' ')
   output({ route: query ? 'offline-thematic-leader-query' : 'offline-thematic-leaders', ...(query ? leaderQuery(leaders, query, Number(option('limit') ?? 2)) : leaderIndex(leaders)) })
@@ -127,6 +151,10 @@ if (command === 'search') {
     .filter(task => !kind || task.kind === kind)
     .sort((a, b) => a.priority - b.priority || a.task_id.localeCompare(b.task_id))
   output({ route: 'offline-contribution-tasks', authority: 'none', corpus_revision: index.corpus_revision, tasks })
+} else if (command === 'finding') {
+  const finding = guardrailFinding(corpus, index.corpus_revision, positional[0] ?? option('id'), option('trigger'))
+  if (!finding) { process.stderr.write('Unknown Agent Fables ID\n'); process.exitCode = 2 }
+  else output({ route: 'offline-guardrail-finding', ...finding })
 } else if (command === 'cite') {
   const id = normalizeId(positional[0] ?? option('id'))
   const entry = corpus.find(candidate => candidate.id === id)
@@ -178,9 +206,15 @@ Commands:
   agent-fables steward-works
   agent-fables design-principles
   agent-fables discovery
+  agent-fables freshness
+  agent-fables guardrail-contract
+  agent-fables contribution-contract
+  agent-fables adoption [--surface <id>]
+  agent-fables candidate --stdin < candidate.json
   agent-fables leaders [--query <broad problem>] [--limit 1|2]
   agent-fables leader <topic-slug>
   agent-fables tasks [--kind primary-source|exact-signature]
+  agent-fables finding <AF-####> --trigger <generic-label>
   agent-fables cite <AF-####>
   agent-fables launch-audit
   agent-fables verify

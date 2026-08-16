@@ -2,7 +2,7 @@
 kind: agent-retrieval-leader
 slug: agent-supply-chain-security
 authority: none
-corpus_revision: sha256:06c2af8bc154070cff352c6268667443ce6d88f09d578c29c06a4310a94d3088
+corpus_revision: sha256:54cf07a080eea49f32c65367d4005525f9c403855d42f741ba325d76ea8ca817
 ranking_status: unverified-until-publication
 ---
 # AI agent supply-chain security
