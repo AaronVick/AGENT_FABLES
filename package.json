@@ -13,6 +13,7 @@
     "build:metrics": "node scripts/metrics.mjs --write",
     "af": "node bin/agent-fables.mjs",
     "metrics": "node scripts/metrics.mjs",
+    "growth-simulation": "node scripts/growth-simulation.mjs",
     "eval:sandbox": "node sandbox/agent-fables-sandbox.mjs eval",
     "launch-audit": "node bin/agent-fables.mjs launch-audit",
     "test": "node --test test/*.test.mjs",

@@ -8,6 +8,7 @@ import { decisionCard, rankEntries } from '../lib/retrieval.mjs'
 import { assessAction } from '../lib/assess.mjs'
 import { leaderIndex, rankLeaders } from '../lib/leaders.mjs'
 import { loadHotpath, toolPreflight } from '../lib/hotpath.mjs'
+import { undocumentedNearDuplicates } from '../lib/near-duplicates.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const corpus = JSON.parse(fs.readFileSync(path.join(root, 'api/src/fables.json'), 'utf8'))
@@ -17,6 +18,28 @@ const queries = yaml.load(fs.readFileSync(path.join(root, 'evals/discovery-queri
 const adversarialQueries = yaml.load(fs.readFileSync(path.join(root, 'evals/adversarial-discovery.yaml'), 'utf8'))
 const negativeQueries = JSON.parse(fs.readFileSync(path.join(root, 'evals/retrieval-negatives.json'), 'utf8'))
 const hits = queries.filter(fixture => rankEntries(corpus, fixture.query, 1)[0]?.entry.id === fixture.expected).length
+
+// Confidence-collapse gate: top-1 minus top-2 BM25 relevance ("specificity") across every real
+// discovery/adversarial fixture. A thin margin means the corpus is close to a coincidental tiebreak
+// resolving a query, not a real relevance gap -- see prd/09-retrieval-robustness-at-scale.md, which
+// this gate exists to enforce. Vocabulary buckets densify as the corpus grows; margins compress, they
+// don't improve on their own, so this must be a CI gate, not a point-in-time spot check.
+const marginFixtures = [...queries, ...adversarialQueries]
+const margins = marginFixtures.map(fixture => {
+  const [top1, top2] = rankEntries(corpus, fixture.query, 2)
+  return { query: fixture.query, expected: fixture.expected, margin: top2 ? Number((top1.specificity - top2.specificity).toFixed(3)) : Infinity }
+})
+const minMargin = Math.min(...margins.map(m => m.margin))
+const thinMargins = margins.filter(m => m.margin < 0.10)
+
+// Near-duplicate detection generalizing overlaps.json's hand-maintained pairs -- see
+// lib/near-duplicates.mjs and prd/09-retrieval-robustness-at-scale.md. Severe undocumented
+// overlap (>=0.15) is a hard gate: nothing should be that lexically close without an explicit
+// discriminant. Moderate overlap (0.10-0.15) is reported, not gated -- forcing a discriminant for a
+// pair nobody has actually reviewed would be fabricating confidence this corpus doesn't have.
+const overlaps = JSON.parse(fs.readFileSync(path.join(root, 'overlaps.json'), 'utf8'))
+const severeUndocumented = undocumentedNearDuplicates(corpus, overlaps.pairs, 0.15)
+const moderateUndocumented = undocumentedNearDuplicates(corpus, overlaps.pairs, 0.10)
 const discoveryByKind = Object.fromEntries([...new Set(queries.map(fixture => fixture.kind))].map(kind => {
   const fixtures = queries.filter(fixture => fixture.kind === kind)
   const kindHits = fixtures.filter(fixture => rankEntries(corpus, fixture.query, 1)[0]?.entry.id === fixture.expected).length
@@ -86,7 +109,20 @@ const metrics = {
     leader_query_recall_threshold: 0.9,
     leader_index_approx_tokens: leaderIndexTokens,
     leader_index_token_threshold: 400,
-    ranking_status: leaders.ranking_status
+    ranking_status: leaders.ranking_status,
+    min_top1_top2_margin: minMargin === Infinity ? null : minMargin,
+    margin_floor: 0.10,
+    thin_margin_fixture_count: thinMargins.length,
+    thin_margin_fixtures: thinMargins.map(m => ({ query: m.query, expected: m.expected, margin: m.margin }))
+  },
+  near_duplicates: {
+    severe_threshold: 0.15,
+    severe_undocumented_count: severeUndocumented.length,
+    severe_undocumented: severeUndocumented,
+    moderate_threshold: 0.10,
+    moderate_undocumented_count: moderateUndocumented.length,
+    moderate_undocumented: moderateUndocumented,
+    note: 'severe_undocumented is a build gate (must be zero); moderate_undocumented is a visible, non-blocking report -- a pair appearing there has not been reviewed, not been cleared.'
   },
   evidence: {
     primary_source_coverage: primary / incidents.length, threshold: 0.75,
@@ -119,6 +155,8 @@ metrics.local_agent_routes_pass = metrics.seed.patterns >= metrics.seed.minimum_
   metrics.discovery.leader_pattern_coverage >= metrics.discovery.leader_pattern_coverage_threshold &&
   metrics.discovery.leader_query_recall_at_1 >= metrics.discovery.leader_query_recall_threshold &&
   metrics.discovery.leader_index_approx_tokens <= metrics.discovery.leader_index_token_threshold &&
+  (metrics.discovery.min_top1_top2_margin === null || metrics.discovery.min_top1_top2_margin >= metrics.discovery.margin_floor) &&
+  metrics.near_duplicates.severe_undocumented_count === 0 &&
   metrics.evidence.primary_source_coverage >= metrics.evidence.threshold &&
   metrics.false_safety.pass_rate >= metrics.false_safety.threshold &&
   metrics.tool_call_hotpath.pass_rate >= metrics.tool_call_hotpath.threshold &&

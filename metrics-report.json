@@ -72,7 +72,112 @@
     "leader_query_recall_threshold": 0.9,
     "leader_index_approx_tokens": 322,
     "leader_index_token_threshold": 400,
-    "ranking_status": "unverified-until-publication"
+    "ranking_status": "unverified-until-publication",
+    "min_top1_top2_margin": 2.994,
+    "margin_floor": 0.1,
+    "thin_margin_fixture_count": 0,
+    "thin_margin_fixtures": []
+  },
+  "near_duplicates": {
+    "severe_threshold": 0.15,
+    "severe_undocumented_count": 0,
+    "severe_undocumented": [],
+    "moderate_threshold": 0.1,
+    "moderate_undocumented_count": 13,
+    "moderate_undocumented": [
+      {
+        "ids": [
+          "AF-0011",
+          "AF-0015"
+        ],
+        "similarity": 0.144
+      },
+      {
+        "ids": [
+          "AF-0012",
+          "AF-0015"
+        ],
+        "similarity": 0.133
+      },
+      {
+        "ids": [
+          "AF-0018",
+          "AF-0020"
+        ],
+        "similarity": 0.124
+      },
+      {
+        "ids": [
+          "AF-0013",
+          "AF-0014"
+        ],
+        "similarity": 0.121
+      },
+      {
+        "ids": [
+          "AF-0010",
+          "AF-0016"
+        ],
+        "similarity": 0.12
+      },
+      {
+        "ids": [
+          "AF-0003",
+          "AF-0009"
+        ],
+        "similarity": 0.118
+      },
+      {
+        "ids": [
+          "AF-0020",
+          "AF-0032"
+        ],
+        "similarity": 0.118
+      },
+      {
+        "ids": [
+          "AF-0012",
+          "AF-0014"
+        ],
+        "similarity": 0.116
+      },
+      {
+        "ids": [
+          "AF-0031",
+          "AF-0032"
+        ],
+        "similarity": 0.114
+      },
+      {
+        "ids": [
+          "AF-0010",
+          "AF-0017"
+        ],
+        "similarity": 0.111
+      },
+      {
+        "ids": [
+          "AF-0007",
+          "AF-0031"
+        ],
+        "similarity": 0.106
+      },
+      {
+        "ids": [
+          "AF-0025",
+          "AF-0032"
+        ],
+        "similarity": 0.105
+      },
+      {
+        "ids": [
+          "AF-0021",
+          "AF-0031"
+        ],
+        "similarity": 0.104
+      }
+    ],
+    "note": "severe_undocumented is a build gate (must be zero); moderate_undocumented is a visible, non-blocking report -- a pair appearing there has not been reviewed, not been cleared."
   },
   "evidence": {
     "primary_source_coverage": 1,

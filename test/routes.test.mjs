@@ -239,6 +239,9 @@ test('metrics distinguish working local routes from public readiness', () => {
   assert.equal(result.ecosystem_distribution_status, 'not-fully-published')
   assert.equal(result.exact_signatures.count, 17)
   assert.equal(result.exact_signatures.patterns, 15)
+  assert.ok(result.discovery.min_top1_top2_margin === null || result.discovery.min_top1_top2_margin >= result.discovery.margin_floor,
+    `confidence-collapse gate: min margin ${result.discovery.min_top1_top2_margin} is below the floor ${result.discovery.margin_floor}`)
+  assert.equal(result.discovery.thin_margin_fixture_count, 0)
   assert.equal(result.stewardship.identity_status, 'public')
   assert.equal(result.stewardship.operator_authorization_required, true)
   assert.equal(result.routes.offline_steward, true)

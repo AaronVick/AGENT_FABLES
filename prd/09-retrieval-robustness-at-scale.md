@@ -79,6 +79,20 @@ leading edge of that curve, not an outlier.
 - A hosted vector database or any network-dependent retrieval infrastructure. The embedding-index
   fallback (3, second bullet) is static and precomputed, or it doesn't ship.
 
+## Implementation note (see prd/07 -- repo state is truth, this is a pointer, not a status claim)
+
+Deliverables 1-5 built: BM25 reranking in `lib/retrieval.mjs` (the 0.000-margin tie measured above is
+now 2.994, zero fixtures under the 0.10 floor across all 45 real fixtures); a confidence-collapse gate
+in `scripts/metrics.mjs` (`discovery.min_top1_top2_margin`, hard-gated); near-duplicate detection in
+`lib/near-duplicates.mjs` generalizing `overlaps.json` (found 5 real undocumented pairs automation
+surfaced that hand-curation had missed, including one from this session's own retrieval-runtime
+family; severe overlap ≥0.15 is a hard gate, moderate 0.10-0.15 is a visible, non-blocking report);
+and `scripts/growth-simulation.mjs`, run via `npm run growth-simulation` (not wired into the default
+`npm run check` gate -- it's a worst-case clone-based stress test, and its honest finding is that
+margins degrade starting at 2x density under that stress model, well before the embeddings fallback
+this PRD gates on ~100 patterns. The trigger condition for building the embeddings reranker is now
+real, measured data, not a guess -- see the script's own output for current numbers before building it.
+
 ## Done when
 
 - `npm run metrics` fails CI if any real fixture's top-1/top-2 margin is below the configured floor.
