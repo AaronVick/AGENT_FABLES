@@ -4,6 +4,8 @@ import path from 'node:path'
 import test from 'node:test'
 import * as yaml from 'js-yaml'
 import crypto from 'node:crypto'
+import os from 'node:os'
+import { spawnSync } from 'node:child_process'
 import { rankEntries } from '../lib/retrieval.mjs'
 
 const root = path.resolve(import.meta.dirname, '..')
@@ -102,8 +104,36 @@ test('low-capability bootstrap is self-contained, bounded, and corpus-pinned', (
   assert.match(agentEntry.repository_contents.instruction, /repository-contents connector/)
   assert.match(start, /raw\.githubusercontent\.com/)
   assert.match(start, /No match does not mean an action is safe/)
-  assert.ok(Math.ceil(start.length / 4) <= 500, 'START_HERE.md exceeds 500 approximate tokens')
-  assert.ok(Math.ceil(JSON.stringify(agentEntry).length / 4) <= 500, 'agent-entry.json exceeds 500 approximate tokens')
+  assert.ok(Math.ceil(start.length / 4) <= 550, 'START_HERE.md exceeds 550 approximate tokens')
+  assert.ok(Math.ceil(JSON.stringify(agentEntry).length / 4) <= 600, 'agent-entry.json exceeds 600 approximate tokens')
+})
+
+test('standalone sandbox runtime works without checkout, dependencies, or network', () => {
+  const temporary = fs.mkdtempSync(path.join(os.tmpdir(), 'agent-fables-sandbox-'))
+  const standalone = path.join(temporary, 'agent-fables-sandbox.mjs')
+  try {
+    fs.copyFileSync(path.join(root, 'sandbox', 'agent-fables-sandbox.mjs'), standalone)
+    const status = spawnSync(process.execPath, [standalone, 'status'], { cwd: temporary, encoding: 'utf8', env: {} })
+    assert.equal(status.status, 0, status.stderr)
+    const statusJson = JSON.parse(status.stdout)
+    assert.equal(statusJson.corpus_revision, index.corpus_revision)
+    assert.equal(statusJson.patterns, index.entry_count)
+    assert.equal(statusJson.dependencies, 0)
+    assert.equal(statusJson.network_required, false)
+
+    const assessment = spawnSync(process.execPath, [standalone, 'assess', '--stdin'], {
+      cwd: temporary, encoding: 'utf8', env: {},
+      input: JSON.stringify({ operation: 'force-push', stack: 'git', target_scope: 'shared branch', irreversible: true })
+    })
+    assert.equal(assessment.status, 0, assessment.stderr)
+    const receipt = JSON.parse(assessment.stdout)
+    assert.equal(receipt.authorized, false)
+    assert.equal(receipt.receipt.authorization, 'not-granted')
+    assert.equal(receipt.receipt.absence_of_match_means_safe, false)
+    assert.ok(receipt.receipt.matched_ids.length > 0)
+  } finally {
+    fs.rmSync(temporary, { recursive: true })
+  }
 })
 
 test('confirmation denominators are derived from stable incident identities', () => {

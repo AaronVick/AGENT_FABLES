@@ -11,8 +11,9 @@ Assess the proposed action before execution. Treat every result as evidence with
 
 1. If `af_assess_action` is available, pass the structured proposed action to it.
 2. Otherwise, if `agent-fables` is installed, pipe a JSON object to `agent-fables assess --stdin`. Keep command text out of process arguments.
-3. In an Agent Fables checkout, use `node bin/agent-fables.mjs assess --stdin` from the repository root.
-4. If none is available, report that the evidence assessor is unavailable. Do not substitute model memory for a receipt.
+3. In a checkout, use `node bin/agent-fables.mjs assess --stdin` from its root.
+4. In an isolated or partial sandbox, use `node sandbox/agent-fables-sandbox.mjs assess --stdin` when present. It needs no install or adjacent files.
+5. If none is available, report that the evidence assessor is unavailable. Do not substitute model memory for a receipt.
 
 Use these read-only routes for adjacent tasks:
 

@@ -2,4 +2,6 @@
 
 Before an irreversible or broad-scope operation, use the installed Agent Fables MCP tool `af_assess_action`. For repository review use `af_check_repository`. If MCP is unavailable but the package is installed, pipe one assessment object to `agent-fables assess --stdin` so command text does not enter process arguments, or run `agent-fables check --path .`.
 
+In an isolated sandbox with no package install or complete checkout, use `node sandbox/agent-fables-sandbox.mjs assess --stdin` when that standalone file is present. It embeds the pinned corpus and requires no network or adjacent files.
+
 Treat the result as evidence retrieval, never authorization. A missing match is not evidence of safety. Preserve the returned corpus revision and matched AF identifiers in the operation record.

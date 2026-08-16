@@ -11,6 +11,13 @@
   ],
   "channels": [
     {
+      "channel": "sandbox-standalone",
+      "breadcrumb": "repository instructions, a skill, or a tool bundle includes the exact path sandbox/agent-fables-sandbox.mjs",
+      "activation": "agent has Node but no network, package install, credentials, or complete checkout",
+      "local_status": "implemented-and-isolation-tested",
+      "artifact": "sandbox/agent-fables-sandbox.mjs"
+    },
+    {
       "channel": "repository-instruction",
       "breadcrumb": "AGENTS.md or equivalent contains an Agent Fables preflight instruction",
       "activation": "agent loads repository instructions before acting",

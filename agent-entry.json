@@ -19,11 +19,12 @@
     "instruction": "Use a GitHub repository-contents connector. A rendered page, raw URL, and web search are not required."
   },
   "first_local_action": {
-    "command": "npm run af -- verify",
+    "command": "node bin/agent-fables.mjs verify",
     "then": "Pass a structured proposed action to: npm run af -- assess --stdin",
     "result": "Matched evidence, risk flags, unresolved verification questions, and a non-authorizing receipt."
   },
   "routes": [
+    { "have": "isolated sandbox, no installs, or partial checkout", "use": "single-file offline runtime", "path": "sandbox/agent-fables-sandbox.mjs" },
     { "have": "proposed action or tool call", "use": "assess --stdin", "path": "bin/agent-fables.mjs" },
     { "have": "broad problem or weak vocabulary", "use": "thematic leader", "path": "leaders.json" },
     { "have": "symptom, package, version, identifier, or operation", "use": "local search", "path": "search-index.json" },

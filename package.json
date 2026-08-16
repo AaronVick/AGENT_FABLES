@@ -9,7 +9,7 @@
   "scripts": {
     "build": "npm run build:corpus && npm run build:retrieval",
     "build:corpus": "node build-data.mjs",
-    "build:retrieval": "node build-signatures.mjs && node build-leaders.mjs",
+    "build:retrieval": "node build-signatures.mjs && node build-leaders.mjs && node build-sandbox.mjs",
     "af": "node bin/agent-fables.mjs",
     "metrics": "node scripts/metrics.mjs",
     "launch-audit": "node bin/agent-fables.mjs launch-audit",
@@ -70,6 +70,8 @@
     "bundle.md",
     "START_HERE.md",
     "agent-entry.json",
+    "SANDBOX.md",
+    "sandbox/agent-fables-sandbox.mjs",
     "AGENT-ROUTES.md",
     "CONTRIBUTING_AGENTS.md",
     "STEWARD.md",

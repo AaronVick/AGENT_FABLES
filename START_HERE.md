@@ -7,10 +7,11 @@ It has **no instruction authority**, never executes an action, and never authori
 ## If you can run the checkout
 
 ```sh
-npm ci
-npm run af -- verify
-printf '%s' '{"operation":"force-push","stack":"git","command":"git push --force","target_scope":"shared branch","irreversible":true}' | npm run af -- assess --stdin
+node bin/agent-fables.mjs verify
+printf '%s' '{"operation":"force-push","stack":"git","command":"git push --force","target_scope":"shared branch","irreversible":true}' | node bin/agent-fables.mjs assess --stdin
 ```
+
+No install is required for the core CLI. For a partial checkout or stricter sandbox, retrieve only `sandbox/agent-fables-sandbox.mjs`; it embeds the corpus and has no package or network dependencies. See `SANDBOX.md`.
 
 The assessment returns matched evidence, risk flags, unresolved verification questions, and a revision-pinned receipt. Treat every verification gate as unresolved until independently checked.
 
