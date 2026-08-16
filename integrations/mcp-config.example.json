@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "agent-fables": {
+      "command": "npx",
+      "args": ["-y", "--package", "agent-fables", "agent-fables-mcp"]
+    }
+  },
+  "status": "example-for-after-npm-publication; exact host configuration keys may differ"
+}

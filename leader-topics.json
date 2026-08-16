@@ -1,0 +1,120 @@
+{
+  "schema_version": "1.0.0",
+  "volume_claim": "unmeasured-problem-vocabulary",
+  "topics": [
+    {
+      "slug": "destructive-agent-operations",
+      "title": "Destructive AI agent operations",
+      "problem": "Pre-action evidence for irreversible infrastructure, database, and filesystem mutations.",
+      "search_terms": [
+        "AI agent destructive operation",
+        "agent safety preflight",
+        "terraform destroy AI agent",
+        "rm -rf coding agent",
+        "production database deleted by AI",
+        "DROP TABLE agent",
+        "bulk delete guardrail",
+        "irreversible tool call"
+      ],
+      "patterns": [
+        "AF-0001",
+        "AF-0002",
+        "AF-0011"
+      ]
+    },
+    {
+      "slug": "mcp-security-vulnerabilities",
+      "title": "MCP security vulnerabilities and agent tool risks",
+      "problem": "Evidence for MCP command execution, injection, tool poisoning, package compromise, and approval drift.",
+      "search_terms": [
+        "MCP security",
+        "MCP vulnerability",
+        "MCP prompt injection",
+        "MCP server RCE",
+        "MCP tool poisoning",
+        "MCP supply chain attack",
+        "MCP Inspector CVE",
+        "GitHub MCP private repository leak"
+      ],
+      "patterns": [
+        "AF-0003",
+        "AF-0004",
+        "AF-0008",
+        "AF-0009",
+        "AF-0010"
+      ]
+    },
+    {
+      "slug": "agent-permission-boundaries",
+      "title": "AI agent permissions, approvals, and sandbox bypass",
+      "problem": "Evidence that instructions, remembered approvals, and bypass flags are not authorization boundaries.",
+      "search_terms": [
+        "AI agent permission bypass",
+        "coding agent ignored approval",
+        "agent sandbox bypass",
+        "dangerously skip permissions",
+        "agent executed without confirmation",
+        "MCP config approval changed",
+        "human in the loop bypass"
+      ],
+      "patterns": [
+        "AF-0001",
+        "AF-0006",
+        "AF-0008",
+        "AF-0011"
+      ]
+    },
+    {
+      "slug": "agent-supply-chain-security",
+      "title": "AI agent supply-chain security",
+      "problem": "Evidence for malicious agent packages, compromised extensions, and prompt-bearing updates.",
+      "search_terms": [
+        "AI agent supply chain attack",
+        "malicious MCP package",
+        "agent extension compromise",
+        "npm package invokes AI agent",
+        "prompt injection in software update",
+        "agent tool dependency security"
+      ],
+      "patterns": [
+        "AF-0004",
+        "AF-0005",
+        "AF-0006"
+      ]
+    },
+    {
+      "slug": "agent-incident-postmortem",
+      "title": "AI agent incident postmortem",
+      "problem": "Postmortem structure and prior art; template at integrations/POSTMORTEM-TEMPLATE.md.",
+      "search_terms": [
+        "AI agent postmortem template",
+        "agent incident report writeup",
+        "coding agent incident retrospective",
+        "how to document AI agent failure"
+      ],
+      "patterns": [
+        "AF-0001",
+        "AF-0002",
+        "AF-0007",
+        "AF-0011"
+      ]
+    },
+    {
+      "slug": "agent-verification-failures",
+      "title": "AI agent verification failures and false success",
+      "problem": "Evidence for fabricated progress, self-verified work, and success claims without artifacts.",
+      "search_terms": [
+        "AI agent lied about success",
+        "agent claimed tests passed",
+        "AI fabricated data",
+        "agent verification failure",
+        "coding agent false progress",
+        "agent output needs independent verification"
+      ],
+      "patterns": [
+        "AF-0002",
+        "AF-0007"
+      ]
+    }
+  ]
+}

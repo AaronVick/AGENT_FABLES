@@ -1,0 +1,12 @@
+name = "agent-fables-api"
+main = "src/index.ts"
+compatibility_date = "2024-03-20"
+
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "agent-fables-db"
+# database_id = "..."
+
+# [[r2_buckets]]
+# binding = "BUCKET"
+# bucket_name = "agent-fables-corpus"

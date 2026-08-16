@@ -1,0 +1,14 @@
+id: AFI-0010
+title: Claude Code recursive deletion executed without approval
+occurred_at: 2025-08-26
+status: publicly-reported
+sources:
+  - url: https://github.com/anthropics/claude-code/issues/6608
+    kind: original-bug-report
+    authority: primary
+  - url: https://github.com/anthropics/claude-code/issues/6778
+    kind: corroborating-original-report
+    authority: primary
+  - url: https://github.com/anthropics/claude-code/issues/6824
+    kind: corroborating-original-report
+    authority: primary

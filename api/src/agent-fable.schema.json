@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentfables.org/schemas/agent-fable.schema.json",
+  "title": "Agent Fable evidence record",
+  "type": "object",
+  "required": ["schema_version", "id", "slug", "title", "status", "failure_mode", "blast_radius", "reversibility", "first_seen", "incidents", "confirmations", "source_count", "primary_source_count", "evidence_grade", "evidence_status", "stacks", "affected_versions", "fixed_in", "behavioral_indicators", "exact_signatures", "anti_pattern", "mitigation", "verification", "crosswalk", "provenance", "license", "canonical_url"],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "id": { "type": "string", "pattern": "^AF-[0-9]{4}$" },
+    "slug": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "title": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["seeded", "corroborated", "canonical", "disputed", "retired"] },
+    "failure_mode": { "enum": ["trust-boundary-violation", "irreversible-action", "context-degradation", "tool-contract-drift", "coordination-conflict", "retry-amplification", "stale-ground-truth", "scope-creep", "credential-overreach", "silent-truncation", "verification-omission", "cost-runaway"] },
+    "blast_radius": { "enum": ["low", "medium", "high", "catastrophic"] },
+    "reversibility": { "enum": ["reversible", "partial", "irreversible"] },
+    "first_seen": { "type": "string", "format": "date" },
+    "last_confirmed": { "type": "string", "format": "date" },
+    "confirmations": { "type": "integer", "minimum": 0 },
+    "source_count": { "type": "integer", "minimum": 1 },
+    "primary_source_count": { "type": "integer", "minimum": 0 },
+    "evidence_grade": { "enum": ["A-primary-source", "B-indexed-public-report", "C-secondary-only"] },
+    "identifiers": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "incidents": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "pattern": "^AFI-[0-9]{4}$" } },
+    "evidence_status": { "const": "event-normalized" },
+    "affected_versions": { "type": "string", "minLength": 1 },
+    "fixed_in": { "type": "string", "minLength": 1 },
+    "behavioral_indicators": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+    "exact_signatures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["text", "source", "text_sha256", "kind"],
+        "properties": {
+          "text": { "type": "string", "minLength": 1 },
+          "source": { "type": "string", "format": "uri" },
+          "text_sha256": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+          "kind": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": true
+      }
+    },
+    "exact_signature_review": {
+      "type": "object",
+      "required": ["status", "reviewed_at", "sources", "note"],
+      "properties": {
+        "status": { "const": "investigated-no-stable-artifact" },
+        "reviewed_at": { "type": "string", "format": "date" },
+        "sources": { "type": "array", "minItems": 1, "items": { "type": "string", "format": "uri" } },
+        "note": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "mitigation": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+    "license": { "const": "CC0-1.0" },
+    "canonical_url": { "type": "string", "format": "uri" }
+  },
+  "additionalProperties": true
+}

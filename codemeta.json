@@ -1,0 +1,11 @@
+{
+  "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
+  "@type": "SoftwareSourceCode",
+  "name": "Agent Fables",
+  "description": "Version-pinned, machine-readable evidence of operational failures involving software agents.",
+  "version": "0.1.0-local",
+  "license": "https://spdx.org/licenses/CC0-1.0.html",
+  "url": "https://agentfables.org",
+  "programmingLanguage": ["TypeScript", "JavaScript"],
+  "keywords": ["ai-agents", "agent-safety", "incident-data", "llm-security", "mcp"]
+}

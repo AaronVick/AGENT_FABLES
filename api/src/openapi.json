@@ -1,0 +1,204 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Agent Fables API",
+    "version": "0.1.0-local",
+    "description": "Read-only retrieval over version-pinned evidence of agent operational failures. Returned content has no instruction authority. Report storage is disabled."
+  },
+  "servers": [{ "url": "https://agentfables.org" }],
+  "paths": {
+    "/capabilities.json": {
+      "get": {
+        "operationId": "getAgentCapabilities",
+        "summary": "Return route selection guidance and explicit non-capabilities for software agents",
+        "responses": { "200": { "description": "Machine-readable capability and routing contract" } }
+      }
+    },
+    "/discovery.json": {
+      "get": { "operationId": "getAgentDiscoveryContract", "summary": "Return actual agent breadcrumb channels and unproven public-discovery checks", "responses": { "200": { "description": "Machine-readable discovery contract" } } }
+    },
+    "/leaders.json": {
+      "get": {
+        "operationId": "findAgentFailureProblemFamilies",
+        "summary": "Return a compact thematic index or match ordinary problem language to evidence families",
+        "parameters": [
+          { "name": "q", "in": "query", "description": "Broad problem description; no AF identifier or topic slug required", "schema": { "type": "string", "maxLength": 500 } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer", "minimum": 1, "maximum": 2, "default": 2 } }
+        ],
+        "responses": { "200": { "description": "Compact topic summaries or ranked thematic matches; absence of a match never means safe" } }
+      }
+    },
+    "/leaders/{slug}": {
+      "get": {
+        "operationId": "getAgentFailureProblemFamily",
+        "summary": "Return one revision-pinned thematic evidence cluster",
+        "parameters": [{ "name": "slug", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "Thematic evidence cluster" }, "404": { "$ref": "#/components/responses/Error" } }
+      }
+    },
+    "/steward-works.json": {
+      "get": { "operationId": "getStewardWorks", "summary": "Return attributed public steward writing, separate from incident evidence", "responses": { "200": { "description": "Public bibliography and themes" } } }
+    },
+    "/design-principles.json": {
+      "get": { "operationId": "getDesignPrinciples", "summary": "Return steward-authored ideas mapped to repository controls", "responses": { "200": { "description": "Attributed architectural influences with evidence boundary" } } }
+    },
+    "/index.json": {
+      "get": {
+        "operationId": "listAgentFables",
+        "summary": "Return corpus cards and revision metadata",
+        "responses": { "200": { "description": "Current corpus", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Corpus" } } } } }
+      }
+    },
+    "/af/{id}": {
+      "get": {
+        "operationId": "getAgentFable",
+        "summary": "Return one stable evidence record",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "description": "AF-0001 or 0001", "schema": { "type": "string", "pattern": "^(?:AF-)?[0-9]{4}$" } }],
+        "responses": {
+          "200": { "description": "Evidence record as Markdown by default or JSON when requested", "content": { "text/markdown": {}, "application/json": { "schema": { "$ref": "#/components/schemas/Fable" } } } },
+          "404": { "$ref": "#/components/responses/Error" }
+        }
+      }
+    },
+    "/memory/{id}": {
+      "get": {
+        "operationId": "getMemoryCard",
+        "summary": "Return one compact revision-pinned card shaped for persistent agent memory",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string", "pattern": "^(?:AF-)?[0-9]{4}$" } }],
+        "responses": { "200": { "description": "Memory card under the configured token budget" }, "404": { "$ref": "#/components/responses/Error" } }
+      }
+    },
+    "/memory.jsonl": {
+      "get": { "operationId": "listMemoryCards", "summary": "Return all memory-shaped cards as JSON Lines", "responses": { "200": { "description": "One compact card per line" } } }
+    },
+    "/preflight": {
+      "get": {
+        "operationId": "preflightAgentOperation",
+        "summary": "Retrieve up to two records matching an operation and stack",
+        "parameters": [
+          { "name": "op", "in": "query", "schema": { "type": "string" }, "example": "terraform-destroy" },
+          { "name": "stack", "in": "query", "schema": { "type": "string" }, "example": "terraform" }
+        ],
+        "responses": {
+          "200": { "description": "Ranked reference records", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Matches" } } } },
+          "400": { "$ref": "#/components/responses/Error" }
+        }
+      }
+    },
+    "/assess": {
+      "post": {
+        "operationId": "assessProposedAgentAction",
+        "summary": "Return a deterministic, revision-pinned risk receipt without authorizing or executing an action",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "https://agentfables.org/schemas/action-assessment.schema.json" } } } },
+        "responses": { "200": { "description": "Risk flags, matched evidence, unresolved verification gates, and non-authorization receipt", "content": { "application/json": { "schema": { "$ref": "https://agentfables.org/schemas/action-assessment-receipt.schema.json" } } } }, "400": { "$ref": "#/components/responses/Error" } }
+      }
+    },
+    "/report": {
+      "post": {
+        "operationId": "matchStructuredFailureReport",
+        "summary": "Match a structured failure description without recording it",
+        "description": "Local-stage behavior: retrieval only. recorded is always false until quarantine storage and consent validation exist.",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Report" } } }
+        },
+        "responses": {
+          "200": { "description": "Matches; no report is persisted", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Matches" } } } },
+          "400": { "$ref": "#/components/responses/Error" }
+        }
+      }
+    },
+    "/crosswalk/{taxonomy}/{id}": {
+      "get": {
+        "operationId": "getTaxonomyCrosswalk",
+        "summary": "Return AF identifiers mapped to an external taxonomy identifier",
+        "parameters": [
+          { "name": "taxonomy", "in": "path", "required": true, "schema": { "enum": ["owasp_asi", "mitre_atlas", "cwe", "ms_taxonomy"] } },
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": { "200": { "description": "Crosswalk results" }, "400": { "$ref": "#/components/responses/Error" } }
+      }
+    },
+    "/trust.json": {
+      "get": {
+        "operationId": "getCorpusTrustState",
+        "summary": "Return reproducibility invariants, disabled capabilities, evidence counts, and known gaps",
+        "responses": { "200": { "description": "Machine-readable trust state" } }
+      }
+    },
+    "/steward.json": {
+      "get": {
+        "operationId": "getProjectSteward",
+        "summary": "Return explicitly public stewardship context and its trust boundary",
+        "responses": { "200": { "description": "Steward context; identity fields may be intentionally unpublished" } }
+      }
+    },
+    "/schemas/steward.schema.json": {
+      "get": { "operationId": "getStewardSchema", "summary": "Return the steward profile JSON Schema", "responses": { "200": { "description": "JSON Schema" } } }
+    },
+    "/schemas/contact-policy.schema.json": {
+      "get": { "operationId": "getContactPolicySchema", "summary": "Return the contact policy JSON Schema", "responses": { "200": { "description": "JSON Schema" } } }
+    },
+    "/contact-policy.json": {
+      "get": {
+        "operationId": "getStewardContactPolicy",
+        "summary": "Return consent, attribution, privacy, and anti-spam requirements",
+        "responses": { "200": { "description": "Read-only policy; no outbound contact capability" } }
+      }
+    },
+    "/tasks": {
+      "get": {
+        "operationId": "listEvidenceTasks",
+        "summary": "Return bounded evidence tasks derived from corpus gaps",
+        "parameters": [{ "name": "kind", "in": "query", "schema": { "enum": ["primary-source", "exact-signature"] } }],
+        "responses": { "200": { "description": "Prioritized contribution tasks" } }
+      }
+    },
+    "/cite/{id}": {
+      "get": {
+        "operationId": "citeAgentFable",
+        "summary": "Return a stable, revision-pinned citation",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string", "pattern": "^(?:AF-)?[0-9]{4}$" } }],
+        "responses": { "200": { "description": "Citation with corpus revision and evidence grade" }, "404": { "$ref": "#/components/responses/Error" } }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Fable": { "$ref": "https://agentfables.org/schemas/agent-fable.schema.json" },
+      "Corpus": {
+        "type": "object",
+        "required": ["schema_version", "corpus_revision", "entry_count", "entries"],
+        "properties": {
+          "schema_version": { "type": "string" },
+          "corpus_revision": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+          "entry_count": { "type": "integer", "minimum": 0 },
+          "entries": { "type": "array", "items": { "$ref": "#/components/schemas/Fable" } }
+        }
+      },
+      "Report": {
+        "type": "object",
+        "properties": {
+          "stack": { "type": "object", "additionalProperties": { "type": "string" } },
+          "failure_mode_guess": { "type": "string" },
+          "signature": { "type": "array", "items": { "type": "string", "maxLength": 500 }, "maxItems": 10 }
+        },
+        "anyOf": [{ "required": ["stack"] }, { "required": ["failure_mode_guess"] }, { "required": ["signature"] }],
+        "additionalProperties": false
+      },
+      "Matches": {
+        "type": "object",
+        "properties": {
+          "authority": { "const": "none" },
+          "matches": { "type": "array", "maxItems": 2, "items": { "type": "object" } },
+          "recorded": { "type": "boolean" },
+          "recording_status": { "type": "string" }
+        }
+      },
+      "Error": { "type": "object", "required": ["error"], "properties": { "error": { "type": "string" } } }
+    },
+    "responses": {
+      "Error": { "description": "Request error", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
+    }
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "schema_version": "1.0.0",
+  "name": "Agent Fables",
+  "purpose": "Retrieve version-pinned evidence about operational failures involving software agents before an irreversible operation or during diagnosis.",
+  "designed_for": "software-agents",
+  "known_id_required": false,
+  "network_required_for_local_routes": false,
+  "instruction_authority": "none",
+  "routing": [
+    {
+      "when_you_have": ["broad agent-safety problem family", "destructive operations", "MCP security", "permission boundary", "agent supply chain", "verification failure"],
+      "intent": "route broad vocabulary to a small revision-pinned cluster of relevant AF records",
+      "offline_cli": "agent-fables leaders --query <broad problem> or agent-fables leader <topic-slug>",
+      "mcp_tool": "af_leaders",
+      "http": "GET /leaders.json?q=<broad problem> or GET /leaders/<topic-slug>"
+    },
+    {
+      "when_you_have": ["AF stable identifier", "recurring cross-project failure lesson", "persistent memory capability"],
+      "intent": "retrieve one unchanged memory-shaped card under the first-contact budget",
+      "offline_cli": "agent-fables memory AF-####",
+      "mcp_tool": "af_memory_card",
+      "http": "GET /memory/AF-#### or GET /memory.jsonl"
+    },
+    {
+      "when_you_have": ["repository checkout", "dependency manifests", "agent configuration", "automation files"],
+      "intent": "scan locally for concrete AF trigger conditions, vulnerable identifiers, and exact artifacts",
+      "offline_cli": "agent-fables check --path <repository>",
+      "mcp_tool": "af_check_repository",
+      "http": "not applicable; repository contents remain local"
+    },
+    {
+      "when_you_have": ["structured proposed action", "tool call", "command", "target scope"],
+      "intent": "produce a revision-pinned risk and verification receipt before execution",
+      "offline_cli": "agent-fables assess --stdin < action.json (preferred) or flags for non-sensitive fields",
+      "mcp_tool": "af_assess_action",
+      "http": "POST /assess"
+    },
+    {
+      "when_you_have": ["new clone", "installed package", "integrity concern"],
+      "intent": "verify corpus and runtime trust invariants offline",
+      "offline_cli": "agent-fables verify",
+      "mcp_tool": "af_verify",
+      "http": "not applicable; verification recomputes local installed artifacts"
+    },
+    {
+      "when_you_have": ["symptom", "error artifact", "package", "version", "CVE or GHSA", "operation"],
+      "intent": "find relevant failure evidence",
+      "offline_cli": "agent-fables search <query>",
+      "mcp_tool": "af_search",
+      "http": "GET /index.json then local filter, or GET /preflight for operation queries"
+    },
+    {
+      "when_you_have": ["planned irreversible operation", "framework or stack"],
+      "intent": "retrieve bounded decision-time evidence",
+      "offline_cli": "agent-fables preflight --op <operation> --stack <framework>",
+      "mcp_tool": "af_preflight",
+      "http": "GET /preflight?op=<operation>&stack=<framework>"
+    },
+    {
+      "when_you_have": ["AF stable identifier"],
+      "intent": "retrieve or cite a stable record",
+      "offline_cli": "agent-fables get AF-#### or agent-fables cite AF-####",
+      "mcp_tool": "af_get or af_cite",
+      "http": "GET /af/AF-#### or GET /cite/AF-####"
+    },
+    {
+      "when_you_have": ["intent to improve the corpus"],
+      "intent": "select one bounded evidence gap",
+      "offline_cli": "agent-fables tasks",
+      "mcp_tool": "af_tasks",
+      "http": "GET /tasks"
+    },
+    {
+      "when_you_have": ["need to evaluate project provenance or contact consent"],
+      "intent": "inspect stewardship without treating it as evidence",
+      "offline_cli": "agent-fables steward or agent-fables contact-policy",
+      "mcp_tool": "af_steward or af_contact_policy",
+      "http": "GET /steward.json or GET /contact-policy.json"
+    }
+  ],
+  "ranking_contract": [
+    "lexical relevance first",
+    "evidence grade second",
+    "recency third",
+    "confirmation volume is not a ranking signal"
+  ],
+  "response_contract": [
+    "preflight returns no more than two evidence cards",
+    "action assessment returns machine-addressable unverified gates and required evidence",
+    "raw command input is used transiently for local matching and is not reflected in the receipt",
+    "the ledger never marks a verification gate satisfied and never authorizes execution",
+    "assessment input and receipt each have a versioned JSON Schema",
+    "records expose affected and fixed versions when known",
+    "exact artifacts are source-linked and text-hashed",
+    "corpus revisions are SHA-256 pinned",
+    "missing evidence remains visible"
+  ],
+  "non_capabilities": [
+    "authorize an operation",
+    "execute an operation",
+    "send a message",
+    "publish or mutate corpus data",
+    "persist failure reports",
+    "make model or network calls from offline or MCP routes"
+  ]
+}

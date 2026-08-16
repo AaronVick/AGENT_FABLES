@@ -1,0 +1,20 @@
+# Canonical evidence and generated mirrors intentionally contain detector strings.
+fables/
+incidents/
+signatures/
+evals/
+prd/
+test/
+api/src/fables.json
+api/src/incidents.json
+api/src/capabilities.json
+api/src/discovery.json
+web/src/fables.json
+web/public/
+index.json
+index.jsonl
+incidents.json
+search-index.json
+scanner-rules.json
+capabilities.json
+discovery.json

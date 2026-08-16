@@ -1,0 +1,17 @@
+id: AFI-0004
+title: Postmark MCP package malicious update
+occurred_at: 2025-09-25
+status: vendor-confirmed
+sources:
+  - url: https://postmarkapp.com/blog/information-regarding-malicious-postmark-mcp-package
+    kind: vendor-advisory
+    authority: primary
+  - url: https://www.upguard.com/blog/mcp-security-incidents
+    kind: secondary-analysis
+    authority: secondary
+  - url: https://authzed.com/blog/timeline-mcp-breaches
+    kind: secondary-analysis
+    authority: secondary
+  - url: https://glasp.co/articles/mcp-security-tool-poisoning-supply-chain
+    kind: secondary-analysis
+    authority: secondary

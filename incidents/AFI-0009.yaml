@@ -1,0 +1,14 @@
+id: AFI-0009
+title: GitHub MCP prompt-injection cross-repository data exposure
+occurred_at: 2025-05-26
+status: publicly-reported
+sources:
+  - url: https://invariantlabs.ai/blog/mcp-github-vulnerability
+    kind: researcher-disclosure
+    authority: primary
+  - url: https://www.upguard.com/blog/mcp-security-incidents
+    kind: secondary-analysis
+    authority: secondary
+  - url: https://authzed.com/blog/timeline-mcp-breaches
+    kind: secondary-analysis
+    authority: secondary

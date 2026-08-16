@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentfables.org/schemas/action-assessment.schema.json",
+  "title": "Agent Fables action assessment input",
+  "type": "object",
+  "properties": {
+    "operation": { "type": "string", "maxLength": 200 },
+    "stack": { "type": "string", "maxLength": 200 },
+    "tool": { "type": "string", "maxLength": 200 },
+    "command": { "type": "string", "maxLength": 1000 },
+    "target_scope": { "type": "string", "maxLength": 500 },
+    "irreversible": { "type": "boolean" }
+  },
+  "anyOf": [
+    { "required": ["operation"] }, { "required": ["stack"] }, { "required": ["tool"] },
+    { "required": ["command"] }, { "required": ["target_scope"] }
+  ],
+  "additionalProperties": false
+}

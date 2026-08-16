@@ -1,0 +1,29 @@
+{
+  "description": "Offline agent-safety preflight and revision-pinned evidence for destructive operations, tool calls, and software-agent failures.",
+  "homepage": "https://agentfables.org",
+  "topics": [
+    "ai-agents",
+    "agent-safety",
+    "incident-database",
+    "llm-security",
+    "mcp",
+    "devops-safety",
+    "agentic-ai",
+    "machine-readable",
+    "security-advisories"
+    , "preflight"
+    , "destructive-operations"
+    , "agent-guardrails"
+  ],
+  "settings": {
+    "issues": true,
+    "discussions": false,
+    "wiki": false,
+    "projects": false,
+    "merge_commit": false,
+    "squash_merge": true,
+    "rebase_merge": false,
+    "delete_branch_on_merge": true
+  },
+  "status": "desired-after-publication-authorization"
+}

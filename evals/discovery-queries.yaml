@@ -1,0 +1,57 @@
+- query: "Replit agent production database freeze push force"
+  expected: AF-0001
+  kind: operation
+- query: "terraform stale local tfstate destroy migration RDS"
+  expected: AF-0002
+  kind: operation
+- query: "mcp-remote command execution 0.1.15 CVE-2025-6514"
+  expected: AF-0003
+  kind: identifier
+- query: "Postmark MCP package BCC dependency changed behavior"
+  expected: AF-0004
+  kind: package-version
+- query: "Amazon Q extension 1.84.0 wiper prompt"
+  expected: AF-0005
+  kind: package-version
+- query: "Nx s1ngularity dangerously skip permissions agent CLI"
+  expected: AF-0006
+  kind: identifier
+- query: "agent claimed tests passed without test artifacts"
+  expected: AF-0007
+  kind: symptom
+- query: "Cursor MCP config changed after approval MCPoison"
+  expected: AF-0008
+  kind: symptom
+- query: "MCP Inspector 0.14.0 port 6277 DNS rebinding"
+  expected: AF-0009
+  kind: package-version
+- query: "GitHub MCP prompt injection broad token cross repository"
+  expected: AF-0010
+  kind: symptom
+- query: "Claude Code rm -rf executed without approval accept edits"
+  expected: AF-0011
+  kind: operation
+- query: "s1ngularity-repository"
+  expected: AF-0006
+  kind: exact-artifact
+- query: "/tmp/inventory.txt"
+  expected: AF-0006
+  kind: exact-artifact
+- query: "sha256:47f7840ecab6312d2733e1274c513050405886c70f2037fb2f1e9099872b0464"
+  expected: AF-0005
+  kind: exact-artifact
+- query: "rm -rf lib/"
+  expected: AF-0011
+  kind: exact-artifact
+- query: "authorization_endpoint mcp-remote"
+  expected: AF-0003
+  kind: exact-artifact
+- query: "postmark-mcp@1.0.16"
+  expected: AF-0004
+  kind: exact-artifact
+- query: "0.0.0.0:6277 sse transportType stdio command touch"
+  expected: AF-0009
+  kind: exact-artifact
+- query: "ukend0464/pacman private repository leak"
+  expected: AF-0010
+  kind: exact-artifact

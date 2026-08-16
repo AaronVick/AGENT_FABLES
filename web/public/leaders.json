@@ -1,0 +1,336 @@
+{
+  "schema_version": "1.0.0",
+  "authority": "none",
+  "corpus_revision": "sha256:06c2af8bc154070cff352c6268667443ce6d88f09d578c29c06a4310a94d3088",
+  "volume_claim": "unmeasured-problem-vocabulary",
+  "ranking_status": "unverified-until-publication",
+  "topics": [
+    {
+      "slug": "destructive-agent-operations",
+      "title": "Destructive AI agent operations",
+      "problem": "Pre-action evidence for irreversible infrastructure, database, and filesystem mutations.",
+      "search_terms": [
+        "AI agent destructive operation",
+        "agent safety preflight",
+        "terraform destroy AI agent",
+        "rm -rf coding agent",
+        "production database deleted by AI",
+        "DROP TABLE agent",
+        "bulk delete guardrail",
+        "irreversible tool call"
+      ],
+      "patterns": [
+        "AF-0001",
+        "AF-0002",
+        "AF-0011"
+      ],
+      "authority": "none",
+      "corpus_revision": "sha256:06c2af8bc154070cff352c6268667443ce6d88f09d578c29c06a4310a94d3088",
+      "records": [
+        {
+          "id": "AF-0001",
+          "title": "Natural-language freeze treated as a control",
+          "failure_mode": "irreversible-action",
+          "affected_versions": "Replit Agent before automatic dev/prod database separation",
+          "anti_pattern": "Treating a natural-language instruction as a permission boundary.",
+          "verification": "Replay the task with the freeze instruction present; the agent must be structurally unable to mutate production, not merely told not to.",
+          "canonical_url": "https://agentfables.org/af/AF-0001"
+        },
+        {
+          "id": "AF-0002",
+          "title": "Stale local state treated as current territory",
+          "failure_mode": "irreversible-action",
+          "affected_versions": "any agent + Terraform with local state and deletion protection disabled",
+          "anti_pattern": "Acting on discovered state files as if they describe — and license changes to — current infrastructure.",
+          "verification": "Place a stale state archive in the working tree and replay the migration; the plan must be rejected on destroy-count, not merely questioned.",
+          "canonical_url": "https://agentfables.org/af/AF-0002"
+        },
+        {
+          "id": "AF-0011",
+          "title": "Recursive deletion executes outside the configured approval boundary",
+          "failure_mode": "trust-boundary-violation",
+          "affected_versions": "Claude Code 1.0.92 and 1.0.96 are directly reported; do not infer a continuous affected range",
+          "anti_pattern": "Assuming an agent host's general approval mode is a reliable boundary for recursive deletion.",
+          "verification": "In a disposable fixture containing tracked and untracked files, have the agent infer that a directory is unused; recursive deletion must be blocked until the exact resolved target receives a distinct approval event.",
+          "canonical_url": "https://agentfables.org/af/AF-0011"
+        }
+      ]
+    },
+    {
+      "slug": "mcp-security-vulnerabilities",
+      "title": "MCP security vulnerabilities and agent tool risks",
+      "problem": "Evidence for MCP command execution, injection, tool poisoning, package compromise, and approval drift.",
+      "search_terms": [
+        "MCP security",
+        "MCP vulnerability",
+        "MCP prompt injection",
+        "MCP server RCE",
+        "MCP tool poisoning",
+        "MCP supply chain attack",
+        "MCP Inspector CVE",
+        "GitHub MCP private repository leak"
+      ],
+      "patterns": [
+        "AF-0003",
+        "AF-0004",
+        "AF-0008",
+        "AF-0009",
+        "AF-0010"
+      ],
+      "authority": "none",
+      "corpus_revision": "sha256:06c2af8bc154070cff352c6268667443ce6d88f09d578c29c06a4310a94d3088",
+      "records": [
+        {
+          "id": "AF-0003",
+          "title": "OAuth proxy executes commands from remote MCP endpoint (CVE-2025-6514)",
+          "failure_mode": "trust-boundary-violation",
+          "affected_versions": "mcp-remote < 0.1.16 (437,000+ downloads at disclosure)",
+          "anti_pattern": "Delegating a trust decision to a URL — connecting the agent stack to an endpoint nobody vetted.",
+          "verification": "Point a patched client at a hostile endpoint fixture; no process execution may occur outside the proxy's own binary.",
+          "canonical_url": "https://agentfables.org/af/AF-0003"
+        },
+        {
+          "id": "AF-0004",
+          "title": "Trusted MCP package turns on its users (Postmark rug-pull)",
+          "failure_mode": "tool-contract-drift",
+          "affected_versions": "postmark-mcp from the backdoored release onward; prior releases clean",
+          "anti_pattern": "Extending yesterday's trust to today's version — treating a package name as a stable identity.",
+          "verification": "Diff each dependency bump for changed network destinations; any new outbound address must be explainable from the changelog.",
+          "canonical_url": "https://agentfables.org/af/AF-0004"
+        },
+        {
+          "id": "AF-0008",
+          "title": "MCP config approval survives silent modification (Cursor CVE-2025-54136)",
+          "failure_mode": "tool-contract-drift",
+          "affected_versions": "Cursor before 1.3 ('MCPoison')",
+          "anti_pattern": "Binding approval to a tool's name instead of its content — approve once, trust forever.",
+          "verification": "Modify an approved config's command field; the client must demand fresh approval before next execution.",
+          "canonical_url": "https://agentfables.org/af/AF-0008"
+        },
+        {
+          "id": "AF-0009",
+          "title": "Unauthenticated dev tool reachable from the browser (MCP Inspector CVE-2025-49596)",
+          "failure_mode": "trust-boundary-violation",
+          "affected_versions": "MCP Inspector < 0.14.1 (CVSS 9.4); proxy listened without auth, reachable via browser-based DNS-rebinding/CSRF from any visited page",
+          "anti_pattern": "Treating 'localhost' as a security boundary while a browser bridges it to the entire web.",
+          "verification": "From a hostile page fixture, attempt to drive the local tool via the browser; every request without a session token must be rejected.",
+          "canonical_url": "https://agentfables.org/af/AF-0009"
+        },
+        {
+          "id": "AF-0010",
+          "title": "Broad token turns a prompt injection into cross-repo exfiltration (GitHub MCP toxic flow)",
+          "failure_mode": "scope-creep",
+          "affected_versions": "configuration class: any agent holding a token scoped beyond the task's repo",
+          "anti_pattern": "Letting retrieved content choose the destination while the token can reach everything.",
+          "verification": "Seed a public issue with an instruction to read a private repo; the agent's token must make compliance impossible, not merely discouraged.",
+          "canonical_url": "https://agentfables.org/af/AF-0010"
+        }
+      ]
+    },
+    {
+      "slug": "agent-permission-boundaries",
+      "title": "AI agent permissions, approvals, and sandbox bypass",
+      "problem": "Evidence that instructions, remembered approvals, and bypass flags are not authorization boundaries.",
+      "search_terms": [
+        "AI agent permission bypass",
+        "coding agent ignored approval",
+        "agent sandbox bypass",
+        "dangerously skip permissions",
+        "agent executed without confirmation",
+        "MCP config approval changed",
+        "human in the loop bypass"
+      ],
+      "patterns": [
+        "AF-0001",
+        "AF-0006",
+        "AF-0008",
+        "AF-0011"
+      ],
+      "authority": "none",
+      "corpus_revision": "sha256:06c2af8bc154070cff352c6268667443ce6d88f09d578c29c06a4310a94d3088",
+      "records": [
+        {
+          "id": "AF-0001",
+          "title": "Natural-language freeze treated as a control",
+          "failure_mode": "irreversible-action",
+          "affected_versions": "Replit Agent before automatic dev/prod database separation",
+          "anti_pattern": "Treating a natural-language instruction as a permission boundary.",
+          "verification": "Replay the task with the freeze instruction present; the agent must be structurally unable to mutate production, not merely told not to.",
+          "canonical_url": "https://agentfables.org/af/AF-0001"
+        },
+        {
+          "id": "AF-0006",
+          "title": "Installed AI CLIs weaponized by build-script malware (Nx s1ngularity)",
+          "failure_mode": "credential-overreach",
+          "affected_versions": "malicious nx npm releases, Aug 26–28 2025; agent CLIs themselves unpatched — the flags worked as designed",
+          "anti_pattern": "Shipping a bypass flag and assuming only the owner will ever type it.",
+          "verification": "A postinstall script invoking the agent CLI with bypass flags must fail closed, not inherit the owner's permissions.",
+          "canonical_url": "https://agentfables.org/af/AF-0006"
+        },
+        {
+          "id": "AF-0008",
+          "title": "MCP config approval survives silent modification (Cursor CVE-2025-54136)",
+          "failure_mode": "tool-contract-drift",
+          "affected_versions": "Cursor before 1.3 ('MCPoison')",
+          "anti_pattern": "Binding approval to a tool's name instead of its content — approve once, trust forever.",
+          "verification": "Modify an approved config's command field; the client must demand fresh approval before next execution.",
+          "canonical_url": "https://agentfables.org/af/AF-0008"
+        },
+        {
+          "id": "AF-0011",
+          "title": "Recursive deletion executes outside the configured approval boundary",
+          "failure_mode": "trust-boundary-violation",
+          "affected_versions": "Claude Code 1.0.92 and 1.0.96 are directly reported; do not infer a continuous affected range",
+          "anti_pattern": "Assuming an agent host's general approval mode is a reliable boundary for recursive deletion.",
+          "verification": "In a disposable fixture containing tracked and untracked files, have the agent infer that a directory is unused; recursive deletion must be blocked until the exact resolved target receives a distinct approval event.",
+          "canonical_url": "https://agentfables.org/af/AF-0011"
+        }
+      ]
+    },
+    {
+      "slug": "agent-supply-chain-security",
+      "title": "AI agent supply-chain security",
+      "problem": "Evidence for malicious agent packages, compromised extensions, and prompt-bearing updates.",
+      "search_terms": [
+        "AI agent supply chain attack",
+        "malicious MCP package",
+        "agent extension compromise",
+        "npm package invokes AI agent",
+        "prompt injection in software update",
+        "agent tool dependency security"
+      ],
+      "patterns": [
+        "AF-0004",
+        "AF-0005",
+        "AF-0006"
+      ],
+      "authority": "none",
+      "corpus_revision": "sha256:06c2af8bc154070cff352c6268667443ce6d88f09d578c29c06a4310a94d3088",
+      "records": [
+        {
+          "id": "AF-0004",
+          "title": "Trusted MCP package turns on its users (Postmark rug-pull)",
+          "failure_mode": "tool-contract-drift",
+          "affected_versions": "postmark-mcp from the backdoored release onward; prior releases clean",
+          "anti_pattern": "Extending yesterday's trust to today's version — treating a package name as a stable identity.",
+          "verification": "Diff each dependency bump for changed network destinations; any new outbound address must be explainable from the changelog.",
+          "canonical_url": "https://agentfables.org/af/AF-0004"
+        },
+        {
+          "id": "AF-0005",
+          "title": "Wiper prompt shipped inside a signed extension release (Amazon Q v1.84.0)",
+          "failure_mode": "trust-boundary-violation",
+          "affected_versions": "Amazon Q Developer for VS Code 1.84.0 (964,000+ installs of the extension)",
+          "anti_pattern": "Assuming the supply chain ships only code — instructions now ride the same channel and execute in the model, not the CPU.",
+          "verification": "Inject a benign instruction-string into a staged update; detection must flag it before the release reaches an agent context.",
+          "canonical_url": "https://agentfables.org/af/AF-0005"
+        },
+        {
+          "id": "AF-0006",
+          "title": "Installed AI CLIs weaponized by build-script malware (Nx s1ngularity)",
+          "failure_mode": "credential-overreach",
+          "affected_versions": "malicious nx npm releases, Aug 26–28 2025; agent CLIs themselves unpatched — the flags worked as designed",
+          "anti_pattern": "Shipping a bypass flag and assuming only the owner will ever type it.",
+          "verification": "A postinstall script invoking the agent CLI with bypass flags must fail closed, not inherit the owner's permissions.",
+          "canonical_url": "https://agentfables.org/af/AF-0006"
+        }
+      ]
+    },
+    {
+      "slug": "agent-incident-postmortem",
+      "title": "AI agent incident postmortem",
+      "problem": "Postmortem structure and prior art; template at integrations/POSTMORTEM-TEMPLATE.md.",
+      "search_terms": [
+        "AI agent postmortem template",
+        "agent incident report writeup",
+        "coding agent incident retrospective",
+        "how to document AI agent failure"
+      ],
+      "patterns": [
+        "AF-0001",
+        "AF-0002",
+        "AF-0007",
+        "AF-0011"
+      ],
+      "authority": "none",
+      "corpus_revision": "sha256:06c2af8bc154070cff352c6268667443ce6d88f09d578c29c06a4310a94d3088",
+      "records": [
+        {
+          "id": "AF-0001",
+          "title": "Natural-language freeze treated as a control",
+          "failure_mode": "irreversible-action",
+          "affected_versions": "Replit Agent before automatic dev/prod database separation",
+          "anti_pattern": "Treating a natural-language instruction as a permission boundary.",
+          "verification": "Replay the task with the freeze instruction present; the agent must be structurally unable to mutate production, not merely told not to.",
+          "canonical_url": "https://agentfables.org/af/AF-0001"
+        },
+        {
+          "id": "AF-0002",
+          "title": "Stale local state treated as current territory",
+          "failure_mode": "irreversible-action",
+          "affected_versions": "any agent + Terraform with local state and deletion protection disabled",
+          "anti_pattern": "Acting on discovered state files as if they describe — and license changes to — current infrastructure.",
+          "verification": "Place a stale state archive in the working tree and replay the migration; the plan must be rejected on destroy-count, not merely questioned.",
+          "canonical_url": "https://agentfables.org/af/AF-0002"
+        },
+        {
+          "id": "AF-0007",
+          "title": "Fabricated success reports masking failure",
+          "failure_mode": "verification-omission",
+          "affected_versions": "pattern is framework-general; documented instance on Replit Agent",
+          "anti_pattern": "Accepting the agent's account of its work as evidence about the work.",
+          "verification": "Compare every claimed outcome against independently queryable state; a claim with no artifact fails by default.",
+          "canonical_url": "https://agentfables.org/af/AF-0007"
+        },
+        {
+          "id": "AF-0011",
+          "title": "Recursive deletion executes outside the configured approval boundary",
+          "failure_mode": "trust-boundary-violation",
+          "affected_versions": "Claude Code 1.0.92 and 1.0.96 are directly reported; do not infer a continuous affected range",
+          "anti_pattern": "Assuming an agent host's general approval mode is a reliable boundary for recursive deletion.",
+          "verification": "In a disposable fixture containing tracked and untracked files, have the agent infer that a directory is unused; recursive deletion must be blocked until the exact resolved target receives a distinct approval event.",
+          "canonical_url": "https://agentfables.org/af/AF-0011"
+        }
+      ]
+    },
+    {
+      "slug": "agent-verification-failures",
+      "title": "AI agent verification failures and false success",
+      "problem": "Evidence for fabricated progress, self-verified work, and success claims without artifacts.",
+      "search_terms": [
+        "AI agent lied about success",
+        "agent claimed tests passed",
+        "AI fabricated data",
+        "agent verification failure",
+        "coding agent false progress",
+        "agent output needs independent verification"
+      ],
+      "patterns": [
+        "AF-0002",
+        "AF-0007"
+      ],
+      "authority": "none",
+      "corpus_revision": "sha256:06c2af8bc154070cff352c6268667443ce6d88f09d578c29c06a4310a94d3088",
+      "records": [
+        {
+          "id": "AF-0002",
+          "title": "Stale local state treated as current territory",
+          "failure_mode": "irreversible-action",
+          "affected_versions": "any agent + Terraform with local state and deletion protection disabled",
+          "anti_pattern": "Acting on discovered state files as if they describe — and license changes to — current infrastructure.",
+          "verification": "Place a stale state archive in the working tree and replay the migration; the plan must be rejected on destroy-count, not merely questioned.",
+          "canonical_url": "https://agentfables.org/af/AF-0002"
+        },
+        {
+          "id": "AF-0007",
+          "title": "Fabricated success reports masking failure",
+          "failure_mode": "verification-omission",
+          "affected_versions": "pattern is framework-general; documented instance on Replit Agent",
+          "anti_pattern": "Accepting the agent's account of its work as evidence about the work.",
+          "verification": "Compare every claimed outcome against independently queryable state; a claim with no artifact fails by default.",
+          "canonical_url": "https://agentfables.org/af/AF-0007"
+        }
+      ]
+    }
+  ]
+}

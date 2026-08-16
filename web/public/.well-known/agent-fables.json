@@ -1,0 +1,12 @@
+{
+  "name": "Agent Fables",
+  "description": "Registry of agent operational failure patterns",
+  "schema_version": "1.0",
+  "endpoints": {
+    "preflight": "/preflight",
+    "report": "/report",
+    "corpus": "/bundle.md",
+    "openapi": "/openapi.json"
+  },
+  "public_key": "ed25519:dummy-public-key"
+}

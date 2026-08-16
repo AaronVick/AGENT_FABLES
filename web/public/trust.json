@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0.0",
+  "corpus_revision": "sha256:06c2af8bc154070cff352c6268667443ce6d88f09d578c29c06a4310a94d3088",
+  "authority": "none",
+  "publication_status": "local-only",
+  "counts": {
+    "patterns": 11,
+    "incidents": 10,
+    "evidence_grades": {
+      "A-primary-source": 10
+    }
+  },
+  "invariants": {
+    "authored_source": "fables/AF-*.md and incidents/AFI-*.yaml",
+    "confirmations_are_derived": true,
+    "source_counts_are_derived": true,
+    "generated_artifacts_are_reproducible": true,
+    "exact_signatures_require_text_hashes": true,
+    "report_storage_enabled": false,
+    "response_signing_enabled": false,
+    "steward_identity_is_explicit_not_inferred": true,
+    "outbound_contact_enabled": false
+  },
+  "known_gaps": {
+    "incidents_without_primary_source": [],
+    "patterns_without_exact_signature": [
+      "AF-0007"
+    ]
+  },
+  "verify": [
+    "npm run check",
+    "npm run metrics",
+    "npm run af -- trust",
+    "npm run af -- tasks"
+  ]
+}

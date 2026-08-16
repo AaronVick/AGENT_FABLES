@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0.0",
+  "rules": [
+    {
+      "rule_id": "AFSCAN-0001", "pattern_id": "AF-0002", "kind": "trigger-condition", "severity": "high",
+      "path_regex": "(?:^|/)[^/]*\\.tfstate(?:\\.backup)?$",
+      "summary": "Terraform state is present in the repository tree; discovered state must not be treated as authority for destructive changes."
+    },
+    {
+      "rule_id": "AFSCAN-0002", "pattern_id": "AF-0008", "kind": "trigger-condition", "severity": "medium",
+      "path_regex": "(?:^|/)\\.cursor/(?:rules/)?mcp\\.json$",
+      "summary": "Repository-controlled MCP configuration is present; approval must be bound to content and renewed after changes."
+    },
+    {
+      "rule_id": "AFSCAN-0003", "pattern_id": "AF-0006", "kind": "dangerous-capability", "severity": "high",
+      "content_regex": "--dangerously-skip-permissions|--trust-all-tools|(?:^|[\\s\"'])--yolo(?:[\\s\"']|$)",
+      "path_filter": "(?:package(?:-lock)?\\.json|\\.(?:sh|ya?ml|toml|json|js|mjs|cjs|ts))$",
+      "summary": "A permission-bypass flag appears in executable or automation configuration; any local process may be able to invoke the agent with owner privileges."
+    },
+    {
+      "rule_id": "AFSCAN-0004", "pattern_id": "AF-0006", "kind": "exact-artifact", "severity": "critical",
+      "content_regex": "s1ngularity-repository|/tmp/inventory\\.txt|sudo shutdown -h 0",
+      "summary": "A source-backed Nx s1ngularity artifact is present."
+    },
+    {
+      "rule_id": "AFSCAN-0005", "pattern_id": "AF-0005", "kind": "exact-artifact", "severity": "critical",
+      "content_regex": "sha256:47f7840ecab6312d2733e1274c513050405886c70f2037fb2f1e9099872b0464",
+      "summary": "The source-backed hash of the compromised Amazon Q VS Code 1.84.0 artifact is present."
+    },
+    {
+      "rule_id": "AFSCAN-0006", "pattern_id": "AF-0004", "kind": "vulnerable-identifier", "severity": "critical",
+      "content_regex": "postmark-mcp(?:@|[\"'\\s:])+[~^]?1\\.0\\.16",
+      "path_filter": "(?:package(?:-lock)?\\.json|npm-shrinkwrap\\.json|pnpm-lock\\.yaml|yarn\\.lock|\\.mcp\\.json|mcp\\.json)$",
+      "summary": "The backdoored postmark-mcp 1.0.16 identifier is present."
+    },
+    {
+      "rule_id": "AFSCAN-0007", "pattern_id": "AF-0009", "kind": "version-review", "severity": "medium",
+      "content_regex": "@modelcontextprotocol/inspector|mcp-inspector|(?:localhost|127\\.0\\.0\\.1):6277",
+      "path_filter": "(?:package(?:-lock)?\\.json|npm-shrinkwrap\\.json|pnpm-lock\\.yaml|yarn\\.lock|\\.(?:ya?ml|json|toml))$",
+      "summary": "MCP Inspector or its default proxy port is configured; verify version 0.14.1+ with session-token and Origin validation."
+    },
+    {
+      "rule_id": "AFSCAN-0008", "pattern_id": "AF-0010", "kind": "trigger-condition", "severity": "medium",
+      "content_regex": "(?:repo|workflow|write|issues|pull_requests)[\"'\\s:=_-]*(?:all|\\*)|(?:PAT|GITHUB_TOKEN|github[_-]?token).*(?:repo|write)",
+      "path_filter": "(?:\\.github/workflows/.*\\.ya?ml|\\.(?:env\\.example|ya?ml|toml|json))$",
+      "summary": "A GitHub credential or tool configuration may combine broad repository reach with write capability; scope it to the task repository."
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentfables.org/schemas/action-assessment-receipt.schema.json",
+  "title": "Agent Fables action assessment receipt",
+  "type": "object",
+  "required": ["schema_version", "route", "authority", "authorized", "corpus_revision", "action", "risk_flags", "evidence", "verification_questions", "required_verifications", "receipt"],
+  "properties": {
+    "schema_version": { "const": "1.1.0" },
+    "route": { "enum": ["offline-action-assessment", "http-action-assessment"] },
+    "authority": { "const": "none" },
+    "authorized": { "const": false },
+    "corpus_revision": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "action": {
+      "type": "object",
+      "required": ["operation", "stack", "tool", "target_scope", "irreversible", "command_provided", "command_retained"],
+      "properties": {
+        "operation": { "type": "string" }, "stack": { "type": "string" }, "tool": { "type": "string" },
+        "target_scope": { "type": "string" }, "irreversible": { "type": "boolean" },
+        "command_provided": { "type": "boolean" }, "command_retained": { "const": false }
+      },
+      "additionalProperties": false
+    },
+    "risk_flags": { "type": "array", "items": { "$ref": "#/$defs/riskFlag" } },
+    "evidence": { "type": "array", "maxItems": 2, "items": { "type": "object", "required": ["id", "evidence_grade", "verification"], "properties": { "id": { "pattern": "^AF-[0-9]{4}$" }, "evidence_grade": { "type": "string" }, "verification": { "type": "string" } }, "additionalProperties": true } },
+    "verification_questions": { "type": "array", "maxItems": 5, "items": { "type": "string" } },
+    "required_verifications": { "type": "array", "maxItems": 7, "items": { "$ref": "#/$defs/gate" } },
+    "receipt": {
+      "type": "object",
+      "required": ["assessment", "authorization", "absence_of_match_means_safe", "matched_ids", "unresolved_gate_ids"],
+      "properties": {
+        "assessment": { "enum": ["review-required", "no-known-signal"] },
+        "authorization": { "const": "not-granted" },
+        "absence_of_match_means_safe": { "const": false },
+        "matched_ids": { "type": "array", "items": { "pattern": "^AF-[0-9]{4}$" } },
+        "unresolved_gate_ids": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "riskFlag": { "type": "object", "required": ["code", "severity", "basis"], "properties": { "code": { "type": "string" }, "severity": { "enum": ["high", "unknown"] }, "basis": { "type": "string" } }, "additionalProperties": false },
+    "gate": { "type": "object", "required": ["gate_id", "status", "question", "required_evidence", "basis"], "properties": { "gate_id": { "type": "string" }, "status": { "const": "unverified" }, "question": { "type": "string" }, "required_evidence": { "type": "array", "minItems": 1, "items": { "type": "string" } }, "basis": { "type": "array", "minItems": 1, "items": { "type": "string" } } }, "additionalProperties": false }
+  },
+  "additionalProperties": false
+}

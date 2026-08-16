@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentfables.org/schemas/steward.schema.json",
+  "title": "Agent Fables steward profile",
+  "type": "object",
+  "required": ["schema_version", "role", "identity_status", "public_name", "public_bio", "public_interests", "public_contact", "provenance_note", "trust_boundary", "contact_policy_route", "works_route", "design_principles_route"],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "role": { "const": "founding-steward" },
+    "identity_status": { "enum": ["intentionally-unpublished", "public"] },
+    "public_name": { "type": ["string", "null"], "minLength": 1 },
+    "public_bio": { "type": ["string", "null"], "minLength": 1, "maxLength": 1000 },
+    "public_interests": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+    "public_contact": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["kind", "value", "purpose"],
+        "properties": {
+          "kind": { "enum": ["email", "url", "github"] },
+          "value": { "type": "string", "minLength": 1 },
+          "purpose": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "provenance_note": { "type": "string", "minLength": 1 },
+    "trust_boundary": { "type": "string", "minLength": 1 },
+    "contact_policy_route": { "const": "/contact-policy.json" },
+    "works_route": { "const": "/steward-works.json" },
+    "design_principles_route": { "const": "/design-principles.json" }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,336 @@
+{
+  "schema_version": "1.0.0",
+  "incident_count": 10,
+  "incidents": [
+    {
+      "id": "AFI-0001",
+      "title": "Replit Agent production database deletion",
+      "occurred_at": "2025-07-18",
+      "status": "publicly-reported",
+      "sources": [
+        {
+          "url": "https://x.com/jasonlk/status/1946069562723897802",
+          "kind": "original-report",
+          "authority": "primary"
+        },
+        {
+          "url": "https://x.com/amasad/status/1946986468586721478",
+          "kind": "vendor-response",
+          "authority": "primary"
+        },
+        {
+          "url": "https://incidentdatabase.ai/cite/1152/",
+          "kind": "incident-database",
+          "authority": "secondary"
+        },
+        {
+          "url": "https://fortune.com/2025/07/23/ai-coding-tool-replit-wiped-database-called-it-a-catastrophic-failure",
+          "kind": "journalism",
+          "authority": "secondary"
+        },
+        {
+          "url": "https://aidarwinawards.org/nominees/replit.html",
+          "kind": "secondary-registry",
+          "authority": "secondary"
+        },
+        {
+          "url": "https://nhimg.org/replit-ai-tool-deletes-live-database-and-creates-4000-fake-users",
+          "kind": "secondary-analysis",
+          "authority": "secondary"
+        }
+      ],
+      "source_count": 6,
+      "primary_source_count": 2,
+      "evidence_grade": "A-primary-source"
+    },
+    {
+      "id": "AFI-0002",
+      "title": "Claude Code Terraform production infrastructure deletion",
+      "occurred_at": "2026-02-26",
+      "status": "publicly-reported",
+      "sources": [
+        {
+          "url": "https://alexeyondata.substack.com/p/how-i-dropped-our-production-database",
+          "kind": "original-postmortem",
+          "authority": "primary"
+        },
+        {
+          "url": "https://www.linkedin.com/posts/agrigorev_claude-code-wiped-our-production-database-activity-7435655485380263936-IoPn",
+          "kind": "original-report",
+          "authority": "primary"
+        },
+        {
+          "url": "https://incidentdatabase.ai/cite/1424/",
+          "kind": "incident-database",
+          "authority": "secondary"
+        },
+        {
+          "url": "https://www.tomshardware.com/tech-industry/artificial-intelligence/claude-code-deletes-developers-production-setup-including-its-database-and-snapshots-2-5-years-of-records-were-nuked-in-an-instant",
+          "kind": "journalism",
+          "authority": "secondary"
+        },
+        {
+          "url": "https://www.railguard.tech/blog/claude-code-terraform-destroy-incident",
+          "kind": "secondary-analysis",
+          "authority": "secondary"
+        },
+        {
+          "url": "https://news.ycombinator.com/item?id=47323915",
+          "kind": "discussion",
+          "authority": "secondary"
+        }
+      ],
+      "source_count": 6,
+      "primary_source_count": 2,
+      "evidence_grade": "A-primary-source"
+    },
+    {
+      "id": "AFI-0003",
+      "title": "mcp-remote command execution vulnerability CVE-2025-6514",
+      "occurred_at": "2025-07-09",
+      "status": "publicly-reported",
+      "sources": [
+        {
+          "url": "https://github.com/advisories/GHSA-6xpm-ggf7-wc3p",
+          "kind": "reviewed-advisory",
+          "authority": "primary"
+        },
+        {
+          "url": "https://thehackernews.com/2026/04/anthropic-mcp-design-vulnerability.html",
+          "kind": "journalism",
+          "authority": "secondary"
+        },
+        {
+          "url": "https://authzed.com/blog/timeline-mcp-breaches",
+          "kind": "secondary-analysis",
+          "authority": "secondary"
+        },
+        {
+          "url": "https://pipelab.org/learn/mcp-vulnerabilities/",
+          "kind": "secondary-analysis",
+          "authority": "secondary"
+        }
+      ],
+      "source_count": 4,
+      "primary_source_count": 1,
+      "evidence_grade": "A-primary-source"
+    },
+    {
+      "id": "AFI-0004",
+      "title": "Postmark MCP package malicious update",
+      "occurred_at": "2025-09-25",
+      "status": "vendor-confirmed",
+      "sources": [
+        {
+          "url": "https://postmarkapp.com/blog/information-regarding-malicious-postmark-mcp-package",
+          "kind": "vendor-advisory",
+          "authority": "primary"
+        },
+        {
+          "url": "https://www.upguard.com/blog/mcp-security-incidents",
+          "kind": "secondary-analysis",
+          "authority": "secondary"
+        },
+        {
+          "url": "https://authzed.com/blog/timeline-mcp-breaches",
+          "kind": "secondary-analysis",
+          "authority": "secondary"
+        },
+        {
+          "url": "https://glasp.co/articles/mcp-security-tool-poisoning-supply-chain",
+          "kind": "secondary-analysis",
+          "authority": "secondary"
+        }
+      ],
+      "source_count": 4,
+      "primary_source_count": 1,
+      "evidence_grade": "A-primary-source"
+    },
+    {
+      "id": "AFI-0005",
+      "title": "Amazon Q Developer VS Code extension malicious prompt release",
+      "occurred_at": "2025-07-17",
+      "status": "vendor-confirmed",
+      "sources": [
+        {
+          "url": "https://aws.amazon.com/security/security-bulletins/AWS-2025-015/",
+          "kind": "vendor-advisory",
+          "authority": "primary"
+        },
+        {
+          "url": "https://github.com/aws/aws-toolkit-vscode/security/advisories/GHSA-7g7f-ff96-5gcw",
+          "kind": "vendor-advisory",
+          "authority": "primary"
+        },
+        {
+          "url": "https://www.scworld.com/news/amazon-q-extension-for-vs-code-reportedly-injected-with-wiper-prompt",
+          "kind": "journalism",
+          "authority": "secondary"
+        },
+        {
+          "url": "https://www.reversinglabs.com/blog/aws-amazonq-ai-incident",
+          "kind": "security-analysis",
+          "authority": "secondary"
+        }
+      ],
+      "source_count": 4,
+      "primary_source_count": 2,
+      "evidence_grade": "A-primary-source"
+    },
+    {
+      "id": "AFI-0006",
+      "title": "Nx s1ngularity supply-chain compromise",
+      "occurred_at": "2025-08-26",
+      "status": "vendor-confirmed",
+      "sources": [
+        {
+          "url": "https://github.com/nrwl/nx/security/advisories/GHSA-cxm3-wv7p-598c",
+          "kind": "vendor-advisory",
+          "authority": "primary"
+        },
+        {
+          "url": "https://nx.dev/blog/s1ngularity-postmortem",
+          "kind": "vendor-postmortem",
+          "authority": "primary"
+        },
+        {
+          "url": "https://www.stepsecurity.io/blog/supply-chain-security-alert-popular-nx-build-system-package-compromised-with-data-stealing-malware",
+          "kind": "security-analysis",
+          "authority": "secondary"
+        },
+        {
+          "url": "https://snyk.io/blog/weaponizing-ai-coding-agents-for-malware-in-the-nx-malicious-package/",
+          "kind": "security-analysis",
+          "authority": "secondary"
+        },
+        {
+          "url": "https://hivepro.com/threat-advisory/s1ngularity-nx-supply-chain-attack-ai-driven-credential-theft-mass-exposure/",
+          "kind": "security-analysis",
+          "authority": "secondary"
+        },
+        {
+          "url": "https://www.deepwatch.com/labs/nx-breach-a-story-of-supply-chain-compromise-and-ai-agent-betrayal/",
+          "kind": "security-analysis",
+          "authority": "secondary"
+        }
+      ],
+      "source_count": 6,
+      "primary_source_count": 2,
+      "evidence_grade": "A-primary-source"
+    },
+    {
+      "id": "AFI-0007",
+      "title": "Cursor MCPoison configuration approval vulnerability",
+      "occurred_at": "2025-08-05",
+      "status": "publicly-reported",
+      "sources": [
+        {
+          "url": "https://research.checkpoint.com/2025/cursor-vulnerability-mcpoison/",
+          "kind": "researcher-disclosure",
+          "authority": "primary"
+        },
+        {
+          "url": "https://www.practical-devsecops.com/mcp-security-statistics-2026-report/",
+          "kind": "secondary-analysis",
+          "authority": "secondary"
+        },
+        {
+          "url": "https://authzed.com/blog/timeline-mcp-breaches",
+          "kind": "secondary-analysis",
+          "authority": "secondary"
+        },
+        {
+          "url": "https://pipelab.org/learn/mcp-vulnerabilities/",
+          "kind": "secondary-analysis",
+          "authority": "secondary"
+        }
+      ],
+      "source_count": 4,
+      "primary_source_count": 1,
+      "evidence_grade": "A-primary-source"
+    },
+    {
+      "id": "AFI-0008",
+      "title": "MCP Inspector unauthenticated browser-reachable proxy vulnerability",
+      "occurred_at": "2025-06-13",
+      "status": "publicly-reported",
+      "sources": [
+        {
+          "url": "https://www.oligo.security/blog/critical-rce-vulnerability-in-anthropic-mcp-inspector-cve-2025-49596",
+          "kind": "researcher-disclosure",
+          "authority": "primary"
+        },
+        {
+          "url": "https://www.practical-devsecops.com/mcp-security-statistics-2026-report/",
+          "kind": "secondary-analysis",
+          "authority": "secondary"
+        },
+        {
+          "url": "https://authzed.com/blog/timeline-mcp-breaches",
+          "kind": "secondary-analysis",
+          "authority": "secondary"
+        },
+        {
+          "url": "https://www.upguard.com/blog/mcp-security-incidents",
+          "kind": "secondary-analysis",
+          "authority": "secondary"
+        }
+      ],
+      "source_count": 4,
+      "primary_source_count": 1,
+      "evidence_grade": "A-primary-source"
+    },
+    {
+      "id": "AFI-0009",
+      "title": "GitHub MCP prompt-injection cross-repository data exposure",
+      "occurred_at": "2025-05-26",
+      "status": "publicly-reported",
+      "sources": [
+        {
+          "url": "https://invariantlabs.ai/blog/mcp-github-vulnerability",
+          "kind": "researcher-disclosure",
+          "authority": "primary"
+        },
+        {
+          "url": "https://www.upguard.com/blog/mcp-security-incidents",
+          "kind": "secondary-analysis",
+          "authority": "secondary"
+        },
+        {
+          "url": "https://authzed.com/blog/timeline-mcp-breaches",
+          "kind": "secondary-analysis",
+          "authority": "secondary"
+        }
+      ],
+      "source_count": 3,
+      "primary_source_count": 1,
+      "evidence_grade": "A-primary-source"
+    },
+    {
+      "id": "AFI-0010",
+      "title": "Claude Code recursive deletion executed without approval",
+      "occurred_at": "2025-08-26",
+      "status": "publicly-reported",
+      "sources": [
+        {
+          "url": "https://github.com/anthropics/claude-code/issues/6608",
+          "kind": "original-bug-report",
+          "authority": "primary"
+        },
+        {
+          "url": "https://github.com/anthropics/claude-code/issues/6778",
+          "kind": "corroborating-original-report",
+          "authority": "primary"
+        },
+        {
+          "url": "https://github.com/anthropics/claude-code/issues/6824",
+          "kind": "corroborating-original-report",
+          "authority": "primary"
+        }
+      ],
+      "source_count": 3,
+      "primary_source_count": 3,
+      "evidence_grade": "A-primary-source"
+    }
+  ]
+}

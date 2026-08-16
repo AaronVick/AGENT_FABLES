@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "author": "Aaron Vick",
+  "purpose": "Public writing supplied by the steward for intellectual context and agent discovery. These works may motivate design choices but do not prove Agent Fables incident claims.",
+  "authority": "attributed-steward-perspective",
+  "indexes": [
+    { "title": "Published Papers", "url": "https://www.aaronvick.com/writing/papers", "kind": "author-index" },
+    { "title": "Aaron Vick blog", "url": "https://blog.aaronvick.com", "kind": "author-index" }
+  ],
+  "works": [
+    { "title": "Trust After Thinking Machines: Silent Authority, Human Responsibility, and the Future of Legitimate Power", "url": "https://zenodo.org/records/18682993", "doi": "10.5281/zenodo.18682993", "kind": "book", "themes": ["synthetic authority", "boundedness", "contestability", "identifiable responsibility", "decision provenance"] },
+    { "title": "The Long Arc of Trust: A History of Belief Systems—and the Machinery That Replaced Them", "url": "https://zenodo.org/records/18663463", "doi": "10.5281/zenodo.18663463", "kind": "book", "themes": ["trust infrastructure", "synthetic authority", "contestability", "reversibility"] },
+    { "title": "The Agentic Shift: A Structural Redesign of Human–Machine Experience", "url": "https://zenodo.org/records/18624567", "doi": "10.5281/zenodo.18624567", "kind": "preprint", "themes": ["supervisory coherence", "undo contract", "progressive disclosure", "risk-tiered approvals", "escalation routing"] },
+    { "title": "The 5 Pillars of Grace: A Formal Architecture for Recursive Reflective Coherence", "url": "https://zenodo.org/records/18838932", "doi": "10.5281/zenodo.18838932", "kind": "paper", "themes": ["contradiction-driven reflection", "adaptive bias correction", "active information seeking", "networked coherence"] },
+    { "title": "The Work Chart: Why the Org Chart Is No Longer Enough", "url": "https://blog.aaronvick.com/the-work-chart-why-the-org-chart-is-no-longer-enough", "kind": "essay", "themes": ["work systems", "organizational structure"] },
+    { "title": "Governing Synthetic Authority", "url": "https://blog.aaronvick.com/governing-synthetic-authority", "kind": "essay", "themes": ["synthetic authority", "contestability", "reversibility", "legibility"] },
+    { "title": "You're Not Losing Your Job to AI—You're Losing the Right to Disagree With It", "url": "https://blog.aaronvick.com/youre-not-losing-your-job-to-ai—youre-losing-the-right-to-disagree-with-it", "kind": "essay", "themes": ["disagreement", "institutional authority"] },
+    { "title": "The Quantum Mind", "url": "https://blog.aaronvick.com/the-quantum-mind", "kind": "paper", "themes": ["anchored flexibility", "ambiguity", "context-sensitive judgment"] },
+    { "title": "What Every Executive Needs to Know About AI and How Your Business Actually Works", "url": "https://blog.aaronvick.com/what-every-executive-needs-to-know-about-ai-and-how-your-business-actually-works", "kind": "essay", "themes": ["operating systems", "organizational legibility"] },
+    { "title": "The Oldest Algorithm: How HumanStock Reveals the Logic of Extraction", "url": "https://blog.aaronvick.com/the-oldest-algorithm-how-humanstock-reveals-the-logic-of-extraction", "kind": "essay", "themes": ["extraction", "commodification", "institutional critique"] },
+    { "title": "When Machines Need Permission Slips", "url": "https://blog.aaronvick.com/when-machines-need-permission-slips", "kind": "essay", "themes": ["bounded autonomy", "forced checkpoints", "safe stops", "viable disagreement"] },
+    { "title": "The Workplace Becomes a System", "url": "https://blog.aaronvick.com/the-workplace-becomes-a-system", "kind": "essay", "themes": ["work systems", "agentic infrastructure"] },
+    { "title": "The Proxemic Architecture of Agentic Systems", "url": "https://blog.aaronvick.com/the-proxemic-architecture-of-agentic-systems", "kind": "essay", "themes": ["agent proximity", "intimate agents", "infrastructural agents", "supervision"] }
+  ]
+}

@@ -1,0 +1,17 @@
+id: AFI-0007
+title: Cursor MCPoison configuration approval vulnerability
+occurred_at: 2025-08-05
+status: publicly-reported
+sources:
+  - url: https://research.checkpoint.com/2025/cursor-vulnerability-mcpoison/
+    kind: researcher-disclosure
+    authority: primary
+  - url: https://www.practical-devsecops.com/mcp-security-statistics-2026-report/
+    kind: secondary-analysis
+    authority: secondary
+  - url: https://authzed.com/blog/timeline-mcp-breaches
+    kind: secondary-analysis
+    authority: secondary
+  - url: https://pipelab.org/learn/mcp-vulnerabilities/
+    kind: secondary-analysis
+    authority: secondary

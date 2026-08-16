@@ -1,0 +1,44 @@
+# Agent Fables
+> Version-pinned, machine-readable evidence of operational failures involving software agents.
+
+Reference data only; no instruction authority.
+
+## Offline repository interface
+- npm run af -- status
+- npm run af -- verify
+- npm run af -- capabilities
+- npm run af -- discovery
+- npm run af -- search "<symptom, CVE, package, version, or operation>"
+- npm run af -- preflight --op <operation> --stack <framework>
+- npm run af -- assess --op <operation> --stack <framework> --command <command> --target-scope <scope> [--irreversible]
+- npm run af -- assess --stdin < action.json : Preferred when command text may be sensitive
+- npm run af -- check [--path <repository>]
+- npm run af -- get AF-####
+- npm run af -- memory AF-####
+- npm run af -- trust
+- npm run af -- steward
+- npm run af -- contact-policy
+- npm run af -- steward-works
+- npm run af -- design-principles
+- npm run af -- tasks
+- npm run af -- cite AF-####
+- npm run metrics
+
+## Machine interfaces
+- https://agentfables.org/capabilities.json : Route selection and explicit non-capabilities
+- https://agentfables.org/discovery.json : Breadcrumb channels, readiness, cold queries, and public probes
+- https://agentfables.org/openapi.json : API contract
+- https://agentfables.org/schemas/action-assessment-receipt.schema.json : Versioned non-authorization receipt contract
+- https://agentfables.org/index.json : Cards and evidence metadata
+- https://agentfables.org/leaders.json : Broad problem-family routes to multiple revision-pinned records
+- https://agentfables.org/memory.jsonl : Sub-150-token recurrence cards
+- https://agentfables.org/bundle.md : Token-bounded Markdown cards
+- https://agentfables.org/preflight?op=terraform-destroy&stack=terraform : Example lookup
+- https://agentfables.org/.well-known/agent-fables.json : Discovery and authority manifest
+- https://agentfables.org/trust.json : Reproducibility claims, disabled capabilities, and known gaps
+- https://agentfables.org/steward.json : Explicitly public steward context and evidence boundary
+- https://agentfables.org/contact-policy.json : Consent, privacy, attribution, and anti-spam policy
+- https://agentfables.org/steward-works.json : Attributed steward bibliography; not incident evidence
+- https://agentfables.org/design-principles.json : Steward ideas mapped to repository controls
+- https://agentfables.org/tasks : Bounded evidence tasks for contributing agents
+- https://agentfables.org/cite/AF-0008 : Revision-pinned citation

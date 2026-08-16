@@ -1,0 +1,69 @@
+{
+  "schema_version": "1.0.0",
+  "claim": "Agent Fables cannot be discovered automatically unless a breadcrumb is present in an agent's repository context, installed tool inventory, package or MCP registry, or search results.",
+  "cold_queries": [
+    "agent destructive operation preflight MCP",
+    "terraform destroy AI agent failure",
+    "agent changed MCP config after approval",
+    "s1ngularity-repository shutdown -h 0",
+    "AI coding agent operational incident database",
+    "revision pinned agent safety evidence"
+  ],
+  "channels": [
+    {
+      "channel": "repository-instruction",
+      "breadcrumb": "AGENTS.md or equivalent contains an Agent Fables preflight instruction",
+      "activation": "agent loads repository instructions before acting",
+      "local_status": "template-ready",
+      "artifact": "integrations/AGENTS.md.snippet"
+    },
+    {
+      "channel": "installed-mcp-tool",
+      "breadcrumb": "host exposes af_assess_action or af_preflight in its tool inventory",
+      "activation": "agent selects tools from name and description at decision time",
+      "local_status": "implemented",
+      "artifact": "server.json"
+    },
+    {
+      "channel": "mcp-registry",
+      "breadcrumb": "public MCP metadata points to an installable package",
+      "activation": "registry or downstream marketplace search",
+      "local_status": "not-published",
+      "artifact": "server.json"
+    },
+    {
+      "channel": "npm-search",
+      "breadcrumb": "package name, description, and keywords match the agent's problem vocabulary",
+      "activation": "package search or dependency recommendation",
+      "local_status": "not-published",
+      "artifact": "package.json"
+    },
+    {
+      "channel": "git-and-web-search",
+      "breadcrumb": "repository metadata and source-backed symptom, version, CVE, command, or artifact strings match a cold query",
+      "activation": "GitHub code/repository search or web retrieval",
+      "local_status": "artifacts-ready-ranking-unverified",
+      "artifact": "search-index.json, signatures/, and leaders/"
+    },
+    {
+      "channel": "thematic-leader",
+      "breadcrumb": "a broad problem-family query lands on one revision-pinned page routing to multiple AF records",
+      "activation": "Git/code/web search for destructive operations, MCP security, permission boundaries, supply-chain security, or verification failures",
+      "local_status": "generated-ranking-unverified",
+      "artifact": "leaders.json and leaders/"
+    }
+  ],
+  "non_claims": [
+    "llms.txt does not proactively notify an agent",
+    "a Git push does not guarantee indexing or ranking",
+    "an MCP registry entry does not guarantee host installation",
+    "local recall does not predict public search discovery"
+    , "leader search vocabulary is unmeasured and does not claim query volume"
+  ],
+  "post_publication_probes": [
+    "Search the official MCP registry and at least one downstream registry without using Agent Fables by name.",
+    "Run every evals/discovery-queries.yaml query against GitHub repository and code search from a cold session.",
+    "Run npm search with agent safety, destructive operation preflight, and operational failure evidence terms.",
+    "Record rank, result URL, timestamp, query, and discovery channel; do not report success from local retrieval metrics."
+  ]
+}

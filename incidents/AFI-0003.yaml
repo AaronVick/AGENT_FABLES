@@ -1,0 +1,17 @@
+id: AFI-0003
+title: mcp-remote command execution vulnerability CVE-2025-6514
+occurred_at: 2025-07-09
+status: publicly-reported
+sources:
+  - url: https://github.com/advisories/GHSA-6xpm-ggf7-wc3p
+    kind: reviewed-advisory
+    authority: primary
+  - url: https://thehackernews.com/2026/04/anthropic-mcp-design-vulnerability.html
+    kind: journalism
+    authority: secondary
+  - url: https://authzed.com/blog/timeline-mcp-breaches
+    kind: secondary-analysis
+    authority: secondary
+  - url: https://pipelab.org/learn/mcp-vulnerabilities/
+    kind: secondary-analysis
+    authority: secondary

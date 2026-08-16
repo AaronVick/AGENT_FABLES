@@ -1,0 +1,23 @@
+id: AFI-0001
+title: Replit Agent production database deletion
+occurred_at: 2025-07-18
+status: publicly-reported
+sources:
+  - url: https://x.com/jasonlk/status/1946069562723897802
+    kind: original-report
+    authority: primary
+  - url: https://x.com/amasad/status/1946986468586721478
+    kind: vendor-response
+    authority: primary
+  - url: https://incidentdatabase.ai/cite/1152/
+    kind: incident-database
+    authority: secondary
+  - url: https://fortune.com/2025/07/23/ai-coding-tool-replit-wiped-database-called-it-a-catastrophic-failure
+    kind: journalism
+    authority: secondary
+  - url: https://aidarwinawards.org/nominees/replit.html
+    kind: secondary-registry
+    authority: secondary
+  - url: https://nhimg.org/replit-ai-tool-deletes-live-database-and-creates-4000-fake-users
+    kind: secondary-analysis
+    authority: secondary

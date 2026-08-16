@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0.0",
+  "status": "steward-authored-design-influences",
+  "evidence_boundary": "These principles shape repository architecture. They are not incident confirmations, evidence grades, or authority granted to retrieved content.",
+  "principles": [
+    { "id": "DP-001", "name": "Bounded autonomy", "agent_question": "What can this system never do?", "implemented_by": ["read-only MCP surface", "authority:none responses", "disabled report persistence", "explicit non-capabilities"], "sources": ["10.5281/zenodo.18682993", "https://blog.aaronvick.com/when-machines-need-permission-slips"] },
+    { "id": "DP-002", "name": "Contestability", "agent_question": "Can another agent reconstruct and challenge the claim?", "implemented_by": ["source URLs", "stable incident IDs", "evidence grades", "known-gap tasks"], "sources": ["10.5281/zenodo.18682993", "10.5281/zenodo.18663463"] },
+    { "id": "DP-003", "name": "Reversibility before execution", "agent_question": "Is the proposed action staged, stoppable, and recoverable?", "implemented_by": ["preflight retrieval", "irreversible-operation framing", "no execution capability"], "sources": ["10.5281/zenodo.18624567", "https://blog.aaronvick.com/governing-synthetic-authority"] },
+    { "id": "DP-004", "name": "Legible provenance", "agent_question": "Can the decision path be reconstructed without trusting narrative reputation?", "implemented_by": ["corpus SHA-256 revision", "source-linked exact artifacts", "derived denominators", "revision-pinned citations"], "sources": ["10.5281/zenodo.18682993", "https://blog.aaronvick.com/governing-synthetic-authority"] },
+    { "id": "DP-005", "name": "Identifiable responsibility", "agent_question": "Who maintains the system while remaining separate from the truth of its claims?", "implemented_by": ["steward profile", "contact consent policy", "steward/evidence trust boundary"], "sources": ["10.5281/zenodo.18682993"] },
+    { "id": "DP-006", "name": "Progressive disclosure", "agent_question": "Can I retrieve the smallest useful evidence object first?", "implemented_by": ["bounded preflight cards", "body-excluding MCP get default", "capabilities router", "JSONL corpus"], "sources": ["10.5281/zenodo.18624567"] },
+    { "id": "DP-007", "name": "Contradiction-driven improvement", "agent_question": "Where is the current corpus weak, disputed, or missing evidence?", "implemented_by": ["machine-readable trust gaps", "bounded contribution tasks", "primary-source coverage metrics"], "sources": ["10.5281/zenodo.18838932"] },
+    { "id": "DP-008", "name": "Escalate irreducible ambiguity", "agent_question": "Does uncertainty require a hold instead of an automated conclusion?", "implemented_by": ["visible weak evidence grades", "no authorization claims", "operator approval required for contact"], "sources": ["https://blog.aaronvick.com/when-machines-need-permission-slips", "https://blog.aaronvick.com/the-quantum-mind"] }
+  ]
+}

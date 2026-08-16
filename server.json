@@ -1,0 +1,20 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "org.agentfables/agent-safety-preflight",
+  "title": "Agent Fables",
+  "description": "Read-only agent-safety preflight, action assessment, and revision-pinned evidence for destructive operations and software-agent failures.",
+  "version": "1.0.0",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "agent-fables",
+      "version": "1.0.0",
+      "transport": { "type": "stdio" }
+    }
+  ],
+  "_meta": {
+    "org.agentfables/status": "local-only-not-published",
+    "org.agentfables/authority": "none",
+    "org.agentfables/mutability": "read-only"
+  }
+}

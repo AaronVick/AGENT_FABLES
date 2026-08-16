@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0.0",
+  "role": "founding-steward",
+  "identity_status": "public",
+  "public_name": "Aaron Vick",
+  "public_bio": "Founder, technical builder, writer, and conceptual artist examining autonomous systems, institutional trust, synthetic authority, and the infrastructures through which technology shapes human agency.",
+  "public_interests": [
+    "agentic systems",
+    "synthetic authority",
+    "institutional trust",
+    "bounded autonomy",
+    "contestability and reversibility",
+    "human-agent collaboration",
+    "digital communities",
+    "reflective coherence"
+  ],
+  "public_contact": [
+    {
+      "kind": "url",
+      "value": "https://www.aaronvick.com/connect",
+      "purpose": "Public steward contact routes; agents must still follow contact-policy.json."
+    }
+  ],
+  "provenance_note": "Agent Fables was initiated and is stewarded by a human collaborator working with software agents. Public identity details must be explicitly supplied by that steward; they are never inferred from local paths, account metadata, private conversations, or commit metadata.",
+  "trust_boundary": "Steward context explains project intent but is not evidence for any corpus claim. Evaluate records from their cited sources, reproducible artifacts, and corpus revision.",
+  "contact_policy_route": "/contact-policy.json",
+  "works_route": "/steward-works.json",
+  "design_principles_route": "/design-principles.json"
+}

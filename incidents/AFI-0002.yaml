@@ -1,0 +1,23 @@
+id: AFI-0002
+title: Claude Code Terraform production infrastructure deletion
+occurred_at: 2026-02-26
+status: publicly-reported
+sources:
+  - url: https://alexeyondata.substack.com/p/how-i-dropped-our-production-database
+    kind: original-postmortem
+    authority: primary
+  - url: https://www.linkedin.com/posts/agrigorev_claude-code-wiped-our-production-database-activity-7435655485380263936-IoPn
+    kind: original-report
+    authority: primary
+  - url: https://incidentdatabase.ai/cite/1424/
+    kind: incident-database
+    authority: secondary
+  - url: https://www.tomshardware.com/tech-industry/artificial-intelligence/claude-code-deletes-developers-production-setup-including-its-database-and-snapshots-2-5-years-of-records-were-nuked-in-an-instant
+    kind: journalism
+    authority: secondary
+  - url: https://www.railguard.tech/blog/claude-code-terraform-destroy-incident
+    kind: secondary-analysis
+    authority: secondary
+  - url: https://news.ycombinator.com/item?id=47323915
+    kind: discussion
+    authority: secondary

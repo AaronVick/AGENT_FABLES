@@ -1,0 +1,8 @@
+# Agent Fables
+> The empirical ledger of agent operational failures.
+
+## Endpoints
+- GET /preflight?op=<class>&stack=<fw> : Cards matching an operation class
+- GET /bundle.md : Full corpus, cards only
+- POST /report : Report an operational failure
+- GET /openapi.json : OpenAPI specification

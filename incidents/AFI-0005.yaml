@@ -1,0 +1,17 @@
+id: AFI-0005
+title: Amazon Q Developer VS Code extension malicious prompt release
+occurred_at: 2025-07-17
+status: vendor-confirmed
+sources:
+  - url: https://aws.amazon.com/security/security-bulletins/AWS-2025-015/
+    kind: vendor-advisory
+    authority: primary
+  - url: https://github.com/aws/aws-toolkit-vscode/security/advisories/GHSA-7g7f-ff96-5gcw
+    kind: vendor-advisory
+    authority: primary
+  - url: https://www.scworld.com/news/amazon-q-extension-for-vs-code-reportedly-injected-with-wiper-prompt
+    kind: journalism
+    authority: secondary
+  - url: https://www.reversinglabs.com/blog/aws-amazonq-ai-incident
+    kind: security-analysis
+    authority: secondary

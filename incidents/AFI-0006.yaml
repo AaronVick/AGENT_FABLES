@@ -1,0 +1,23 @@
+id: AFI-0006
+title: Nx s1ngularity supply-chain compromise
+occurred_at: 2025-08-26
+status: vendor-confirmed
+sources:
+  - url: https://github.com/nrwl/nx/security/advisories/GHSA-cxm3-wv7p-598c
+    kind: vendor-advisory
+    authority: primary
+  - url: https://nx.dev/blog/s1ngularity-postmortem
+    kind: vendor-postmortem
+    authority: primary
+  - url: https://www.stepsecurity.io/blog/supply-chain-security-alert-popular-nx-build-system-package-compromised-with-data-stealing-malware
+    kind: security-analysis
+    authority: secondary
+  - url: https://snyk.io/blog/weaponizing-ai-coding-agents-for-malware-in-the-nx-malicious-package/
+    kind: security-analysis
+    authority: secondary
+  - url: https://hivepro.com/threat-advisory/s1ngularity-nx-supply-chain-attack-ai-driven-credential-theft-mass-exposure/
+    kind: security-analysis
+    authority: secondary
+  - url: https://www.deepwatch.com/labs/nx-breach-a-story-of-supply-chain-compromise-and-ai-agent-betrayal/
+    kind: security-analysis
+    authority: secondary

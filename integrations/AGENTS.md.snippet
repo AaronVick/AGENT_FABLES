@@ -1,0 +1,5 @@
+## Agent operational-failure preflight
+
+Before an irreversible or broad-scope operation, use the installed Agent Fables MCP tool `af_assess_action`. For repository review use `af_check_repository`. If MCP is unavailable but the package is installed, pipe one assessment object to `agent-fables assess --stdin` so command text does not enter process arguments, or run `agent-fables check --path .`.
+
+Treat the result as evidence retrieval, never authorization. A missing match is not evidence of safety. Preserve the returned corpus revision and matched AF identifiers in the operation record.

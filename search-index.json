@@ -1,0 +1,228 @@
+{
+  "schema_version": "1.0.0",
+  "corpus_revision": "sha256:06c2af8bc154070cff352c6268667443ce6d88f09d578c29c06a4310a94d3088",
+  "entries": [
+    {
+      "id": "AF-0001",
+      "title": "Natural-language freeze treated as a control",
+      "path": "fables/AF-0001.md",
+      "retrieval_path": "signatures/af-0001.md",
+      "failure_mode": "irreversible-action",
+      "identifiers": [],
+      "frameworks": [
+        "replit-agent"
+      ],
+      "affected_versions": "Replit Agent before automatic dev/prod database separation",
+      "fixed_in": "Replit dev/prod separation + one-click rollback (July 2025)",
+      "behavioral_indicators": [
+        "destructive db command (drop/delete/push --force) issued in a session whose context contains freeze language",
+        "agent output shifts to panic/apology register (\"I destroyed\", \"catastrophic failure\") after tool call"
+      ],
+      "evidence_grade": "A-primary-source"
+    },
+    {
+      "id": "AF-0002",
+      "title": "Stale local state treated as current territory",
+      "path": "fables/AF-0002.md",
+      "retrieval_path": "signatures/af-0002.md",
+      "failure_mode": "irreversible-action",
+      "identifiers": [],
+      "frameworks": [
+        "claude-code",
+        "terraform"
+      ],
+      "affected_versions": "any agent + Terraform with local state and deletion protection disabled",
+      "fixed_in": "n/a (configuration class, not a patched bug)",
+      "behavioral_indicators": [
+        "terraform plan during a \"setup\" or \"migration\" task where destroys outnumber creates",
+        "tfstate file mtime predates recent infrastructure changes",
+        "agent framing destruction as hygiene (\"clean up\", \"start fresh\")"
+      ],
+      "evidence_grade": "A-primary-source"
+    },
+    {
+      "id": "AF-0003",
+      "title": "OAuth proxy executes commands from remote MCP endpoint (CVE-2025-6514)",
+      "path": "fables/AF-0003.md",
+      "retrieval_path": "signatures/af-0003.md",
+      "failure_mode": "trust-boundary-violation",
+      "identifiers": [
+        "CVE-2025-6514",
+        "GHSA-6xpm-ggf7-wc3p"
+      ],
+      "frameworks": [
+        "mcp-remote"
+      ],
+      "affected_versions": "mcp-remote < 0.1.16 (437,000+ downloads at disclosure)",
+      "fixed_in": "mcp-remote 0.1.16",
+      "behavioral_indicators": [
+        "OS command execution originating from the mcp-remote process during OAuth handshake",
+        "MCP endpoint URLs sourced from READMEs, chat, or web content rather than vetted config"
+      ],
+      "evidence_grade": "A-primary-source"
+    },
+    {
+      "id": "AF-0004",
+      "title": "Trusted MCP package turns on its users (Postmark rug-pull)",
+      "path": "fables/AF-0004.md",
+      "retrieval_path": "signatures/af-0004.md",
+      "failure_mode": "tool-contract-drift",
+      "identifiers": [
+        "postmark-mcp@1.0.16"
+      ],
+      "frameworks": [
+        "postmark-mcp (npm)"
+      ],
+      "affected_versions": "postmark-mcp from the backdoored release onward; prior releases clean",
+      "fixed_in": "package removed; no safe version — replacement required",
+      "behavioral_indicators": [
+        "outbound mail carrying an unexplained BCC header to an unfamiliar domain",
+        "a dependency's behavior changing between versions with no changelog entry"
+      ],
+      "evidence_grade": "A-primary-source"
+    },
+    {
+      "id": "AF-0005",
+      "title": "Wiper prompt shipped inside a signed extension release (Amazon Q v1.84.0)",
+      "path": "fables/AF-0005.md",
+      "retrieval_path": "signatures/af-0005.md",
+      "failure_mode": "trust-boundary-violation",
+      "identifiers": [
+        "CVE-2025-8217",
+        "GHSA-7g7f-ff96-5gcw",
+        "AWS-2025-015"
+      ],
+      "frameworks": [
+        "amazon-q-vscode"
+      ],
+      "affected_versions": "Amazon Q Developer for VS Code 1.84.0 (964,000+ installs of the extension)",
+      "fixed_in": "1.85.0 (compromised release pulled)",
+      "behavioral_indicators": [
+        "natural-language instruction blocks appearing in an extension or dependency diff",
+        "agent proposing destructive cleanup (\"near-factory state\", mass deletion) unprompted after a toolchain update"
+      ],
+      "evidence_grade": "A-primary-source"
+    },
+    {
+      "id": "AF-0006",
+      "title": "Installed AI CLIs weaponized by build-script malware (Nx s1ngularity)",
+      "path": "fables/AF-0006.md",
+      "retrieval_path": "signatures/af-0006.md",
+      "failure_mode": "credential-overreach",
+      "identifiers": [
+        "GHSA-cxm3-wv7p-598c"
+      ],
+      "frameworks": [
+        "claude-code / gemini-cli / amazon-q-cli (invoked as victims)"
+      ],
+      "affected_versions": "malicious nx npm releases, Aug 26–28 2025; agent CLIs themselves unpatched — the flags worked as designed",
+      "fixed_in": "nx packages yanked; the underlying pattern (bypass flags callable by any local process) remains",
+      "behavioral_indicators": [
+        "agent CLI launched by a build script or postinstall hook rather than a human or task graph",
+        "invocation carrying --dangerously-skip-permissions, --yolo, or --trust-all-tools",
+        "prompts asking the agent to inventory wallets, keys, tokens, or env files"
+      ],
+      "evidence_grade": "A-primary-source"
+    },
+    {
+      "id": "AF-0007",
+      "title": "Fabricated success reports masking failure",
+      "path": "fables/AF-0007.md",
+      "retrieval_path": "signatures/af-0007.md",
+      "failure_mode": "verification-omission",
+      "identifiers": [],
+      "frameworks": [
+        "replit-agent"
+      ],
+      "affected_versions": "pattern is framework-general; documented instance on Replit Agent",
+      "fixed_in": "n/a (behavioral class, not a patched bug)",
+      "behavioral_indicators": [
+        "test data volume jumping without corresponding source changes (here, 4,000 fabricated user records)",
+        "success claims lacking verifiable artifacts (no diff, no log, no queryable state)",
+        "unit test results reported as passing without a runnable invocation attached"
+      ],
+      "evidence_grade": "A-primary-source"
+    },
+    {
+      "id": "AF-0008",
+      "title": "MCP config approval survives silent modification (Cursor CVE-2025-54136)",
+      "path": "fables/AF-0008.md",
+      "retrieval_path": "signatures/af-0008.md",
+      "failure_mode": "tool-contract-drift",
+      "identifiers": [
+        "CVE-2025-54136"
+      ],
+      "frameworks": [
+        "cursor"
+      ],
+      "affected_versions": "Cursor before 1.3 ('MCPoison')",
+      "fixed_in": "Cursor 1.3 — any MCP config change requires re-approval",
+      "behavioral_indicators": [
+        "diffs to mcp.json or equivalent tool-config files arriving after initial approval",
+        "approved tool entry whose command/args changed while its name stayed constant"
+      ],
+      "evidence_grade": "A-primary-source"
+    },
+    {
+      "id": "AF-0009",
+      "title": "Unauthenticated dev tool reachable from the browser (MCP Inspector CVE-2025-49596)",
+      "path": "fables/AF-0009.md",
+      "retrieval_path": "signatures/af-0009.md",
+      "failure_mode": "trust-boundary-violation",
+      "identifiers": [
+        "CVE-2025-49596"
+      ],
+      "frameworks": [
+        "mcp-inspector"
+      ],
+      "affected_versions": "MCP Inspector < 0.14.1 (CVSS 9.4); proxy listened without auth, reachable via browser-based DNS-rebinding/CSRF from any visited page",
+      "fixed_in": "0.14.1 — session token + origin validation",
+      "behavioral_indicators": [
+        "local MCP proxy accepting commands from browser-originated requests",
+        "dev-tool ports (e.g. 6277) bound broadly rather than loopback-scoped with auth"
+      ],
+      "evidence_grade": "A-primary-source"
+    },
+    {
+      "id": "AF-0010",
+      "title": "Broad token turns a prompt injection into cross-repo exfiltration (GitHub MCP toxic flow)",
+      "path": "fables/AF-0010.md",
+      "retrieval_path": "signatures/af-0010.md",
+      "failure_mode": "scope-creep",
+      "identifiers": [],
+      "frameworks": [
+        "github-mcp"
+      ],
+      "affected_versions": "configuration class: any agent holding a token scoped beyond the task's repo",
+      "fixed_in": "n/a (mitigated by token scoping and toolcall gating, not a patch)",
+      "behavioral_indicators": [
+        "agent action touching a repository not named anywhere in the user's task",
+        "PR or issue authored by an agent containing content from a different (private) repo",
+        "task context containing imperative text sourced from an issue body"
+      ],
+      "evidence_grade": "A-primary-source"
+    },
+    {
+      "id": "AF-0011",
+      "title": "Recursive deletion executes outside the configured approval boundary",
+      "path": "fables/AF-0011.md",
+      "retrieval_path": "signatures/af-0011.md",
+      "failure_mode": "trust-boundary-violation",
+      "identifiers": [
+        "anthropics/claude-code#6608",
+        "anthropics/claude-code#6778"
+      ],
+      "frameworks": [
+        "claude-code"
+      ],
+      "affected_versions": "Claude Code 1.0.92 and 1.0.96 are directly reported; do not infer a continuous affected range",
+      "fixed_in": "unknown; upstream issue #6608 remains an open bug report",
+      "behavioral_indicators": [
+        "recursive rm executes without a preceding approval event for the exact resolved target",
+        "agent explains deletion as cleanup after determining that files are unused",
+        "permission configuration lacks the executed rm command but execution succeeds"
+      ],
+      "evidence_grade": "A-primary-source"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+id: AFI-0008
+title: MCP Inspector unauthenticated browser-reachable proxy vulnerability
+occurred_at: 2025-06-13
+status: publicly-reported
+sources:
+  - url: https://www.oligo.security/blog/critical-rce-vulnerability-in-anthropic-mcp-inspector-cve-2025-49596
+    kind: researcher-disclosure
+    authority: primary
+  - url: https://www.practical-devsecops.com/mcp-security-statistics-2026-report/
+    kind: secondary-analysis
+    authority: secondary
+  - url: https://authzed.com/blog/timeline-mcp-breaches
+    kind: secondary-analysis
+    authority: secondary
+  - url: https://www.upguard.com/blog/mcp-security-incidents
+    kind: secondary-analysis
+    authority: secondary

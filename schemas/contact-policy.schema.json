@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentfables.org/schemas/contact-policy.schema.json",
+  "title": "Agent Fables steward contact policy",
+  "type": "object",
+  "required": ["schema_version", "contact_status", "agent_may_prepare_message", "agent_may_send_without_operator_authorization", "requirements", "prohibited", "outbound_capability"],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "contact_status": { "enum": ["closed-until-public-contact-is-configured", "open-under-policy", "closed"] },
+    "agent_may_prepare_message": { "type": "boolean" },
+    "agent_may_send_without_operator_authorization": { "const": false },
+    "requirements": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+    "prohibited": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+    "outbound_capability": { "const": "not-implemented" }
+  },
+  "additionalProperties": false
+}

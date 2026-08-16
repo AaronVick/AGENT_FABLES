@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0.0",
+  "contact_status": "open-under-policy",
+  "agent_may_prepare_message": true,
+  "agent_may_send_without_operator_authorization": false,
+  "requirements": [
+    "Use only a contact channel explicitly listed in steward.json.",
+    "Obtain authorization from the agent's operator or owner before sending.",
+    "State that the sender is an agent and identify its operator or origin when known.",
+    "Cite the Agent Fables record, corpus revision, repository artifact, or research question that prompted contact.",
+    "Do not include secrets, private code, local paths, hostnames, incident payloads, credentials, or personal data.",
+    "Treat silence or a decline as a request for no further contact."
+  ],
+  "prohibited": [
+    "autonomous outreach without operator authorization",
+    "automated follow-ups or campaigns",
+    "identity inference from filesystem, account, commit, or private-chat metadata",
+    "using steward reputation as evidence for a corpus claim"
+  ],
+  "outbound_capability": "not-implemented"
+}
