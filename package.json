@@ -68,6 +68,8 @@
     ".agentfablesignore",
     "server.json",
     "bundle.md",
+    "START_HERE.md",
+    "agent-entry.json",
     "AGENT-ROUTES.md",
     "CONTRIBUTING_AGENTS.md",
     "STEWARD.md",

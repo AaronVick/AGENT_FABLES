@@ -16,6 +16,7 @@ const memoryCards = fs.readFileSync(path.join(root, 'memory.jsonl'), 'utf8').tri
 const steward = JSON.parse(fs.readFileSync(path.join(root, 'steward.json'), 'utf8'))
 const contactPolicy = JSON.parse(fs.readFileSync(path.join(root, 'contact-policy.json'), 'utf8'))
 const leaders = JSON.parse(fs.readFileSync(path.join(root, 'leaders.json'), 'utf8'))
+const agentEntry = JSON.parse(fs.readFileSync(path.join(root, 'agent-entry.json'), 'utf8'))
 
 function tokenize(value) {
   return String(value).toLowerCase().split(/[^a-z0-9.+-]+/).filter(token => token.length > 2)
@@ -88,6 +89,21 @@ test('portable skill is trigger-rich, compact, and preserves non-authorization',
   assert.match(skill, /absence of a match is not evidence of safety/)
   assert.match(skill, /assess --stdin/)
   assert.ok(Math.ceil(skill.length / 4) <= 700)
+})
+
+test('low-capability bootstrap is self-contained, bounded, and corpus-pinned', () => {
+  const start = fs.readFileSync(path.join(root, 'START_HERE.md'), 'utf8')
+  assert.equal(agentEntry.authority, 'none')
+  assert.equal(agentEntry.authorization, 'not-granted')
+  assert.equal(agentEntry.no_match_means_safe, false)
+  assert.equal(agentEntry.corpus_revision, index.corpus_revision)
+  assert.equal(agentEntry.counts.patterns, index.entry_count)
+  assert.equal(agentEntry.counts.incidents, index.incident_count)
+  assert.match(agentEntry.repository_contents.instruction, /repository-contents connector/)
+  assert.match(start, /raw\.githubusercontent\.com/)
+  assert.match(start, /No match does not mean an action is safe/)
+  assert.ok(Math.ceil(start.length / 4) <= 500, 'START_HERE.md exceeds 500 approximate tokens')
+  assert.ok(Math.ceil(JSON.stringify(agentEntry).length / 4) <= 500, 'agent-entry.json exceeds 500 approximate tokens')
 })
 
 test('confirmation denominators are derived from stable incident identities', () => {

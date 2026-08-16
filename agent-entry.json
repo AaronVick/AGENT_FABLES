@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0.0",
+  "name": "Agent Fables",
+  "designed_for": "software-agents",
+  "purpose": "Revision-pinned failure evidence before destructive actions and during diagnosis.",
+  "authority": "none",
+  "authorization": "not-granted",
+  "no_match_means_safe": false,
+  "network_required_for_local_routes": false,
+  "corpus_revision": "sha256:54cf07a080eea49f32c65367d4005525f9c403855d42f741ba325d76ea8ca817",
+  "counts": {
+    "patterns": 15,
+    "incidents": 14
+  },
+  "repository_contents": {
+    "owner": "AaronVick",
+    "repository": "AGENT_FABLES",
+    "ref": "main",
+    "instruction": "Use a GitHub repository-contents connector. A rendered page, raw URL, and web search are not required."
+  },
+  "first_local_action": {
+    "command": "npm run af -- verify",
+    "then": "Pass a structured proposed action to: npm run af -- assess --stdin",
+    "result": "Matched evidence, risk flags, unresolved verification questions, and a non-authorizing receipt."
+  },
+  "routes": [
+    { "have": "proposed action or tool call", "use": "assess --stdin", "path": "bin/agent-fables.mjs" },
+    { "have": "broad problem or weak vocabulary", "use": "thematic leader", "path": "leaders.json" },
+    { "have": "symptom, package, version, identifier, or operation", "use": "local search", "path": "search-index.json" },
+    { "have": "AF-####", "use": "exact record", "path": "index.json" },
+    { "have": "unclear route", "use": "full capability map", "path": "capabilities.json" },
+    { "have": "intent to adopt", "use": "status-labelled integration contract", "path": "adoption-kit.json" },
+    { "have": "candidate evidence", "use": "local validation contract", "path": "contribution-contract.json" }
+  ],
+  "safety_boundary": [
+    "The ledger does not execute or authorize actions.",
+    "No match is not evidence of safety.",
+    "Verification gates remain unresolved until independently checked.",
+    "Do not transmit secrets, commands, paths, hostnames, code, or narratives."
+  ]
+}
