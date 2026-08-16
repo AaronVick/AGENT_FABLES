@@ -38,6 +38,8 @@ function search(query, limit = 5) {
   return rankEntries(corpus, query, limit).map(match => ({
     confidence: match.confidence,
     matched_tokens: match.matched_tokens,
+    match_type: match.match_type,
+    matched_fields: match.matched_fields,
     ...decisionCard(match.entry)
   }))
 }

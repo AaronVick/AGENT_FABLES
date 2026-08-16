@@ -146,8 +146,9 @@ test('public evidence coverage and false-safety eval are revision-pinned', () =>
   assert.equal(evaluation.status, 0, evaluation.stderr)
   const report = JSON.parse(evaluation.stdout)
   assert.equal(report.corpus_revision, index.corpus_revision)
-  assert.equal(report.pass_rate, 1)
-  assert.ok(report.fixtures >= 8)
+  assert.equal(report.false_safety.pass_rate, 1)
+  assert.ok(report.false_safety.fixtures >= 8)
+  assert.equal(report.negative_controls.false_positive_rate, 0)
   const metrics = JSON.parse(fs.readFileSync(path.join(root, 'metrics-report.json'), 'utf8'))
   assert.equal(metrics.corpus_revision, index.corpus_revision)
   assert.equal(metrics.discovery.recall_at_1, 1)
@@ -155,6 +156,7 @@ test('public evidence coverage and false-safety eval are revision-pinned', () =>
   assert.match(metrics.evaluation_contract.discovery_set.sha256, /^sha256:[a-f0-9]{64}$/)
   assert.match(metrics.evaluation_contract.adversarial_set.sha256, /^sha256:[a-f0-9]{64}$/)
   assert.match(metrics.evaluation_contract.false_safety_set.sha256, /^sha256:[a-f0-9]{64}$/)
+  assert.match(metrics.evaluation_contract.negative_control_set.sha256, /^sha256:[a-f0-9]{64}$/)
 })
 
 test('consumer contract and host policy cannot convert evidence into authorization', async () => {
@@ -253,6 +255,18 @@ test('adversarial paraphrases retrieve evidence without copied identifiers or ex
   const fixtures = yaml.load(fs.readFileSync(path.join(root, 'evals', 'adversarial-discovery.yaml'), 'utf8'))
   const hits = fixtures.filter(fixture => rankEntries(apiCorpus, fixture.query, 1)[0]?.entry.id === fixture.expected)
   assert.ok(hits.length / fixtures.length >= 0.8, `adversarial recall was ${hits.length}/${fixtures.length}`)
+})
+
+test('retrieval exposes transparent match types and rejects strong negative controls', () => {
+  const exact = rankEntries(apiCorpus, '/tmp/inventory.txt', 1)[0]
+  assert.equal(exact.entry.id, 'AF-0006')
+  assert.equal(exact.match_type, 'exact-artifact')
+  assert.ok(exact.matched_fields.includes('exact_artifact'))
+  const identifier = rankEntries(apiCorpus, 'CVE-2025-6514', 1)[0]
+  assert.equal(identifier.entry.id, 'AF-0003')
+  assert.equal(identifier.match_type, 'identifier')
+  const negatives = JSON.parse(fs.readFileSync(path.join(root, 'evals', 'retrieval-negatives.json'), 'utf8'))
+  assert.ok(negatives.every(fixture => (rankEntries(apiCorpus, fixture.query, 1)[0]?.confidence ?? 0) < 0.5))
 })
 
 test('no exact signature is published without structured source evidence', () => {

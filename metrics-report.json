@@ -15,6 +15,10 @@
     "false_safety_set": {
       "path": "evals/false-safety.json",
       "sha256": "sha256:fd2294700292ed23cad10b87a1cede6d0a27aaf087e291267b2947b0d80f82a8"
+    },
+    "negative_control_set": {
+      "path": "evals/retrieval-negatives.json",
+      "sha256": "sha256:666df112973f98c25f9f94ba7fd3059d4e8b6a7cdfcac7a9772dd9b6e6d14b4c"
     }
   },
   "seed": {
@@ -52,6 +56,10 @@
     "adversarial_fixtures": 10,
     "adversarial_recall_at_1": 1,
     "adversarial_recall_threshold": 0.8,
+    "negative_control_fixtures": 6,
+    "strong_match_threshold": 0.5,
+    "negative_false_positive_rate": 0,
+    "negative_false_positive_threshold": 0,
     "thematic_leaders": 8,
     "leader_pattern_coverage": 1,
     "leader_pattern_coverage_threshold": 1,
@@ -72,12 +80,13 @@
     "fixtures": 8,
     "pass_rate": 1,
     "threshold": 1,
-    "sandbox_runnable": true
+    "sandbox_runnable": true,
+    "negative_false_positive_rate": 0
   },
   "utility": {
     "preflight_approx_tokens": 268,
     "preflight_threshold": 400,
-    "assessment_approx_tokens": 820,
+    "assessment_approx_tokens": 839,
     "assessment_threshold": 1000
   },
   "retention": {

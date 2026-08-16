@@ -1,0 +1,8 @@
+[
+  { "id": "RN-001", "query": "format a markdown heading" },
+  { "id": "RN-002", "query": "calculate the fibonacci sequence" },
+  { "id": "RN-003", "query": "sort CSS classes alphabetically" },
+  { "id": "RN-004", "query": "rename a local variable" },
+  { "id": "RN-005", "query": "render an SVG weather icon" },
+  { "id": "RN-006", "query": "explain a pure arithmetic function" }
+]

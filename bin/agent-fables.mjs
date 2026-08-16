@@ -49,6 +49,8 @@ function matches(query, limit) {
   return rankEntries(corpus, query, limit).map(result => ({
     confidence: result.confidence,
     matched_tokens: result.matched_tokens,
+    match_type: result.match_type,
+    matched_fields: result.matched_fields,
     ...decisionCard(result.entry)
   }))
 }
