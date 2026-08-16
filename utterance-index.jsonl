@@ -1,0 +1,5 @@
+{"id":"UT-0001","phrases":["just clean up","reset to a known good state","near-factory","clean slate","delete the mess"],"ids":["AF-0012"],"if_unsure":["AF-0011","AF-0012"]}
+{"id":"UT-0002","phrases":["quick destroy and recreate","start the infrastructure over","stale state should be fine"],"ids":["AF-0002"],"if_unsure":["AF-0001","AF-0002"]}
+{"id":"UT-0003","phrases":["tests should pass","looks good without rerunning","already verified earlier"],"ids":["AF-0007"],"if_unsure":["AF-0007"]}
+{"id":"UT-0004","phrases":["approval still applies","same tool as before","config change is harmless"],"ids":["AF-0008"],"if_unsure":["AF-0008"]}
+{"id":"UT-0005","phrases":["while i'm here","might as well","also clean up","quick refactor"],"ids":["AF-0011"],"if_unsure":["AF-0011","AF-0012"]}

@@ -7,6 +7,7 @@ import crypto from 'node:crypto'
 import os from 'node:os'
 import { spawnSync } from 'node:child_process'
 import { rankEntries } from '../lib/retrieval.mjs'
+import { loadHotpath, toolPreflight } from '../lib/hotpath.mjs'
 
 const root = path.resolve(import.meta.dirname, '..')
 const index = JSON.parse(fs.readFileSync(path.join(root, 'index.json'), 'utf8'))
@@ -168,6 +169,28 @@ test('consumer contract and host policy cannot convert evidence into authorizati
   assert.equal(decision.allow, false)
   assert.equal(decision.reason, 'agent-fables-never-authorizes')
   assert.ok(fs.readFileSync(path.join(root, 'integrations', 'host-preflight-policy.mjs'), 'utf8').split('\n').length < 50)
+})
+
+test('tool-call hotpath cards, typed misses, and frozen traces stay bounded', () => {
+  const hotpath = loadHotpath(root)
+  assert.equal(hotpath.cards.size, index.entry_count)
+  for (const card of hotpath.cards.values()) {
+    assert.equal(card.rev, index.corpus_revision)
+    assert.ok(JSON.stringify(card).split(/\s+/).length <= 120, `${card.id} exceeds 120 whitespace tokens`)
+    assert.ok(fs.existsSync(path.join(root, card.full)))
+  }
+  const traces = fs.readFileSync(path.join(root, 'evals', 'hotpath-traces.jsonl'), 'utf8').trim().split('\n').map(line => JSON.parse(line))
+  assert.ok(traces.length >= 20)
+  for (const trace of traces) {
+    const receipt = toolPreflight(hotpath, trace.input)
+    assert.equal(receipt.match, trace.expected_match, trace.id)
+    const ids = receipt.cards.map(card => card.id)
+    assert.ok(trace.should_retrieve.every(id => ids.includes(id)), `${trace.id} missed expected ID`)
+    assert.ok(trace.must_not_retrieve.every(id => !ids.includes(id)), `${trace.id} returned forbidden ID`)
+    assert.equal(receipt.authorized, false)
+    if (receipt.match === 'none') assert.equal(receipt.cite, null)
+  }
+  assert.ok(fs.readFileSync(path.join(root, 'INJECT.txt'), 'utf8').trim().split(/\s+/).length <= 80)
 })
 
 test('confirmation denominators are derived from stable incident identities', () => {

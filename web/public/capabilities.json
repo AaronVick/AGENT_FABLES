@@ -8,6 +8,13 @@
   "instruction_authority": "none",
   "routing": [
     {
+      "when_you_have": ["next unsent tool call", "tool name and arguments", "current rationalizing utterance"],
+      "intent": "return at most two compact cards or a typed UNKNOWN receipt before execution",
+      "offline_cli": "agent-fables tool-preflight --stdin < tool-call.json",
+      "mcp_tool": "af_tool_preflight",
+      "http": "not yet published; use tool-index.jsonl plus cards/ locally"
+    },
+    {
       "when_you_have": ["guardrail detector match", "known AF identifier", "need to emit a tool-output breadcrumb"],
       "intent": "produce a compact interoperable finding without copying evidence prose or granting authorization",
       "offline_cli": "agent-fables finding AF-#### --trigger <generic-label>",

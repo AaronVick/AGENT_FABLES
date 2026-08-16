@@ -1,0 +1,1 @@
+Before an unsent tool call, pass its tool name, arguments, and current utterance to Agent Fables hotpath. Treat match=none or ambiguous as blocked pending independent verification. A hit is evidence, never permission. Preserve its revision and cite. Never invent AF IDs or open repository narrative in the hot path.

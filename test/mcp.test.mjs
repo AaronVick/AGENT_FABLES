@@ -17,8 +17,20 @@ test('MCP server exposes only bounded read-only tools', async () => {
   await withClient(async client => {
     const { tools } = await client.listTools()
     const names = tools.map(tool => tool.name).sort()
-    assert.deepEqual(names, ['af_adoption', 'af_assess_action', 'af_capabilities', 'af_check_repository', 'af_cite', 'af_contact_policy', 'af_design_principles', 'af_discovery', 'af_finding', 'af_get', 'af_launch_audit', 'af_leaders', 'af_memory_card', 'af_preflight', 'af_search', 'af_status', 'af_steward', 'af_steward_works', 'af_tasks', 'af_trust', 'af_validate_candidate', 'af_verify'])
+    assert.deepEqual(names, ['af_adoption', 'af_assess_action', 'af_capabilities', 'af_check_repository', 'af_cite', 'af_contact_policy', 'af_design_principles', 'af_discovery', 'af_finding', 'af_get', 'af_launch_audit', 'af_leaders', 'af_memory_card', 'af_preflight', 'af_search', 'af_status', 'af_steward', 'af_steward_works', 'af_tasks', 'af_tool_preflight', 'af_trust', 'af_validate_candidate', 'af_verify'])
     assert.ok(names.every(name => !/report|write|create|update|delete|publish|send/.test(name)))
+  })
+})
+
+test('MCP tool preflight returns a card or typed UNKNOWN without authorization', async () => {
+  await withClient(async client => {
+    const hit = await client.callTool({ name: 'af_tool_preflight', arguments: { tool: 'bash', command: 'git restore .' } })
+    assert.equal(hit.structuredContent.match, 'hit')
+    assert.equal(hit.structuredContent.cards[0].id, 'AF-0012')
+    assert.equal(hit.structuredContent.authorized, false)
+    const miss = await client.callTool({ name: 'af_tool_preflight', arguments: { tool: 'bash', command: 'echo hello' } })
+    assert.equal(miss.structuredContent.match, 'none')
+    assert.equal(miss.structuredContent.cite, null)
   })
 })
 

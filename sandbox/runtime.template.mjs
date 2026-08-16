@@ -6,6 +6,9 @@ const corpusRevision = __CORPUS_REVISION__
 const corpus = __CORPUS__
 const falseSafety = __FALSE_SAFETY__
 const retrievalNegatives = __RETRIEVAL_NEGATIVES__
+const toolRules = __TOOL_RULES__
+const utteranceRules = __UTTERANCE_RULES__
+const cards = __CARDS__
 const ignored = new Set(['the', 'and', 'for', 'from', 'into', 'that', 'this', 'with', 'were', 'was', 'its', 'own', 'after', 'before', 'without', 'while', 'through'])
 const tokenize = value => String(value ?? '').toLowerCase().split(/[^a-z0-9.+-]+/).filter(token => token.length > 2 && !ignored.has(token))
 const related = (left, right) => left === right || (left.length >= 4 && right.length >= 4 && (left.startsWith(right) || right.startsWith(left)))
@@ -62,7 +65,24 @@ function assess(action) {
   return { schema_version: '1.0.0-sandbox', route: 'sandbox-action-assessment', authority: 'none', authorized: false, corpus_revision: corpusRevision, risk_flags: flags, evidence, required_verifications: gates, receipt: { assessment: flags.length ? 'review-required' : 'no-known-signal', authorization: 'not-granted', absence_of_match_means_safe: false, matched_ids: evidence.map(item => item.id), unresolved_gate_ids: gates.map(item => item.gate_id) } }
 }
 
-if (command === 'status') emit({ route: 'sandbox-status', authority: 'none', authorized: false, corpus_revision: corpusRevision, patterns: corpus.length, dependencies: 0, network_required: false })
+function preflightTool(input) {
+  const lower = value => String(value ?? '').toLowerCase()
+  const command = lower(input.command ?? (Array.isArray(input.argv) ? input.argv.join(' ') : ''))
+  const tool = lower(input.tool), pathValue = lower(input.path), packageValue = lower(input.package), mcpTool = lower(input.mcp_tool)
+  const near = toolRules.find(rule => lower(rule.tool) === tool && rule.not.some(value => command.includes(lower(value))))
+  const hit = toolRules.find(rule => (lower(rule.tool) === tool || (rule.mcp_tool && lower(rule.mcp_tool) === mcpTool)) && !rule.not.some(value => command.includes(lower(value))) && (rule.argv_any.some(value => command.includes(lower(value))) || (rule.argv_all.length && rule.argv_all.every(value => command.includes(lower(value)))) || (rule.path_regex && new RegExp(rule.path_regex, 'i').test(pathValue)) || (rule.package && packageValue.includes(lower(rule.package))) || (rule.mcp_tool && lower(rule.mcp_tool) === mcpTool)))
+  const utterance = utteranceRules.find(rule => rule.phrases.some(phrase => lower(input.utterance).includes(lower(phrase))))
+  let ids = hit?.ids ?? utterance?.ids ?? [], reason = ids.length ? 'corpus_hit' : near ? 'near_miss_only' : 'no_corpus_hit'
+  if (hit && utterance && new Set([...hit.if_unsure, ...utterance.if_unsure]).size > 1) { ids = [...new Set([...hit.ids, ...utterance.ids, ...hit.if_unsure, ...utterance.if_unsure])].slice(0, 2); reason = 'ambiguous' }
+  if (!ids.length) return { schema_version: '1.0.0', route: 'tool-call-hotpath', match: 'none', reason, authority: 'none', authorized: false, corpus_revision: corpusRevision, trigger_id: near?.id ?? null, cards: [], similar_rejected: (near?.ids ?? []).slice(0, 2), required_verifications: [{ id: 'independent_artifact_before_mutate', status: 'unverified' }], cite: null }
+  const selected = ids.map(id => cards[id]).filter(Boolean)
+  return { schema_version: '1.0.0', route: 'tool-call-hotpath', match: 'hit', reason, authority: 'none', authorized: false, corpus_revision: corpusRevision, trigger_id: hit?.id ?? utterance?.id ?? null, cards: selected, similar_rejected: [], required_verifications: selected.flatMap(card => card.verify.map((predicate, index) => ({ id: `${card.id.toLowerCase()}-predicate-${index + 1}`, status: 'unverified', predicate }))), cite: selected.map(card => ({ id: card.id, corpus_revision: corpusRevision, card_rev: card.rev, source: 'card' })) }
+}
+
+if (command === 'tool-preflight') {
+  if (!args.includes('--stdin')) fail('tool-preflight requires --stdin')
+  else { let call; try { call = JSON.parse(fs.readFileSync(0, 'utf8')) } catch { fail('tool-preflight requires one JSON object') } if (call) emit(preflightTool(call)) }
+} else if (command === 'status') emit({ route: 'sandbox-status', authority: 'none', authorized: false, corpus_revision: corpusRevision, patterns: corpus.length, dependencies: 0, network_required: false })
 else if (command === 'search') {
   const query = args.join(' ')
   if (!query) fail('search requires a query')
@@ -109,4 +129,4 @@ else if (command === 'search') {
       }
     }
   }
-} else emit({ name: 'Agent Fables sandbox runtime', authority: 'none', commands: ['status', 'search <query>', 'preflight --op <operation> --stack <stack>', 'get AF-####', 'assess --stdin', 'eval'], network_required: false, dependencies: 0 })
+} else emit({ name: 'Agent Fables sandbox runtime', authority: 'none', commands: ['tool-preflight --stdin', 'status', 'search <query>', 'preflight --op <operation> --stack <stack>', 'get AF-####', 'assess --stdin', 'eval'], network_required: false, dependencies: 0 })

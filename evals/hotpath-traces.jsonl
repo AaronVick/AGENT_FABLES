@@ -1,0 +1,20 @@
+{"id":"TR-0001","input":{"tool":"bash","command":"git restore ."},"expected_match":"hit","should_retrieve":["AF-0012"],"must_not_retrieve":["AF-0001"]}
+{"id":"TR-0002","input":{"tool":"bash","command":"git checkout -- src"},"expected_match":"hit","should_retrieve":["AF-0012"],"must_not_retrieve":["AF-0001"]}
+{"id":"TR-0003","input":{"tool":"bash","command":"git reset --hard HEAD"},"expected_match":"hit","should_retrieve":["AF-0012"],"must_not_retrieve":["AF-0001"]}
+{"id":"TR-0004","input":{"tool":"bash","command":"git restore --staged ."},"expected_match":"none","should_retrieve":[],"must_not_retrieve":["AF-0012"]}
+{"id":"TR-0005","input":{"tool":"bash","command":"rm -rf build"},"expected_match":"hit","should_retrieve":["AF-0011"],"must_not_retrieve":["AF-0001"]}
+{"id":"TR-0006","input":{"tool":"bash","command":"rm -rf build","utterance":"just clean up"},"expected_match":"hit","should_retrieve":["AF-0011","AF-0012"],"must_not_retrieve":["AF-0001"]}
+{"id":"TR-0007","input":{"tool":"bash","command":"terraform destroy -auto-approve","package":"terraform"},"expected_match":"hit","should_retrieve":["AF-0002"],"must_not_retrieve":["AF-0012"]}
+{"id":"TR-0008","input":{"tool":"sql_query","command":"DROP TABLE customers"},"expected_match":"hit","should_retrieve":["AF-0001"],"must_not_retrieve":["AF-0012"]}
+{"id":"TR-0009","input":{"tool":"mcp_config_update","mcp_tool":"mcp_config_update"},"expected_match":"hit","should_retrieve":["AF-0008"],"must_not_retrieve":["AF-0003"]}
+{"id":"TR-0010","input":{"tool":"bash","command":"npm install"},"expected_match":"hit","should_retrieve":["AF-0006"],"must_not_retrieve":["AF-0012"]}
+{"id":"TR-0011","input":{"tool":"bash","command":"npm install --ignore-scripts"},"expected_match":"none","should_retrieve":[],"must_not_retrieve":["AF-0006"]}
+{"id":"TR-0012","input":{"tool":"bash","command":"git worktree remove /tmp/w"},"expected_match":"hit","should_retrieve":["AF-0015"],"must_not_retrieve":["AF-0012"]}
+{"id":"TR-0013","input":{"tool":"bash","command":"git push --force origin main"},"expected_match":"hit","should_retrieve":["AF-0012"],"must_not_retrieve":["AF-0001"]}
+{"id":"TR-0014","input":{"tool":"bash","command":"git push --force-with-lease origin main"},"expected_match":"none","should_retrieve":[],"must_not_retrieve":["AF-0012"]}
+{"id":"TR-0015","input":{"tool":"none","utterance":"tests should pass"},"expected_match":"hit","should_retrieve":["AF-0007"],"must_not_retrieve":["AF-0012"]}
+{"id":"TR-0016","input":{"tool":"none","utterance":"approval still applies"},"expected_match":"hit","should_retrieve":["AF-0008"],"must_not_retrieve":["AF-0012"]}
+{"id":"TR-0017","input":{"tool":"bash","command":"echo hello"},"expected_match":"none","should_retrieve":[],"must_not_retrieve":["AF-0001","AF-0012"]}
+{"id":"TR-0018","input":{"tool":"render_image","path":"icon.svg"},"expected_match":"none","should_retrieve":[],"must_not_retrieve":["AF-0001"]}
+{"id":"TR-0019","input":{"tool":"write_file","path":"session/tool-results.json"},"expected_match":"hit","should_retrieve":["AF-0014"],"must_not_retrieve":["AF-0011"]}
+{"id":"TR-0020","input":{"tool":"none","utterance":"quick destroy and recreate"},"expected_match":"hit","should_retrieve":["AF-0002"],"must_not_retrieve":["AF-0012"]}

@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0.0",
+  "authority": "none",
+  "authorization": "not-granted",
+  "open_next": [
+    "tool-index.jsonl",
+    "utterance-index.jsonl",
+    "cards/",
+    "overlaps.json",
+    "cite-contract.json"
+  ],
+  "do_not_open": [
+    "README.md",
+    "START_HERE.md",
+    "AGENT-ROUTES.md",
+    "bundle.md",
+    "web/",
+    "prd/",
+    "leaders/",
+    "fables/"
+  ],
+  "preflight": "af_tool_preflight",
+  "default_response": "card_or_unknown",
+  "full_only_if": "request.full === true",
+  "inject_file": "INJECT.txt",
+  "inject_sha256": "sha256:8316be96db6ab0dc2ec946346a9e7786807279e25330c5399fc5eaabd981f364"
+}

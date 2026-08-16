@@ -19,6 +19,10 @@
     "negative_control_set": {
       "path": "evals/retrieval-negatives.json",
       "sha256": "sha256:666df112973f98c25f9f94ba7fd3059d4e8b6a7cdfcac7a9772dd9b6e6d14b4c"
+    },
+    "hotpath_trace_set": {
+      "path": "evals/hotpath-traces.jsonl",
+      "sha256": "sha256:553254455e46f897d6080bd3ec8915ea807e216b80d784fff44daa2a51793911"
     }
   },
   "seed": {
@@ -82,6 +86,14 @@
     "threshold": 1,
     "sandbox_runnable": true,
     "negative_false_positive_rate": 0
+  },
+  "tool_call_hotpath": {
+    "fixtures": 20,
+    "pass_rate": 1,
+    "threshold": 1,
+    "cards": 15,
+    "card_limit": 2,
+    "unknown_is_typed": true
   },
   "utility": {
     "preflight_approx_tokens": 268,

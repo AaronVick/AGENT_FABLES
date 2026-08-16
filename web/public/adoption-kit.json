@@ -4,6 +4,12 @@
   "repository": "https://github.com/AaronVick/AGENT_FABLES",
   "surfaces": [
     {
+      "id": "tool-call-hotpath",
+      "status": "ready-from-git",
+      "artifact": "INJECT.txt + hotpath.json",
+      "use_when": "a host can intercept the next unsent tool object and needs card-or-UNKNOWN output"
+    },
+    {
       "id": "repository-instruction",
       "status": "ready",
       "artifact": "integrations/AGENTS.md.snippet",

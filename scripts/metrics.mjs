@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url'
 import { decisionCard, rankEntries } from '../lib/retrieval.mjs'
 import { assessAction } from '../lib/assess.mjs'
 import { leaderIndex, rankLeaders } from '../lib/leaders.mjs'
+import { loadHotpath, toolPreflight } from '../lib/hotpath.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const corpus = JSON.parse(fs.readFileSync(path.join(root, 'api/src/fables.json'), 'utf8'))
@@ -43,6 +44,12 @@ const falseSafety = JSON.parse(fs.readFileSync(path.join(root, 'eval-report.json
 const leaderFixtures = leaders.topics.flatMap(topic => topic.search_terms.map(query => ({ query, expected: topic.slug })))
 const leaderHits = leaderFixtures.filter(fixture => rankLeaders(leaders, fixture.query, 1)[0]?.slug === fixture.expected).length
 const leaderIndexTokens = Math.ceil(JSON.stringify(leaderIndex(leaders)).length / 4)
+const hotpath = loadHotpath(root)
+const hotpathTraces = fs.readFileSync(path.join(root, 'evals', 'hotpath-traces.jsonl'), 'utf8').trim().split('\n').map(line => JSON.parse(line))
+const hotpathPasses = hotpathTraces.filter(trace => {
+  const receipt = toolPreflight(hotpath, trace.input); const ids = receipt.cards.map(card => card.id)
+  return receipt.match === trace.expected_match && trace.should_retrieve.every(id => ids.includes(id)) && trace.must_not_retrieve.every(id => !ids.includes(id))
+}).length
 const fileSha256 = relativePath => `sha256:${crypto.createHash('sha256').update(fs.readFileSync(path.join(root, relativePath))).digest('hex')}`
 
 const metrics = {
@@ -55,6 +62,7 @@ const metrics = {
     adversarial_set: { path: 'evals/adversarial-discovery.yaml', sha256: fileSha256('evals/adversarial-discovery.yaml') },
     false_safety_set: { path: 'evals/false-safety.json', sha256: fileSha256('evals/false-safety.json') }
     , negative_control_set: { path: 'evals/retrieval-negatives.json', sha256: fileSha256('evals/retrieval-negatives.json') }
+    , hotpath_trace_set: { path: 'evals/hotpath-traces.jsonl', sha256: fileSha256('evals/hotpath-traces.jsonl') }
   },
   seed: { patterns: corpus.length, incidents: incidents.length, minimum_patterns: 10 },
   discovery: {
@@ -86,6 +94,7 @@ const metrics = {
     coverage_artifact: 'evidence-coverage.json'
   },
   false_safety: { fixtures: falseSafety.false_safety.fixtures, pass_rate: falseSafety.false_safety.pass_rate, threshold: 1, sandbox_runnable: falseSafety.sandbox_runnable, negative_false_positive_rate: falseSafety.negative_controls.false_positive_rate },
+  tool_call_hotpath: { fixtures: hotpathTraces.length, pass_rate: hotpathPasses / hotpathTraces.length, threshold: 1, cards: hotpath.cards.size, card_limit: 2, unknown_is_typed: true },
   utility: {
     preflight_approx_tokens: Math.ceil(preflightFixture.length / 4), preflight_threshold: 400,
     assessment_approx_tokens: Math.ceil(assessmentFixture.length / 4), assessment_threshold: 1000
@@ -112,6 +121,7 @@ metrics.local_agent_routes_pass = metrics.seed.patterns >= metrics.seed.minimum_
   metrics.discovery.leader_index_approx_tokens <= metrics.discovery.leader_index_token_threshold &&
   metrics.evidence.primary_source_coverage >= metrics.evidence.threshold &&
   metrics.false_safety.pass_rate >= metrics.false_safety.threshold &&
+  metrics.tool_call_hotpath.pass_rate >= metrics.tool_call_hotpath.threshold &&
   metrics.utility.preflight_approx_tokens <= metrics.utility.preflight_threshold &&
   metrics.utility.assessment_approx_tokens <= metrics.utility.assessment_threshold &&
   metrics.retention.max_approx_tokens <= metrics.retention.threshold && Object.values(metrics.routes).every(Boolean)

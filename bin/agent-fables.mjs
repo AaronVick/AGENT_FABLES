@@ -11,6 +11,7 @@ import { checkRepository } from '../lib/check-repo.mjs'
 import { leaderIndex, leaderQuery } from '../lib/leaders.mjs'
 import { guardrailFinding } from '../lib/finding.mjs'
 import { validateCandidate } from '../lib/candidate.mjs'
+import { loadHotpath, toolPreflight } from '../lib/hotpath.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const corpus = fs.readFileSync(path.join(root, 'index.jsonl'), 'utf8').trim().split('\n').map(line => JSON.parse(line))
@@ -29,6 +30,7 @@ const freshness = JSON.parse(fs.readFileSync(path.join(root, 'freshness.json'), 
 const guardrailContract = JSON.parse(fs.readFileSync(path.join(root, 'guardrail-contract.json'), 'utf8'))
 const contributionContract = JSON.parse(fs.readFileSync(path.join(root, 'contribution-contract.json'), 'utf8'))
 const adoptionKit = JSON.parse(fs.readFileSync(path.join(root, 'adoption-kit.json'), 'utf8'))
+const hotpath = loadHotpath(root)
 const [command = 'help', ...args] = process.argv.slice(2)
 
 const option = name => {
@@ -55,7 +57,14 @@ function matches(query, limit) {
   }))
 }
 
-if (command === 'search') {
+if (command === 'tool-preflight') {
+  if (!args.includes('--stdin')) throw new Error('tool-preflight requires --stdin')
+  const raw = fs.readFileSync(0, 'utf8')
+  if (Buffer.byteLength(raw, 'utf8') > 8192) throw new Error('tool-preflight payload exceeds 8192 bytes')
+  let call
+  try { call = JSON.parse(raw) } catch { throw new Error('tool-preflight requires one JSON object') }
+  output(toolPreflight(hotpath, call))
+} else if (command === 'search') {
   const query = option('query') ?? positional.join(' ')
   if (!query) throw new Error('search requires a query')
   const results = matches(query, Number(option('limit') ?? 5))
@@ -196,6 +205,7 @@ if (command === 'search') {
   process.stdout.write(`Agent Fables offline interface
 
 Commands:
+  agent-fables tool-preflight --stdin < tool-call.json
   agent-fables status
   agent-fables search <symptom, package, version, CVE, or operation>
   agent-fables preflight --op <operation> --stack <framework>
