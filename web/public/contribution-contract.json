@@ -5,10 +5,11 @@
   "candidate_schema": "https://agentfables.org/schemas/evidence-candidate.schema.json",
   "offline_validation": "agent-fables candidate --stdin",
   "mcp_tool": "af_validate_candidate",
-  "accepted_kinds": ["new-incident", "source-addition", "exact-artifact", "retrieval-miss", "integration-mapping"],
+  "accepted_kinds": ["new-incident", "source-addition", "exact-artifact", "retrieval-miss", "integration-mapping", "claim-challenge"],
   "required_boundaries": [
     "one candidate per change",
     "HTTPS source required",
+    "claim challenges name one AF/AFI target, bounded claim path, proposed correction, and independently checkable source",
     "no paths, hostnames, credentials, code, commands, or narrative",
     "validation does not submit, persist, accept, merge, or publish evidence",
     "accepted evidence requires an independent review and passing repository CI"

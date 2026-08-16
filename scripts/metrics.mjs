@@ -33,6 +33,8 @@ const contactPolicy = JSON.parse(fs.readFileSync(path.join(root, 'contact-policy
 const leaders = JSON.parse(fs.readFileSync(path.join(root, 'leaders.json'), 'utf8'))
 const leaderPatternIds = new Set(leaders.topics.flatMap(topic => topic.records.map(record => record.id)))
 const publicationState = JSON.parse(fs.readFileSync(path.join(root, 'publication-state.json'), 'utf8'))
+const evidenceCoverage = JSON.parse(fs.readFileSync(path.join(root, 'evidence-coverage.json'), 'utf8'))
+const falseSafety = JSON.parse(fs.readFileSync(path.join(root, 'eval-report.json'), 'utf8'))
 const leaderFixtures = leaders.topics.flatMap(topic => topic.search_terms.map(query => ({ query, expected: topic.slug })))
 const leaderHits = leaderFixtures.filter(fixture => rankLeaders(leaders, fixture.query, 1)[0]?.slug === fixture.expected).length
 const leaderIndexTokens = Math.ceil(JSON.stringify(leaderIndex(leaders)).length / 4)
@@ -58,7 +60,12 @@ const metrics = {
     leader_index_token_threshold: 400,
     ranking_status: leaders.ranking_status
   },
-  evidence: { primary_source_coverage: primary / incidents.length, threshold: 0.75 },
+  evidence: {
+    primary_source_coverage: primary / incidents.length, threshold: 0.75,
+    exact_signature_pattern_coverage: evidenceCoverage.overall.exact_signature_pattern_coverage,
+    coverage_artifact: 'evidence-coverage.json'
+  },
+  false_safety: { fixtures: falseSafety.fixtures, pass_rate: falseSafety.pass_rate, threshold: 1, sandbox_runnable: falseSafety.sandbox_runnable },
   utility: {
     preflight_approx_tokens: Math.ceil(preflightFixture.length / 4), preflight_threshold: 400,
     assessment_approx_tokens: Math.ceil(assessmentFixture.length / 4), assessment_threshold: 1000
@@ -83,6 +90,7 @@ metrics.local_agent_routes_pass = metrics.seed.patterns >= metrics.seed.minimum_
   metrics.discovery.leader_query_recall_at_1 >= metrics.discovery.leader_query_recall_threshold &&
   metrics.discovery.leader_index_approx_tokens <= metrics.discovery.leader_index_token_threshold &&
   metrics.evidence.primary_source_coverage >= metrics.evidence.threshold &&
+  metrics.false_safety.pass_rate >= metrics.false_safety.threshold &&
   metrics.utility.preflight_approx_tokens <= metrics.utility.preflight_threshold &&
   metrics.utility.assessment_approx_tokens <= metrics.utility.assessment_threshold &&
   metrics.retention.max_approx_tokens <= metrics.retention.threshold && Object.values(metrics.routes).every(Boolean)

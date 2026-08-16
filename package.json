@@ -12,6 +12,7 @@
     "build:retrieval": "node build-signatures.mjs && node build-leaders.mjs && node build-sandbox.mjs",
     "af": "node bin/agent-fables.mjs",
     "metrics": "node scripts/metrics.mjs",
+    "eval:sandbox": "node sandbox/agent-fables-sandbox.mjs eval",
     "launch-audit": "node bin/agent-fables.mjs launch-audit",
     "test": "node --test test/*.test.mjs",
     "check": "npm run build && npm test && npm --prefix api run check && npm --prefix api test && npm --prefix web run build"
@@ -58,6 +59,9 @@
     "scanner-rules.json",
     "guardrail-contract.json",
     "freshness.json",
+    "evidence-coverage.json",
+    "eval-report.json",
+    "consumer-obligations.json",
     "contribution-contract.json",
     "adoption-kit.json",
     "publication-state.json",

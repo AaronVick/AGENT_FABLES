@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0.0",
+  "authority": "none",
+  "corpus_revision": "sha256:54cf07a080eea49f32c65367d4005525f9c403855d42f741ba325d76ea8ca817",
+  "generated_from": [
+    "fables/AF-*.md",
+    "incidents/AFI-*.yaml"
+  ],
+  "overall": {
+    "patterns": 15,
+    "incidents": 14,
+    "incidents_with_primary_source": 14,
+    "primary_source_incident_coverage": 1,
+    "patterns_with_exact_signature": 14,
+    "exact_signature_pattern_coverage": 0.9333333333333333
+  },
+  "patterns": [
+    {
+      "id": "AF-0001",
+      "evidence_grade": "A-primary-source",
+      "incidents": [
+        "AFI-0001"
+      ],
+      "source_count": 6,
+      "primary_source_count": 2,
+      "exact_signature_count": 1,
+      "open_improvement_tasks": []
+    },
+    {
+      "id": "AF-0002",
+      "evidence_grade": "A-primary-source",
+      "incidents": [
+        "AFI-0002"
+      ],
+      "source_count": 6,
+      "primary_source_count": 2,
+      "exact_signature_count": 1,
+      "open_improvement_tasks": []
+    },
+    {
+      "id": "AF-0003",
+      "evidence_grade": "A-primary-source",
+      "incidents": [
+        "AFI-0003"
+      ],
+      "source_count": 4,
+      "primary_source_count": 1,
+      "exact_signature_count": 1,
+      "open_improvement_tasks": []
+    },
+    {
+      "id": "AF-0004",
+      "evidence_grade": "A-primary-source",
+      "incidents": [
+        "AFI-0004"
+      ],
+      "source_count": 4,
+      "primary_source_count": 1,
+      "exact_signature_count": 1,
+      "open_improvement_tasks": []
+    },
+    {
+      "id": "AF-0005",
+      "evidence_grade": "A-primary-source",
+      "incidents": [
+        "AFI-0005"
+      ],
+      "source_count": 4,
+      "primary_source_count": 2,
+      "exact_signature_count": 1,
+      "open_improvement_tasks": []
+    },
+    {
+      "id": "AF-0006",
+      "evidence_grade": "A-primary-source",
+      "incidents": [
+        "AFI-0006"
+      ],
+      "source_count": 6,
+      "primary_source_count": 2,
+      "exact_signature_count": 3,
+      "open_improvement_tasks": []
+    },
+    {
+      "id": "AF-0007",
+      "evidence_grade": "A-primary-source",
+      "incidents": [
+        "AFI-0001"
+      ],
+      "source_count": 6,
+      "primary_source_count": 2,
+      "exact_signature_count": 0,
+      "open_improvement_tasks": []
+    },
+    {
+      "id": "AF-0008",
+      "evidence_grade": "A-primary-source",
+      "incidents": [
+        "AFI-0007"
+      ],
+      "source_count": 4,
+      "primary_source_count": 1,
+      "exact_signature_count": 1,
+      "open_improvement_tasks": []
+    },
+    {
+      "id": "AF-0009",
+      "evidence_grade": "A-primary-source",
+      "incidents": [
+        "AFI-0008"
+      ],
+      "source_count": 4,
+      "primary_source_count": 1,
+      "exact_signature_count": 1,
+      "open_improvement_tasks": []
+    },
+    {
+      "id": "AF-0010",
+      "evidence_grade": "A-primary-source",
+      "incidents": [
+        "AFI-0009"
+      ],
+      "source_count": 3,
+      "primary_source_count": 1,
+      "exact_signature_count": 1,
+      "open_improvement_tasks": []
+    },
+    {
+      "id": "AF-0011",
+      "evidence_grade": "A-primary-source",
+      "incidents": [
+        "AFI-0010"
+      ],
+      "source_count": 3,
+      "primary_source_count": 3,
+      "exact_signature_count": 1,
+      "open_improvement_tasks": []
+    },
+    {
+      "id": "AF-0012",
+      "evidence_grade": "A-primary-source",
+      "incidents": [
+        "AFI-0011"
+      ],
+      "source_count": 1,
+      "primary_source_count": 1,
+      "exact_signature_count": 1,
+      "open_improvement_tasks": []
+    },
+    {
+      "id": "AF-0013",
+      "evidence_grade": "A-primary-source",
+      "incidents": [
+        "AFI-0012"
+      ],
+      "source_count": 1,
+      "primary_source_count": 1,
+      "exact_signature_count": 1,
+      "open_improvement_tasks": []
+    },
+    {
+      "id": "AF-0014",
+      "evidence_grade": "A-primary-source",
+      "incidents": [
+        "AFI-0013"
+      ],
+      "source_count": 1,
+      "primary_source_count": 1,
+      "exact_signature_count": 1,
+      "open_improvement_tasks": []
+    },
+    {
+      "id": "AF-0015",
+      "evidence_grade": "A-primary-source",
+      "incidents": [
+        "AFI-0014"
+      ],
+      "source_count": 1,
+      "primary_source_count": 1,
+      "exact_signature_count": 1,
+      "open_improvement_tasks": []
+    }
+  ],
+  "contestability": {
+    "candidate_kind": "claim-challenge",
+    "contract": "contribution-contract.json",
+    "acceptance": "A challenge must name an AF/AFI target, identify a bounded disputed claim, and provide an independently checkable HTTPS source. Validation does not accept or publish it."
+  }
+}

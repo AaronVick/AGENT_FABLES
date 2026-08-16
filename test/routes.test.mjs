@@ -203,6 +203,15 @@ test('candidate validation and adoption routes are local and non-mutating', () =
   assert.equal(adoption.surfaces[0].artifact, 'guardrail-contract.json')
 })
 
+test('claim challenges are locally validated but never accepted or submitted', () => {
+  const payload = JSON.stringify({ kind: 'claim-challenge', source_url: 'https://example.com/advisory', title: 'Challenge affected range', target_id: 'AF-0003', claim_path: 'affected_versions', proposed_correction: 'The cited advisory bounds this range differently.' })
+  const challenge = JSON.parse(execFileSync(process.execPath, [cli, 'candidate', '--stdin'], { cwd: root, input: payload, encoding: 'utf8' }))
+  assert.equal(challenge.valid_candidate, true)
+  assert.equal(challenge.evidence_accepted, false)
+  assert.equal(challenge.submission_performed, false)
+  assert.equal(challenge.persistence_performed, false)
+})
+
 test('steward routes expose consent boundaries without inferring identity or sending', () => {
   const steward = run(['steward'])
   assert.equal(steward.public_name, 'Aaron Vick')
