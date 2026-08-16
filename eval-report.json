@@ -1,7 +1,7 @@
 {
   "schema_version": "1.1.0",
   "eval": "retrieval-and-false-safety",
-  "corpus_revision": "sha256:54cf07a080eea49f32c65367d4005525f9c403855d42f741ba325d76ea8ca817",
+  "corpus_revision": "sha256:38d52e03c5a906b7c061962eb3016d59c186594bc67b8219617ffaca5cfd4372",
   "sandbox_runnable": true,
   "false_safety": {
     "fixtures": 8,
@@ -35,7 +35,7 @@
         "expected": "AF-0011",
         "matched_ids": [
           "AF-0011",
-          "AF-0001"
+          "AF-0018"
         ]
       },
       {
@@ -74,8 +74,8 @@
         "required_flag": "credential-sensitive",
         "expected": null,
         "matched_ids": [
-          "AF-0001",
-          "AF-0004"
+          "AF-0017",
+          "AF-0001"
         ]
       },
       {
@@ -99,14 +99,14 @@
       {
         "id": "RN-001",
         "passed": true,
-        "top_confidence": 0,
-        "match_type": null
+        "top_confidence": 0.3333333333333333,
+        "match_type": "behavioral"
       },
       {
         "id": "RN-002",
         "passed": true,
-        "top_confidence": 0,
-        "match_type": null
+        "top_confidence": 0.3333333333333333,
+        "match_type": "behavioral"
       },
       {
         "id": "RN-003",
@@ -123,8 +123,8 @@
       {
         "id": "RN-005",
         "passed": true,
-        "top_confidence": 0,
-        "match_type": null
+        "top_confidence": 0.25,
+        "match_type": "behavioral"
       },
       {
         "id": "RN-006",

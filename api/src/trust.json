@@ -1,13 +1,13 @@
 {
   "schema_version": "1.0.0",
-  "corpus_revision": "sha256:54cf07a080eea49f32c65367d4005525f9c403855d42f741ba325d76ea8ca817",
+  "corpus_revision": "sha256:38d52e03c5a906b7c061962eb3016d59c186594bc67b8219617ffaca5cfd4372",
   "authority": "none",
   "publication_status": "local-only",
   "counts": {
-    "patterns": 15,
-    "incidents": 14,
+    "patterns": 18,
+    "incidents": 17,
     "evidence_grades": {
-      "A-primary-source": 14
+      "A-primary-source": 17
     }
   },
   "invariants": {
@@ -24,7 +24,10 @@
   "known_gaps": {
     "incidents_without_primary_source": [],
     "patterns_without_exact_signature": [
-      "AF-0007"
+      "AF-0007",
+      "AF-0016",
+      "AF-0017",
+      "AF-0018"
     ]
   },
   "verify": [

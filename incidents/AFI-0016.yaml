@@ -1,0 +1,8 @@
+id: AFI-0016
+title: Indirect prompt injection in Perplexity Comet exfiltrates credentials via hidden webpage text
+occurred_at: 2025-08-20
+status: publicly-reported
+sources:
+  - url: https://brave.com/blog/comet-prompt-injection/
+    kind: original-researcher-disclosure
+    authority: primary

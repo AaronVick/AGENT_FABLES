@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "corpus_revision": "sha256:54cf07a080eea49f32c65367d4005525f9c403855d42f741ba325d76ea8ca817",
+  "corpus_revision": "sha256:38d52e03c5a906b7c061962eb3016d59c186594bc67b8219617ffaca5cfd4372",
   "entries": [
     {
       "id": "AF-0001",
@@ -305,6 +305,66 @@
         "main repository disappears after delegated worktree cleanup",
         "Git reports that the surviving directory is not a repository",
         "files produced by the final agent round survive while earlier source and history do not"
+      ],
+      "evidence_grade": "A-primary-source"
+    },
+    {
+      "id": "AF-0016",
+      "title": "Untrusted inbound content triggers zero-click retrieval and exfiltration",
+      "path": "fables/AF-0016.md",
+      "retrieval_path": "signatures/af-0016.md",
+      "failure_mode": "trust-boundary-violation",
+      "identifiers": [
+        "CVE-2025-32711",
+        "GHSA-h2w9-p5qf-qmrh"
+      ],
+      "frameworks": [
+        "microsoft-365-copilot"
+      ],
+      "affected_versions": "Microsoft 365 Copilot prior to Microsoft's May 2025 server-side fix; exact internal build range not independently disclosed",
+      "fixed_in": "Server-side fix deployed by Microsoft, May 2025 (no client update required); CVE-2025-32711 published 2025-06-11",
+      "behavioral_indicators": [
+        "assistant output contains an outbound reference (link, image source, or auto-fetched resource) that was not present in the user's own request or prior turns",
+        "retrieval was triggered by unsolicited inbound content rather than an explicit user query",
+        "the exfiltration channel is a rendering side effect, such as an auto-loading image, rather than a tool call the user approved"
+      ],
+      "evidence_grade": "A-primary-source"
+    },
+    {
+      "id": "AF-0017",
+      "title": "Hidden webpage text steers a browsing agent into exfiltrating credentials",
+      "path": "fables/AF-0017.md",
+      "retrieval_path": "signatures/af-0017.md",
+      "failure_mode": "trust-boundary-violation",
+      "identifiers": [],
+      "frameworks": [
+        "perplexity-comet"
+      ],
+      "affected_versions": "Perplexity Comet browser assistant, as tested by Brave through August 2025; per Brave's post-publication retest, the disclosed vector remained incompletely mitigated",
+      "fixed_in": "unknown; disclosed 2025-08-20, remained incompletely mitigated per Brave's follow-up retest",
+      "behavioral_indicators": [
+        "agent action sequence includes navigating to an account or credentials page and reading an inbox for content such as a one-time passcode, none of which were requested by the user",
+        "the triggering instruction is present in the fetched page's markup or rendered content but absent from its visible, user-facing text",
+        "exfiltrated data appears encoded, such as base64, inside an otherwise unrelated outbound action"
+      ],
+      "evidence_grade": "A-primary-source"
+    },
+    {
+      "id": "AF-0018",
+      "title": "Fabricated citations submitted as authoritative without independent verification",
+      "path": "fables/AF-0018.md",
+      "retrieval_path": "signatures/af-0018.md",
+      "failure_mode": "verification-omission",
+      "identifiers": [],
+      "frameworks": [
+        "generative-ai-assisted-legal-drafting"
+      ],
+      "affected_versions": "Unspecified — the underlying generative AI tool is not named in available public sources; the pattern applies to any workflow producing citations without independent verification against a citator or direct source lookup",
+      "fixed_in": "n/a (behavioral and process class, not a patched product defect)",
+      "behavioral_indicators": [
+        "cited case names, docket numbers, or quotations that do not resolve in an independent citation-checking service or a direct source lookup",
+        "citation density in the output inconsistent with any corresponding search or fetch tool-call activity in the same session",
+        "fabricated citations recur across multiple drafts or revisions without correction, indicating no verification step was ever run"
       ],
       "evidence_grade": "A-primary-source"
     }

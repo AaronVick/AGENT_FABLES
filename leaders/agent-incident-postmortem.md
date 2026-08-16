@@ -2,7 +2,7 @@
 kind: agent-retrieval-leader
 slug: agent-incident-postmortem
 authority: none
-corpus_revision: sha256:54cf07a080eea49f32c65367d4005525f9c403855d42f741ba325d76ea8ca817
+corpus_revision: sha256:38d52e03c5a906b7c061962eb3016d59c186594bc67b8219617ffaca5cfd4372
 ranking_status: unverified-until-publication
 ---
 # AI agent incident postmortem

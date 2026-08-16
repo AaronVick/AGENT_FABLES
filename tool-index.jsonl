@@ -8,3 +8,4 @@
 {"id":"TI-0008","tool":"bash","argv_any":["export ","setx ","source "],"argv_all":[],"not":[],"path_regex":"(?:shell|session|state|profile|rc)$","package":null,"mcp_tool":null,"ids":["AF-0013"],"if_unsure":["AF-0013"],"confidence":0.72}
 {"id":"TI-0009","tool":"write_file","argv_any":[],"argv_all":[],"not":[],"path_regex":"(?:audit|session|transcript|tool-results)","package":null,"mcp_tool":null,"ids":["AF-0014"],"if_unsure":["AF-0014"],"confidence":0.78}
 {"id":"TI-0010","tool":"bash","argv_any":["git push --force","git push -f"],"argv_all":[],"not":["--force-with-lease"],"path_regex":null,"package":"git","mcp_tool":null,"ids":["AF-0012"],"if_unsure":["AF-0011","AF-0012"],"confidence":0.68}
+{"id":"TI-0011","tool":"fetch_url","argv_any":[],"argv_all":[],"not":[],"path_regex":"^https?://","package":null,"mcp_tool":null,"ids":["AF-0016","AF-0017"],"if_unsure":["AF-0016","AF-0017"],"confidence":0.55}

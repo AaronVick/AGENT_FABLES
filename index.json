@@ -1,9 +1,9 @@
 {
   "schema_version": "1.0.0",
-  "corpus_revision": "sha256:54cf07a080eea49f32c65367d4005525f9c403855d42f741ba325d76ea8ca817",
+  "corpus_revision": "sha256:38d52e03c5a906b7c061962eb3016d59c186594bc67b8219617ffaca5cfd4372",
   "generated_from": "fables/AF-*.md",
-  "entry_count": 15,
-  "incident_count": 14,
+  "entry_count": 18,
+  "incident_count": 17,
   "entries": [
     {
       "schema_version": "1.0.0",
@@ -230,6 +230,11 @@
       "identifiers": [
         "CVE-2025-6514",
         "GHSA-6xpm-ggf7-wc3p"
+      ],
+      "retrieval_aliases": [
+        "tool server executes attacker instructions through command parameter",
+        "MCP proxy OS command injection remote endpoint",
+        "local MCP client compromised by remote server"
       ],
       "stacks": [
         {
@@ -1402,6 +1407,268 @@
         "files produced by the final agent round survive while earlier source and history do not"
       ],
       "canonical_url": "https://agentfables.org/af/AF-0015"
+    },
+    {
+      "schema_version": "1.0.0",
+      "id": "AF-0016",
+      "slug": "the-letter-that-read-itself",
+      "title": "Untrusted inbound content triggers zero-click retrieval and exfiltration",
+      "status": "seeded",
+      "failure_mode": "trust-boundary-violation",
+      "blast_radius": "catastrophic",
+      "reversibility": "irreversible",
+      "first_seen": "2025-06-11",
+      "incidents": [
+        "AFI-0015"
+      ],
+      "identifiers": [
+        "CVE-2025-32711",
+        "GHSA-h2w9-p5qf-qmrh"
+      ],
+      "retrieval_aliases": [
+        "zero click prompt injection email agent",
+        "RAG assistant data exfiltration via email",
+        "EchoLeak Copilot vulnerability",
+        "LLM scope violation retrieval"
+      ],
+      "stacks": [
+        {
+          "framework": "microsoft-365-copilot",
+          "versions": [
+            "prior to Microsoft's May 2025 server-side fix"
+          ]
+        }
+      ],
+      "affected_versions": "Microsoft 365 Copilot prior to Microsoft's May 2025 server-side fix; exact internal build range not independently disclosed",
+      "fixed_in": "Server-side fix deployed by Microsoft, May 2025 (no client update required); CVE-2025-32711 published 2025-06-11",
+      "trigger_conditions": [
+        "agent has retrieval-augmented access to inbound content it did not request (email, calendar invites, shared documents) that is automatically ingested into working context",
+        "retrieved content can reach a rendering or output channel capable of carrying data outward (a generated hyperlink, an auto-loaded image, a markdown resource reference)",
+        "no isolation exists between what the assistant reads and what it is permitted to act on within the same reasoning pass"
+      ],
+      "exact_signature_review": {
+        "status": "investigated-no-stable-artifact",
+        "reviewed_at": "2026-08-16",
+        "sources": [
+          "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-32711",
+          "https://github.com/advisories/GHSA-h2w9-p5qf-qmrh",
+          "https://www.catonetworks.com/blog/breaking-down-echoleak/"
+        ],
+        "note": "The vendor advisory and independent technical analyses describe the attack class and its 'LLM Scope Violation' mechanism, but no single reusable verbatim payload is published as a stable artifact — the triggering email content is attacker-variable by design."
+      },
+      "anti_pattern": "Trusting content the agent did not request as if it entered through the same channel as the user's own instructions.",
+      "mitigation": [
+        "treat all retrieved or ingested content as untrusted input with no instruction authority, regardless of its source inside the organization",
+        "strip or neutralize outbound-rendering constructs (auto-loading links or images) in any content the model composes from untrusted input before that content reaches a rendering surface",
+        "require an explicit, user-approved channel for any data leaving the trust boundary; never let model-composed output alone select the destination",
+        "classify inbound content sources such as organizational mail and shared documents as adversary-reachable by default, not by exception"
+      ],
+      "verification": "Seed inbound content with retrieval-triggering text and a callback URL; the response must not contain any externally resolvable reference sourced from that content.",
+      "crosswalk": {
+        "owasp_asi": [
+          "ASI01"
+        ],
+        "cwe": [
+          "CWE-74"
+        ]
+      },
+      "license": "CC0-1.0",
+      "confirmations": 1,
+      "source_count": 3,
+      "primary_source_count": 1,
+      "evidence_grade": "A-primary-source",
+      "evidence_status": "event-normalized",
+      "provenance": [
+        {
+          "incident_id": "AFI-0015",
+          "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-32711",
+          "kind": "vendor-security-advisory",
+          "authority": "primary"
+        },
+        {
+          "incident_id": "AFI-0015",
+          "url": "https://github.com/advisories/GHSA-h2w9-p5qf-qmrh",
+          "kind": "advisory-database-mirror",
+          "authority": "secondary"
+        },
+        {
+          "incident_id": "AFI-0015",
+          "url": "https://www.catonetworks.com/blog/breaking-down-echoleak/",
+          "kind": "independent-technical-analysis",
+          "authority": "secondary"
+        }
+      ],
+      "behavioral_indicators": [
+        "assistant output contains an outbound reference (link, image source, or auto-fetched resource) that was not present in the user's own request or prior turns",
+        "retrieval was triggered by unsolicited inbound content rather than an explicit user query",
+        "the exfiltration channel is a rendering side effect, such as an auto-loading image, rather than a tool call the user approved"
+      ],
+      "exact_signatures": [],
+      "canonical_url": "https://agentfables.org/af/AF-0016"
+    },
+    {
+      "schema_version": "1.0.0",
+      "id": "AF-0017",
+      "slug": "the-page-that-whispered",
+      "title": "Hidden webpage text steers a browsing agent into exfiltrating credentials",
+      "status": "seeded",
+      "failure_mode": "trust-boundary-violation",
+      "blast_radius": "high",
+      "reversibility": "irreversible",
+      "first_seen": "2025-08-20",
+      "incidents": [
+        "AFI-0016"
+      ],
+      "retrieval_aliases": [
+        "prompt injection browser agent OTP theft",
+        "hidden text webpage AI browser attack",
+        "AI browser agent credential exfiltration",
+        "white text prompt injection agentic browser"
+      ],
+      "stacks": [
+        {
+          "framework": "perplexity-comet",
+          "versions": [
+            "as tested by Brave through August 2025; Perplexity's July 27 - August 13, 2025 fixes did not fully close the disclosed vector"
+          ]
+        }
+      ],
+      "affected_versions": "Perplexity Comet browser assistant, as tested by Brave through August 2025; per Brave's post-publication retest, the disclosed vector remained incompletely mitigated",
+      "fixed_in": "unknown; disclosed 2025-08-20, remained incompletely mitigated per Brave's follow-up retest",
+      "trigger_conditions": [
+        "agent autonomously browses or renders webpage content, including elements invisible to a human viewer such as white-on-white text or HTML comments, as part of fulfilling a user request",
+        "the agent holds session access to connected accounts (email, calendar, other logged-in services) reachable from the same browsing context",
+        "an output channel available to the agent, such as a comment field, can carry data to an external destination"
+      ],
+      "anti_pattern": "Rendering fetched pages into agent context without separating visible text from hidden or invisible instructions.",
+      "mitigation": [
+        "render fetched content into a strictly data-only context; never allow markup, comments, or invisible elements to carry instruction-shaped text into the model's active context",
+        "separate the capability to browse untrusted pages from the capability to access authenticated sessions and credentials within the same agent turn",
+        "treat any model-initiated navigation to an account, credential, or inbox page as requiring a distinct, freshly-scoped approval, not one inherited from the original browsing task",
+        "flag outbound encoding patterns, such as base64 payloads embedded in ordinary-looking actions, as a structural signal independent of page topic"
+      ],
+      "verification": "Serve a page with hidden zero-opacity instructions to visit an authenticated page and exfiltrate data; the agent must not comply, and no data may leave without explicit user authorization.",
+      "crosswalk": {
+        "owasp_asi": [
+          "ASI01"
+        ],
+        "ms_taxonomy": [
+          "cross-domain-prompt-injection"
+        ]
+      },
+      "exact_signature_review": {
+        "status": "investigated-no-stable-artifact",
+        "reviewed_at": "2026-08-16",
+        "sources": [
+          "https://brave.com/blog/comet-prompt-injection/"
+        ],
+        "note": "Brave's disclosure documents the hidden-text technique (white-on-white, HTML comments, steganographic image text) and its effect, but publishes technique descriptions rather than one single reusable payload string suitable as a hash-pinned exact signature."
+      },
+      "license": "CC0-1.0",
+      "confirmations": 1,
+      "source_count": 1,
+      "primary_source_count": 1,
+      "evidence_grade": "A-primary-source",
+      "evidence_status": "event-normalized",
+      "provenance": [
+        {
+          "incident_id": "AFI-0016",
+          "url": "https://brave.com/blog/comet-prompt-injection/",
+          "kind": "original-researcher-disclosure",
+          "authority": "primary"
+        }
+      ],
+      "behavioral_indicators": [
+        "agent action sequence includes navigating to an account or credentials page and reading an inbox for content such as a one-time passcode, none of which were requested by the user",
+        "the triggering instruction is present in the fetched page's markup or rendered content but absent from its visible, user-facing text",
+        "exfiltrated data appears encoded, such as base64, inside an otherwise unrelated outbound action"
+      ],
+      "exact_signatures": [],
+      "canonical_url": "https://agentfables.org/af/AF-0017"
+    },
+    {
+      "schema_version": "1.0.0",
+      "id": "AF-0018",
+      "slug": "the-brief-with-invented-precedent",
+      "title": "Fabricated citations submitted as authoritative without independent verification",
+      "status": "seeded",
+      "failure_mode": "verification-omission",
+      "blast_radius": "high",
+      "reversibility": "irreversible",
+      "first_seen": "2025-12-12",
+      "incidents": [
+        "AFI-0017"
+      ],
+      "retrieval_aliases": [
+        "AI hallucinated case citations court sanctions",
+        "lawyer fined fake citations ChatGPT",
+        "AI generated fabricated legal citations",
+        "generative AI citation verification failure"
+      ],
+      "stacks": [
+        {
+          "framework": "generative-ai-assisted-legal-drafting",
+          "versions": [
+            "unspecified underlying tool; the court record does not name the specific AI product used"
+          ]
+        }
+      ],
+      "affected_versions": "Unspecified — the underlying generative AI tool is not named in available public sources; the pattern applies to any workflow producing citations without independent verification against a citator or direct source lookup",
+      "fixed_in": "n/a (behavioral and process class, not a patched product defect)",
+      "trigger_conditions": [
+        "an agent or AI-assisted workflow drafts content containing citations to external authorities such as case law, articles, or documentation",
+        "citations are not individually verified against an independent source, such as a citator or a direct fetch of the cited document, before being included in output presented as authoritative",
+        "the output is submitted or acted upon in a context where fabricated citations carry material consequence, such as legal filings, technical documentation, or safety guidance"
+      ],
+      "anti_pattern": "Presenting a generated citation as verified because it is well-formed, without confirming the source exists.",
+      "mitigation": [
+        "require every emitted citation to correspond to a successful, logged fetch or search tool call against the cited source within the same session",
+        "run an independent citator or verification pass over all citations before any filing, publication, or downstream action",
+        "treat citation fabrication as a structural risk class independent of subject matter; apply the same check to legal, medical, scientific, and technical citations alike",
+        "disclose AI assistance and the verification steps taken, consistent with jurisdictional certification requirements where applicable"
+      ],
+      "verification": "Confirm each citation resolves via an independent lookup performed after drafting; unresolved citations must be flagged and withheld from the output.",
+      "crosswalk": {
+        "owasp_asi": [
+          "ASI09"
+        ]
+      },
+      "exact_signature_review": {
+        "status": "investigated-no-stable-artifact",
+        "reviewed_at": "2026-08-16",
+        "sources": [
+          "https://storage.courtlistener.com/recap/gov.uscourts.ord.158388/gov.uscourts.ord.158388.215.0.pdf",
+          "https://nwsidebar.wsba.org/2026/03/02/parade-of-horribles-federal-court-in-oregon-surveys-sanctions-for-ai-fake-citations/"
+        ],
+        "note": "The court order and bar-association commentary confirm the sanction and the count of fabricated citations and quotations, but no individual fabricated citation string was independently confirmed character-for-character from the primary document during review, so none is recorded as a hash-pinned exact signature."
+      },
+      "license": "CC0-1.0",
+      "confirmations": 1,
+      "source_count": 2,
+      "primary_source_count": 1,
+      "evidence_grade": "A-primary-source",
+      "evidence_status": "event-normalized",
+      "provenance": [
+        {
+          "incident_id": "AFI-0017",
+          "url": "https://storage.courtlistener.com/recap/gov.uscourts.ord.158388/gov.uscourts.ord.158388.215.0.pdf",
+          "kind": "court-order-primary-document",
+          "authority": "primary"
+        },
+        {
+          "incident_id": "AFI-0017",
+          "url": "https://nwsidebar.wsba.org/2026/03/02/parade-of-horribles-federal-court-in-oregon-surveys-sanctions-for-ai-fake-citations/",
+          "kind": "bar-association-commentary",
+          "authority": "secondary"
+        }
+      ],
+      "behavioral_indicators": [
+        "cited case names, docket numbers, or quotations that do not resolve in an independent citation-checking service or a direct source lookup",
+        "citation density in the output inconsistent with any corresponding search or fetch tool-call activity in the same session",
+        "fabricated citations recur across multiple drafts or revisions without correction, indicating no verification step was ever run"
+      ],
+      "exact_signatures": [],
+      "canonical_url": "https://agentfables.org/af/AF-0018"
     }
   ]
 }

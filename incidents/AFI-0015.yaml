@@ -1,0 +1,14 @@
+id: AFI-0015
+title: EchoLeak zero-click prompt injection in Microsoft 365 Copilot
+occurred_at: 2025-06-11
+status: vendor-confirmed
+sources:
+  - url: https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-32711
+    kind: vendor-security-advisory
+    authority: primary
+  - url: https://github.com/advisories/GHSA-h2w9-p5qf-qmrh
+    kind: advisory-database-mirror
+    authority: secondary
+  - url: https://www.catonetworks.com/blog/breaking-down-echoleak/
+    kind: independent-technical-analysis
+    authority: secondary

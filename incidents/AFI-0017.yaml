@@ -1,0 +1,11 @@
+id: AFI-0017
+title: Federal court sanctions counsel for AI-fabricated case citations in Couvrette v. Wisnovsky
+occurred_at: 2025-12-12
+status: publicly-reported
+sources:
+  - url: https://storage.courtlistener.com/recap/gov.uscourts.ord.158388/gov.uscourts.ord.158388.215.0.pdf
+    kind: court-order-primary-document
+    authority: primary
+  - url: https://nwsidebar.wsba.org/2026/03/02/parade-of-horribles-federal-court-in-oregon-surveys-sanctions-for-ai-fake-citations/
+    kind: bar-association-commentary
+    authority: secondary

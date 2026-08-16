@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0.0",
+  "rule": "fetch-or-silence",
+  "scope": "citations of sources outside this corpus (URLs, documents, quotations) emitted in agent output",
+  "distinguished_from": "cite-contract.json governs citations of this corpus (AF-####); this contract governs the agent's own citations of the outside world",
+  "valid_cite": {
+    "url": { "pattern": "^https?://" },
+    "matched_tool_call": { "enum": ["fetch_url", "search_web"] }
+  },
+  "invalid_if": [
+    "url_without_a_successful_fetch_or_search_call_in_the_same_session",
+    "quotation_without_a_matching_fetch_of_its_source_url",
+    "cited_url_host_or_path_differs_from_any_fetched_or_returned_url"
+  ],
+  "on_invalid": "drop_citation_treat_as_unverified_claim",
+  "on_unknown": "cite_must_be_null",
+  "related_pattern": "AF-0018",
+  "authority": "none",
+  "note": "Reference contract, not an enforcement mechanism. lib/external-cite.mjs implements this rule as a pure function over a session transcript for hosts that want to check it."
+}

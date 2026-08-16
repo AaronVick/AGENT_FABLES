@@ -85,7 +85,7 @@ test('memory routes expose compact cards individually and as JSONL', async () =>
   assert.ok(Math.ceil(JSON.stringify(card).length / 4) <= 150)
   const response = await app.request('/memory.jsonl')
   assert.match(response.headers.get('content-type') ?? '', /application\/x-ndjson/)
-  assert.equal((await response.text()).trim().split('\n').length, 15)
+  assert.equal((await response.text()).trim().split('\n').length, 18)
 })
 
 test('report endpoint retrieves but cannot claim persistence', async () => {

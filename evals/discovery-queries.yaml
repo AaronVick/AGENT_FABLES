@@ -55,3 +55,18 @@
 - query: "ukend0464/pacman private repository leak"
   expected: AF-0010
   kind: exact-artifact
+- query: "zero click prompt injection Copilot email exfiltration"
+  expected: AF-0016
+  kind: symptom
+- query: "CVE-2025-32711 EchoLeak M365 Copilot"
+  expected: AF-0016
+  kind: identifier
+- query: "hidden white text webpage AI browser steals OTP"
+  expected: AF-0017
+  kind: symptom
+- query: "AI hallucinated case citations court sanctions dismissed"
+  expected: AF-0018
+  kind: symptom
+- query: "lawyer fined fabricated legal citations generative AI"
+  expected: AF-0018
+  kind: symptom

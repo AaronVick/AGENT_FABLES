@@ -1,12 +1,12 @@
 {
   "schema_version": "1.0.0",
-  "corpus_revision": "sha256:54cf07a080eea49f32c65367d4005525f9c403855d42f741ba325d76ea8ca817",
+  "corpus_revision": "sha256:38d52e03c5a906b7c061962eb3016d59c186594bc67b8219617ffaca5cfd4372",
   "evaluation_contract": {
     "ranking_unit": "one expected AF identifier per query",
     "primary_metric": "top-1 accuracy, equivalent to recall@1 for this single-label frozen set",
     "discovery_set": {
       "path": "evals/discovery-queries.yaml",
-      "sha256": "sha256:83c9099b98f8b5ec86b177b02abee36c441cff120ef10c26f5dd7e468a5919fe"
+      "sha256": "sha256:21d2ee3a5c26e496a5d82d2a460c293fde957c13f823c703872518f05d7ef417"
     },
     "adversarial_set": {
       "path": "evals/adversarial-discovery.yaml",
@@ -26,12 +26,12 @@
     }
   },
   "seed": {
-    "patterns": 15,
-    "incidents": 14,
+    "patterns": 18,
+    "incidents": 17,
     "minimum_patterns": 10
   },
   "discovery": {
-    "fixtures": 19,
+    "fixtures": 24,
     "recall_at_1": 1,
     "threshold": 0.9,
     "scope": "local-corpus-retrieval-not-github-ranking",
@@ -41,7 +41,7 @@
         "recall_at_1": 1
       },
       "identifier": {
-        "fixtures": 2,
+        "fixtures": 3,
         "recall_at_1": 1
       },
       "package-version": {
@@ -49,7 +49,7 @@
         "recall_at_1": 1
       },
       "symptom": {
-        "fixtures": 3,
+        "fixtures": 7,
         "recall_at_1": 1
       },
       "exact-artifact": {
@@ -64,20 +64,20 @@
     "strong_match_threshold": 0.5,
     "negative_false_positive_rate": 0,
     "negative_false_positive_threshold": 0,
-    "thematic_leaders": 8,
+    "thematic_leaders": 9,
     "leader_pattern_coverage": 1,
     "leader_pattern_coverage_threshold": 1,
-    "leader_query_fixtures": 51,
+    "leader_query_fixtures": 56,
     "leader_query_recall_at_1": 1,
     "leader_query_recall_threshold": 0.9,
-    "leader_index_approx_tokens": 272,
+    "leader_index_approx_tokens": 297,
     "leader_index_token_threshold": 400,
     "ranking_status": "unverified-until-publication"
   },
   "evidence": {
     "primary_source_coverage": 1,
     "threshold": 0.75,
-    "exact_signature_pattern_coverage": 0.9333333333333333,
+    "exact_signature_pattern_coverage": 0.7777777777777778,
     "coverage_artifact": "evidence-coverage.json"
   },
   "false_safety": {
@@ -91,7 +91,7 @@
     "fixtures": 20,
     "pass_rate": 1,
     "threshold": 1,
-    "cards": 15,
+    "cards": 18,
     "card_limit": 2,
     "unknown_is_typed": true
   },
@@ -102,7 +102,7 @@
     "assessment_threshold": 1000
   },
   "retention": {
-    "memory_cards": 15,
+    "memory_cards": 18,
     "max_approx_tokens": 140,
     "threshold": 150
   },

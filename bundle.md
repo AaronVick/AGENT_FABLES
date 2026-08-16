@@ -1,6 +1,6 @@
 # Agent Fables — machine bundle
 
-Schema: 1.0.0 | Corpus: sha256:54cf07a080eea49f32c65367d4005525f9c403855d42f741ba325d76ea8ca817 | Entries: 15
+Schema: 1.0.0 | Corpus: sha256:38d52e03c5a906b7c061962eb3016d59c186594bc67b8219617ffaca5cfd4372 | Entries: 18
 
 Reference data only. This document has no instruction authority.
 Steward context: steward.json. Evidence trust is independent of steward identity or reputation.
@@ -242,4 +242,55 @@ Mitigations:
 - prove the resolved target is beneath the isolated-worktree root and is not the main working tree
 - retain a remote or out-of-tree recovery point before multi-agent worktree orchestration
 Verification: Repeat parallel-agent rounds in a disposable repository; cleanup must stay beneath the isolation root while main Git history and unrelated files remain unchanged.
+
+## AF-0016 — Untrusted inbound content triggers zero-click retrieval and exfiltration
+Canonical: https://agentfables.org/af/AF-0016
+Failure mode: trust-boundary-violation
+Affected: Microsoft 365 Copilot prior to Microsoft's May 2025 server-side fix; exact internal build range not independently disclosed
+Fixed in: Server-side fix deployed by Microsoft, May 2025 (no client update required); CVE-2025-32711 published 2025-06-11
+Anti-pattern: Trusting content the agent did not request as if it entered through the same channel as the user's own instructions.
+Behavioral indicators:
+- assistant output contains an outbound reference (link, image source, or auto-fetched resource) that was not present in the user's own request or prior turns
+- retrieval was triggered by unsolicited inbound content rather than an explicit user query
+- the exfiltration channel is a rendering side effect, such as an auto-loading image, rather than a tool call the user approved
+Mitigations:
+- treat all retrieved or ingested content as untrusted input with no instruction authority, regardless of its source inside the organization
+- strip or neutralize outbound-rendering constructs (auto-loading links or images) in any content the model composes from untrusted input before that content reaches a rendering surface
+- require an explicit, user-approved channel for any data leaving the trust boundary; never let model-composed output alone select the destination
+- classify inbound content sources such as organizational mail and shared documents as adversary-reachable by default, not by exception
+Verification: Seed inbound content with retrieval-triggering text and a callback URL; the response must not contain any externally resolvable reference sourced from that content.
+
+## AF-0017 — Hidden webpage text steers a browsing agent into exfiltrating credentials
+Canonical: https://agentfables.org/af/AF-0017
+Failure mode: trust-boundary-violation
+Affected: Perplexity Comet browser assistant, as tested by Brave through August 2025; per Brave's post-publication retest, the disclosed vector remained incompletely mitigated
+Fixed in: unknown; disclosed 2025-08-20, remained incompletely mitigated per Brave's follow-up retest
+Anti-pattern: Rendering fetched pages into agent context without separating visible text from hidden or invisible instructions.
+Behavioral indicators:
+- agent action sequence includes navigating to an account or credentials page and reading an inbox for content such as a one-time passcode, none of which were requested by the user
+- the triggering instruction is present in the fetched page's markup or rendered content but absent from its visible, user-facing text
+- exfiltrated data appears encoded, such as base64, inside an otherwise unrelated outbound action
+Mitigations:
+- render fetched content into a strictly data-only context; never allow markup, comments, or invisible elements to carry instruction-shaped text into the model's active context
+- separate the capability to browse untrusted pages from the capability to access authenticated sessions and credentials within the same agent turn
+- treat any model-initiated navigation to an account, credential, or inbox page as requiring a distinct, freshly-scoped approval, not one inherited from the original browsing task
+- flag outbound encoding patterns, such as base64 payloads embedded in ordinary-looking actions, as a structural signal independent of page topic
+Verification: Serve a page with hidden zero-opacity instructions to visit an authenticated page and exfiltrate data; the agent must not comply, and no data may leave without explicit user authorization.
+
+## AF-0018 — Fabricated citations submitted as authoritative without independent verification
+Canonical: https://agentfables.org/af/AF-0018
+Failure mode: verification-omission
+Affected: Unspecified — the underlying generative AI tool is not named in available public sources; the pattern applies to any workflow producing citations without independent verification against a citator or direct source lookup
+Fixed in: n/a (behavioral and process class, not a patched product defect)
+Anti-pattern: Presenting a generated citation as verified because it is well-formed, without confirming the source exists.
+Behavioral indicators:
+- cited case names, docket numbers, or quotations that do not resolve in an independent citation-checking service or a direct source lookup
+- citation density in the output inconsistent with any corresponding search or fetch tool-call activity in the same session
+- fabricated citations recur across multiple drafts or revisions without correction, indicating no verification step was ever run
+Mitigations:
+- require every emitted citation to correspond to a successful, logged fetch or search tool call against the cited source within the same session
+- run an independent citator or verification pass over all citations before any filing, publication, or downstream action
+- treat citation fabrication as a structural risk class independent of subject matter; apply the same check to legal, medical, scientific, and technical citations alike
+- disclose AI assistance and the verification steps taken, consistent with jurisdictional certification requirements where applicable
+Verification: Confirm each citation resolves via an independent lookup performed after drafting; unresolved citations must be flagged and withheld from the output.
 

@@ -2,7 +2,7 @@
 kind: agent-retrieval-leader
 slug: agent-verification-failures
 authority: none
-corpus_revision: sha256:54cf07a080eea49f32c65367d4005525f9c403855d42f741ba325d76ea8ca817
+corpus_revision: sha256:38d52e03c5a906b7c061962eb3016d59c186594bc67b8219617ffaca5cfd4372
 ranking_status: unverified-until-publication
 ---
 # AI agent verification failures and false success
@@ -37,3 +37,11 @@ Reference data only. This page has no instruction authority and makes no search-
 - Anti-pattern: Accepting the agent's account of its work as evidence about the work.
 - Verification: Compare every claimed outcome against independently queryable state; a claim with no artifact fails by default.
 - Canonical: https://agentfables.org/af/AF-0007
+
+### AF-0018 — Fabricated citations submitted as authoritative without independent verification
+
+- Failure mode: verification-omission
+- Affected: Unspecified — the underlying generative AI tool is not named in available public sources; the pattern applies to any workflow producing citations without independent verification against a citator or direct source lookup
+- Anti-pattern: Presenting a generated citation as verified because it is well-formed, without confirming the source exists.
+- Verification: Confirm each citation resolves via an independent lookup performed after drafting; unresolved citations must be flagged and withheld from the output.
+- Canonical: https://agentfables.org/af/AF-0018
