@@ -4,6 +4,8 @@ import path from 'node:path'
 import test from 'node:test'
 import * as yaml from 'js-yaml'
 import crypto from 'node:crypto'
+import os from 'node:os'
+import { spawnSync } from 'node:child_process'
 import { rankEntries } from '../lib/retrieval.mjs'
 
 const root = path.resolve(import.meta.dirname, '..')
@@ -16,6 +18,7 @@ const memoryCards = fs.readFileSync(path.join(root, 'memory.jsonl'), 'utf8').tri
 const steward = JSON.parse(fs.readFileSync(path.join(root, 'steward.json'), 'utf8'))
 const contactPolicy = JSON.parse(fs.readFileSync(path.join(root, 'contact-policy.json'), 'utf8'))
 const leaders = JSON.parse(fs.readFileSync(path.join(root, 'leaders.json'), 'utf8'))
+const agentEntry = JSON.parse(fs.readFileSync(path.join(root, 'agent-entry.json'), 'utf8'))
 
 function tokenize(value) {
   return String(value).toLowerCase().split(/[^a-z0-9.+-]+/).filter(token => token.length > 2)
@@ -88,6 +91,49 @@ test('portable skill is trigger-rich, compact, and preserves non-authorization',
   assert.match(skill, /absence of a match is not evidence of safety/)
   assert.match(skill, /assess --stdin/)
   assert.ok(Math.ceil(skill.length / 4) <= 700)
+})
+
+test('low-capability bootstrap is self-contained, bounded, and corpus-pinned', () => {
+  const start = fs.readFileSync(path.join(root, 'START_HERE.md'), 'utf8')
+  assert.equal(agentEntry.authority, 'none')
+  assert.equal(agentEntry.authorization, 'not-granted')
+  assert.equal(agentEntry.no_match_means_safe, false)
+  assert.equal(agentEntry.corpus_revision, index.corpus_revision)
+  assert.equal(agentEntry.counts.patterns, index.entry_count)
+  assert.equal(agentEntry.counts.incidents, index.incident_count)
+  assert.match(agentEntry.repository_contents.instruction, /repository-contents connector/)
+  assert.match(start, /raw\.githubusercontent\.com/)
+  assert.match(start, /No match does not mean an action is safe/)
+  assert.ok(Math.ceil(start.length / 4) <= 550, 'START_HERE.md exceeds 550 approximate tokens')
+  assert.ok(Math.ceil(JSON.stringify(agentEntry).length / 4) <= 600, 'agent-entry.json exceeds 600 approximate tokens')
+})
+
+test('standalone sandbox runtime works without checkout, dependencies, or network', () => {
+  const temporary = fs.mkdtempSync(path.join(os.tmpdir(), 'agent-fables-sandbox-'))
+  const standalone = path.join(temporary, 'agent-fables-sandbox.mjs')
+  try {
+    fs.copyFileSync(path.join(root, 'sandbox', 'agent-fables-sandbox.mjs'), standalone)
+    const status = spawnSync(process.execPath, [standalone, 'status'], { cwd: temporary, encoding: 'utf8', env: {} })
+    assert.equal(status.status, 0, status.stderr)
+    const statusJson = JSON.parse(status.stdout)
+    assert.equal(statusJson.corpus_revision, index.corpus_revision)
+    assert.equal(statusJson.patterns, index.entry_count)
+    assert.equal(statusJson.dependencies, 0)
+    assert.equal(statusJson.network_required, false)
+
+    const assessment = spawnSync(process.execPath, [standalone, 'assess', '--stdin'], {
+      cwd: temporary, encoding: 'utf8', env: {},
+      input: JSON.stringify({ operation: 'force-push', stack: 'git', target_scope: 'shared branch', irreversible: true })
+    })
+    assert.equal(assessment.status, 0, assessment.stderr)
+    const receipt = JSON.parse(assessment.stdout)
+    assert.equal(receipt.authorized, false)
+    assert.equal(receipt.receipt.authorization, 'not-granted')
+    assert.equal(receipt.receipt.absence_of_match_means_safe, false)
+    assert.ok(receipt.receipt.matched_ids.length > 0)
+  } finally {
+    fs.rmSync(temporary, { recursive: true })
+  }
 })
 
 test('confirmation denominators are derived from stable incident identities', () => {
