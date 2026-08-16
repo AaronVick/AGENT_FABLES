@@ -111,10 +111,28 @@ function specificityFable(fable: Fable, query: string) {
     .reduce((score, token) => score + 1 / fables.filter(candidate => tokens(searchableText(candidate)).some(value => token === value || (token.length >= 4 && value.length >= 4 && (token.startsWith(value) || value.startsWith(token))))).length, 0)
 }
 
+function matchMetadata(fable: Fable, query: string, confidence: number) {
+  const queryTokens = [...new Set(tokens(query))]
+  const normalized = query.trim().toLowerCase()
+  const groups: Record<string, string[]> = {
+    exact_artifact: fable.exact_signatures.map(signature => typeof signature === 'string' ? signature : signature.text),
+    identifier: [fable.id, ...(fable.identifiers ?? [])],
+    stack_version: fable.stacks.flatMap(stack => [stack.framework, ...stack.versions]).concat([fable.affected_versions, fable.fixed_in]),
+    behavioral: [...fable.behavioral_indicators, ...(fable.trigger_conditions ?? []), fable.anti_pattern, ...fable.mitigation, fable.verification],
+    lexical: [fable.title, fable.failure_mode, ...((fable as Fable & { retrieval_aliases?: string[] }).retrieval_aliases ?? [])]
+  }
+  const matchedFields = Object.entries(groups).filter(([field, values]) => {
+    if (field === 'exact_artifact' || field === 'identifier') return normalized.length >= 4 && values.some(value => normalized.includes(value.toLowerCase()) || value.toLowerCase().includes(normalized))
+    return queryTokens.some(token => tokens(values.join(' ')).some(candidate => token === candidate || (token.length >= 4 && candidate.length >= 4 && (token.startsWith(candidate) || candidate.startsWith(token)))))
+  }).map(([field]) => field)
+  const matchType = matchedFields.includes('exact_artifact') ? 'exact-artifact' : matchedFields.includes('identifier') ? 'identifier' : matchedFields.includes('stack_version') ? 'stack-version' : matchedFields.includes('behavioral') ? 'behavioral' : confidence < 0.5 ? 'weak-lexical' : 'lexical'
+  return { match_type: matchType, matched_fields: matchedFields }
+}
+
 function findMatches(query: string, limit = 2) {
   const gradeRank: Record<string, number> = { 'A-primary-source': 3, 'B-indexed-public-report': 2, 'C-secondary-only': 1 }
   return fables
-    .map(fable => ({ fable, confidence: scoreFable(fable, query), specificity: specificityFable(fable, query) }))
+    .map(fable => { const confidence = scoreFable(fable, query); return ({ fable, confidence, specificity: specificityFable(fable, query), ...matchMetadata(fable, query, confidence) }) })
     .filter(match => match.confidence > 0)
     .sort((a, b) => b.confidence - a.confidence || b.specificity - a.specificity ||
       gradeRank[b.fable.evidence_grade] - gradeRank[a.fable.evidence_grade] ||
@@ -281,7 +299,7 @@ app.get('/preflight', c => {
   const matches = findMatches(`${op} ${stack}`)
   return c.json({
     authority: 'none', query: { op, stack },
-    matches: matches.map(({ fable, confidence }) => ({ confidence, ...decisionCard(fable) }))
+    matches: matches.map(({ fable, confidence, match_type, matched_fields }) => ({ confidence, match_type, matched_fields, ...decisionCard(fable) }))
   })
 })
 
@@ -312,12 +330,12 @@ app.post('/assess', async c => {
   const combined = `${normalized.operation} ${normalized.command} ${normalized.target_scope}`
   const rankedMatches = findMatches(query)
   const strongMatches = rankedMatches.filter(({ confidence }) => confidence >= 0.5)
-  const matches = (strongMatches.length ? strongMatches : rankedMatches.slice(0, 1)).map(({ fable, confidence }) => ({ confidence, ...decisionCard(fable) }))
+  const matches = (strongMatches.length ? strongMatches : rankedMatches.slice(0, 1)).map(({ fable, confidence, match_type, matched_fields }) => ({ confidence, match_type, matched_fields, ...decisionCard(fable) }))
   const flags = [
     normalized.irreversible || /\b(destroy|delete|drop|purge|force[- ]?push|overwrite|truncate|shutdown|revoke|rotate|migrate|rmtree|remove-item|git\s+clean)\b|\brm\s+-[a-z]*r[a-z]*f?/i.test(combined) ? { code: 'irreversible-action', severity: 'high', basis: 'declared or lexical operation signal' } : null,
     /(?:^|\s)(?:\/|\*|--all|all|global|recursive)(?:\s|$)/i.test(`${normalized.command} ${normalized.target_scope}`) ? { code: 'broad-target-scope', severity: 'high', basis: 'broad or recursive target signal' } : null,
     /\b(prod(?:uction)?|live|customer|tenant|shared|mainnet)\b/i.test(normalized.target_scope) ? { code: 'protected-target-scope', severity: 'high', basis: 'production, live, customer, tenant, shared, or mainnet target signal' } : null,
-    /\b(token|secret|credential|api[-_ ]?key|password|private[-_ ]?key)\b/i.test(combined) ? { code: 'credential-sensitive', severity: 'high', basis: 'credential-related operation signal' } : null,
+    /\b(tokens?|secrets?|credentials?|api[-_ ]?keys?|passwords?|private[-_ ]?keys?)\b/i.test(combined) ? { code: 'credential-sensitive', severity: 'high', basis: 'credential-related operation signal' } : null,
     matches.length === 0 ? { code: 'no-corpus-match', severity: 'unknown', basis: 'absence of a match is not evidence of safety' } : null,
     matches.some(match => match.evidence_grade !== 'A-primary-source') ? { code: 'weak-or-incomplete-evidence', severity: 'unknown', basis: 'at least one result lacks primary-source grade' } : null
   ].filter((flag): flag is { code: string, severity: string, basis: string } => flag !== null)
@@ -367,7 +385,7 @@ app.post('/report', async c => {
   const matches = findMatches(query)
   return c.json({
     authority: 'none',
-    matches: matches.map(({ fable, confidence }) => ({ confidence, card: decisionCard(fable) })),
+    matches: matches.map(({ fable, confidence, match_type, matched_fields }) => ({ confidence, match_type, matched_fields, card: decisionCard(fable) })),
     recorded: false,
     recording_status: 'disabled-until-quarantine-storage-and-consent-validation-exist'
   })

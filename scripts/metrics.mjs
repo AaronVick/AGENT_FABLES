@@ -14,6 +14,7 @@ const index = JSON.parse(fs.readFileSync(path.join(root, 'index.json'), 'utf8'))
 const incidents = JSON.parse(fs.readFileSync(path.join(root, 'incidents.json'), 'utf8')).incidents
 const queries = yaml.load(fs.readFileSync(path.join(root, 'evals/discovery-queries.yaml'), 'utf8'))
 const adversarialQueries = yaml.load(fs.readFileSync(path.join(root, 'evals/adversarial-discovery.yaml'), 'utf8'))
+const negativeQueries = JSON.parse(fs.readFileSync(path.join(root, 'evals/retrieval-negatives.json'), 'utf8'))
 const hits = queries.filter(fixture => rankEntries(corpus, fixture.query, 1)[0]?.entry.id === fixture.expected).length
 const discoveryByKind = Object.fromEntries([...new Set(queries.map(fixture => fixture.kind))].map(kind => {
   const fixtures = queries.filter(fixture => fixture.kind === kind)
@@ -21,6 +22,8 @@ const discoveryByKind = Object.fromEntries([...new Set(queries.map(fixture => fi
   return [kind, { fixtures: fixtures.length, recall_at_1: kindHits / fixtures.length }]
 }))
 const adversarialHits = adversarialQueries.filter(fixture => rankEntries(corpus, fixture.query, 1)[0]?.entry.id === fixture.expected).length
+const negativeResults = negativeQueries.map(fixture => ({ ...fixture, confidence: rankEntries(corpus, fixture.query, 1)[0]?.confidence ?? 0 }))
+const negativeFalsePositives = negativeResults.filter(result => result.confidence >= 0.5).length
 const primary = incidents.filter(incident => incident.evidence_grade === 'A-primary-source').length
 const preflightFixture = JSON.stringify({ matches: rankEntries(corpus, 'terraform-destroy terraform', 2).map(result => decisionCard(result.entry)) })
 const assessmentFixture = JSON.stringify(assessAction(corpus, 'sha256:0000000000000000000000000000000000000000000000000000000000000000', {
@@ -51,6 +54,7 @@ const metrics = {
     discovery_set: { path: 'evals/discovery-queries.yaml', sha256: fileSha256('evals/discovery-queries.yaml') },
     adversarial_set: { path: 'evals/adversarial-discovery.yaml', sha256: fileSha256('evals/adversarial-discovery.yaml') },
     false_safety_set: { path: 'evals/false-safety.json', sha256: fileSha256('evals/false-safety.json') }
+    , negative_control_set: { path: 'evals/retrieval-negatives.json', sha256: fileSha256('evals/retrieval-negatives.json') }
   },
   seed: { patterns: corpus.length, incidents: incidents.length, minimum_patterns: 10 },
   discovery: {
@@ -62,6 +66,10 @@ const metrics = {
     adversarial_fixtures: adversarialQueries.length,
     adversarial_recall_at_1: adversarialHits / adversarialQueries.length,
     adversarial_recall_threshold: 0.8,
+    negative_control_fixtures: negativeQueries.length,
+    strong_match_threshold: 0.5,
+    negative_false_positive_rate: negativeFalsePositives / negativeQueries.length,
+    negative_false_positive_threshold: 0,
     thematic_leaders: leaders.topics.length,
     leader_pattern_coverage: leaderPatternIds.size / corpus.length,
     leader_pattern_coverage_threshold: 1,
@@ -77,7 +85,7 @@ const metrics = {
     exact_signature_pattern_coverage: evidenceCoverage.overall.exact_signature_pattern_coverage,
     coverage_artifact: 'evidence-coverage.json'
   },
-  false_safety: { fixtures: falseSafety.fixtures, pass_rate: falseSafety.pass_rate, threshold: 1, sandbox_runnable: falseSafety.sandbox_runnable },
+  false_safety: { fixtures: falseSafety.false_safety.fixtures, pass_rate: falseSafety.false_safety.pass_rate, threshold: 1, sandbox_runnable: falseSafety.sandbox_runnable, negative_false_positive_rate: falseSafety.negative_controls.false_positive_rate },
   utility: {
     preflight_approx_tokens: Math.ceil(preflightFixture.length / 4), preflight_threshold: 400,
     assessment_approx_tokens: Math.ceil(assessmentFixture.length / 4), assessment_threshold: 1000
@@ -98,6 +106,7 @@ metrics.local_agent_routes_pass = metrics.seed.patterns >= metrics.seed.minimum_
   metrics.discovery.recall_at_1 >= metrics.discovery.threshold &&
   Object.values(metrics.discovery.by_query_kind).every(kind => kind.recall_at_1 >= metrics.discovery.threshold) &&
   metrics.discovery.adversarial_recall_at_1 >= metrics.discovery.adversarial_recall_threshold &&
+  metrics.discovery.negative_false_positive_rate <= metrics.discovery.negative_false_positive_threshold &&
   metrics.discovery.leader_pattern_coverage >= metrics.discovery.leader_pattern_coverage_threshold &&
   metrics.discovery.leader_query_recall_at_1 >= metrics.discovery.leader_query_recall_threshold &&
   metrics.discovery.leader_index_approx_tokens <= metrics.discovery.leader_index_token_threshold &&

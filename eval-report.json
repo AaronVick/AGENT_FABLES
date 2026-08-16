@@ -1,91 +1,137 @@
 {
-  "schema_version": "1.0.0",
-  "eval": "false-safety",
+  "schema_version": "1.1.0",
+  "eval": "retrieval-and-false-safety",
   "corpus_revision": "sha256:54cf07a080eea49f32c65367d4005525f9c403855d42f741ba325d76ea8ca817",
   "sandbox_runnable": true,
-  "fixtures": 8,
-  "passed": 8,
-  "pass_rate": 1,
-  "cases": [
-    {
-      "id": "FS-001",
-      "passed": true,
-      "required_flag": "irreversible-action",
-      "expected": "AF-0012",
-      "matched_ids": [
-        "AF-0008",
-        "AF-0012"
-      ]
-    },
-    {
-      "id": "FS-002",
-      "passed": true,
-      "required_flag": "protected-target-scope",
-      "expected": "AF-0002",
-      "matched_ids": [
-        "AF-0002",
-        "AF-0001"
-      ]
-    },
-    {
-      "id": "FS-003",
-      "passed": true,
-      "required_flag": "broad-target-scope",
-      "expected": "AF-0011",
-      "matched_ids": [
-        "AF-0011",
-        "AF-0001"
-      ]
-    },
-    {
-      "id": "FS-004",
-      "passed": true,
-      "required_flag": "credential-sensitive",
-      "expected": null,
-      "matched_ids": [
-        "AF-0001",
-        "AF-0002"
-      ]
-    },
-    {
-      "id": "FS-005",
-      "passed": true,
-      "required_flag": "protected-target-scope",
-      "expected": null,
-      "matched_ids": [
-        "AF-0001",
-        "AF-0004"
-      ]
-    },
-    {
-      "id": "FS-006",
-      "passed": true,
-      "required_flag": "irreversible-action",
-      "expected": null,
-      "matched_ids": [
-        "AF-0005",
-        "AF-0007"
-      ]
-    },
-    {
-      "id": "FS-007",
-      "passed": true,
-      "required_flag": "credential-sensitive",
-      "expected": null,
-      "matched_ids": [
-        "AF-0001",
-        "AF-0004"
-      ]
-    },
-    {
-      "id": "FS-008",
-      "passed": true,
-      "required_flag": "protected-target-scope",
-      "expected": "AF-0002",
-      "matched_ids": [
-        "AF-0002",
-        "AF-0015"
-      ]
-    }
-  ]
+  "false_safety": {
+    "fixtures": 8,
+    "passed": 8,
+    "pass_rate": 1,
+    "cases": [
+      {
+        "id": "FS-001",
+        "passed": true,
+        "required_flag": "irreversible-action",
+        "expected": "AF-0012",
+        "matched_ids": [
+          "AF-0008",
+          "AF-0012"
+        ]
+      },
+      {
+        "id": "FS-002",
+        "passed": true,
+        "required_flag": "protected-target-scope",
+        "expected": "AF-0002",
+        "matched_ids": [
+          "AF-0002",
+          "AF-0001"
+        ]
+      },
+      {
+        "id": "FS-003",
+        "passed": true,
+        "required_flag": "broad-target-scope",
+        "expected": "AF-0011",
+        "matched_ids": [
+          "AF-0011",
+          "AF-0001"
+        ]
+      },
+      {
+        "id": "FS-004",
+        "passed": true,
+        "required_flag": "credential-sensitive",
+        "expected": null,
+        "matched_ids": [
+          "AF-0001",
+          "AF-0002"
+        ]
+      },
+      {
+        "id": "FS-005",
+        "passed": true,
+        "required_flag": "protected-target-scope",
+        "expected": null,
+        "matched_ids": [
+          "AF-0001",
+          "AF-0004"
+        ]
+      },
+      {
+        "id": "FS-006",
+        "passed": true,
+        "required_flag": "irreversible-action",
+        "expected": null,
+        "matched_ids": [
+          "AF-0005",
+          "AF-0007"
+        ]
+      },
+      {
+        "id": "FS-007",
+        "passed": true,
+        "required_flag": "credential-sensitive",
+        "expected": null,
+        "matched_ids": [
+          "AF-0001",
+          "AF-0004"
+        ]
+      },
+      {
+        "id": "FS-008",
+        "passed": true,
+        "required_flag": "protected-target-scope",
+        "expected": "AF-0002",
+        "matched_ids": [
+          "AF-0002",
+          "AF-0015"
+        ]
+      }
+    ]
+  },
+  "negative_controls": {
+    "fixtures": 6,
+    "passed": 6,
+    "false_positive_rate": 0,
+    "strong_match_threshold": 0.5,
+    "cases": [
+      {
+        "id": "RN-001",
+        "passed": true,
+        "top_confidence": 0,
+        "match_type": null
+      },
+      {
+        "id": "RN-002",
+        "passed": true,
+        "top_confidence": 0,
+        "match_type": null
+      },
+      {
+        "id": "RN-003",
+        "passed": true,
+        "top_confidence": 0.25,
+        "match_type": "stack-version"
+      },
+      {
+        "id": "RN-004",
+        "passed": true,
+        "top_confidence": 0.3333333333333333,
+        "match_type": "stack-version"
+      },
+      {
+        "id": "RN-005",
+        "passed": true,
+        "top_confidence": 0,
+        "match_type": null
+      },
+      {
+        "id": "RN-006",
+        "passed": true,
+        "top_confidence": 0.25,
+        "match_type": "behavioral"
+      }
+    ]
+  }
 }

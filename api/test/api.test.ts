@@ -27,9 +27,11 @@ test('preflight requires a bounded query and retrieves the Terraform record', as
   const response = await app.request('/preflight?op=terraform-destroy&stack=terraform')
   assert.equal(response.status, 200)
   assert.equal(response.headers.get('x-af-schema-version'), '1.0.0')
-  const body = await response.json() as { authority: string, matches: Array<{ id: string }> }
+  const body = await response.json() as { authority: string, matches: Array<{ id: string, match_type: string, matched_fields: string[] }> }
   assert.equal(body.authority, 'none')
   assert.equal(body.matches[0].id, 'AF-0002')
+  assert.equal(body.matches[0].match_type, 'stack-version')
+  assert.ok(body.matches[0].matched_fields.includes('stack_version'))
   assert.ok(body.matches.length <= 2)
 })
 
