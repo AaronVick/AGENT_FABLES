@@ -28,3 +28,18 @@
 - query: tool server fetched attacker instructions and executed them through a command parameter
   expected: AF-0003
   kind: paraphrased-operation
+- query: chatbot attributed specific quotes to a real outlet that only a headline and excerpt had actually been retrieved from
+  expected: AF-0020
+  kind: paraphrased-symptom
+- query: retrieval tool reported success while the extracted body was effectively blank, and the summary proceeded anyway
+  expected: AF-0021
+  kind: paraphrased-symptom
+- query: assistant asserted something was absent from a codebase moments after a push the search index had not caught up to
+  expected: AF-0025
+  kind: paraphrased-symptom
+- query: a setup command failed without raising an error and every later step assumed the earlier one had worked
+  expected: AF-0031
+  kind: paraphrased-symptom
+- query: an unparsed response block left only a confirmation phrase visible, and that phrase was mistaken for the document
+  expected: AF-0032
+  kind: paraphrased-symptom

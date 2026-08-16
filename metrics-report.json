@@ -6,11 +6,11 @@
     "primary_metric": "top-1 accuracy, equivalent to recall@1 for this single-label frozen set",
     "discovery_set": {
       "path": "evals/discovery-queries.yaml",
-      "sha256": "sha256:21d2ee3a5c26e496a5d82d2a460c293fde957c13f823c703872518f05d7ef417"
+      "sha256": "sha256:0461176878af452642f7f57a28c09e06e2145cd6f2054487193d8ff05dd5c065"
     },
     "adversarial_set": {
       "path": "evals/adversarial-discovery.yaml",
-      "sha256": "sha256:280a4522d6490d05f2cb66eb8b3524e44a9e668ae717f775cce3569907bca4a8"
+      "sha256": "sha256:aa6ce3b7649de726ee556404fde88fec388d1263eafe18b76d5b2017d37bd452"
     },
     "false_safety_set": {
       "path": "evals/false-safety.json",
@@ -31,7 +31,7 @@
     "minimum_patterns": 10
   },
   "discovery": {
-    "fixtures": 24,
+    "fixtures": 30,
     "recall_at_1": 1,
     "threshold": 0.9,
     "scope": "local-corpus-retrieval-not-github-ranking",
@@ -49,15 +49,15 @@
         "recall_at_1": 1
       },
       "symptom": {
-        "fixtures": 7,
+        "fixtures": 12,
         "recall_at_1": 1
       },
       "exact-artifact": {
-        "fixtures": 8,
+        "fixtures": 9,
         "recall_at_1": 1
       }
     },
-    "adversarial_fixtures": 10,
+    "adversarial_fixtures": 15,
     "adversarial_recall_at_1": 1,
     "adversarial_recall_threshold": 0.8,
     "negative_control_fixtures": 6,

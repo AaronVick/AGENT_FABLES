@@ -70,3 +70,21 @@
 - query: "lawyer fined fabricated legal citations generative AI"
   expected: AF-0018
   kind: symptom
+- query: "AI search answer contained quotes beyond what the preview snippet showed"
+  expected: AF-0020
+  kind: symptom
+- query: "fetch_url reported success but returned near-empty dropped content treated as fully read"
+  expected: AF-0021
+  kind: symptom
+- query: "agent said file does not exist right after a repo push, index not caught up"
+  expected: AF-0025
+  kind: symptom
+- query: "unconfirmed failed tool result treated as a successful one and acted on, cascading into destructive actions"
+  expected: AF-0031
+  kind: symptom
+- query: "file read tool returned a status message instead of the actual content"
+  expected: AF-0032
+  kind: symptom
+- query: "successfully downloaded text file"
+  expected: AF-0032
+  kind: exact-artifact
