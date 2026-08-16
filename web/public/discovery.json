@@ -28,7 +28,7 @@
       "channel": "agent-skill-catalog",
       "breadcrumb": "skill metadata matches destructive operations, agent permission risk, MCP changes, false-success verification, or incident documentation",
       "activation": "agent or harness selects a skill from its name and description before acting",
-      "local_status": "portable-skill-ready-not-published",
+      "local_status": "public-git-ready",
       "artifact": "skills/agent-fables-preflight/SKILL.md"
     },
     {
@@ -49,14 +49,14 @@
       "channel": "git-and-web-search",
       "breadcrumb": "repository metadata and source-backed symptom, version, CVE, command, or artifact strings match a cold query",
       "activation": "GitHub code/repository search or web retrieval",
-      "local_status": "artifacts-ready-ranking-unverified",
+      "local_status": "public-git-verified-ranking-unverified",
       "artifact": "search-index.json, signatures/, and leaders/"
     },
     {
       "channel": "thematic-leader",
       "breadcrumb": "a broad problem-family query lands on one revision-pinned page routing to multiple AF records",
       "activation": "Git/code/web search for destructive operations, MCP security, permission boundaries, supply-chain security, or verification failures",
-      "local_status": "generated-ranking-unverified",
+      "local_status": "public-git-verified-ranking-unverified",
       "artifact": "leaders.json and leaders/"
     }
   ],

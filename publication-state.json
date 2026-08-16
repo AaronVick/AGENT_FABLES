@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0.0",
+  "verified_at": "2026-08-16",
+  "repository": "https://github.com/AaronVick/AGENT_FABLES",
+  "visibility": "public",
+  "default_branch": "main",
+  "git_repository_published": true,
+  "raw_machine_artifacts_verified": true,
+  "github_topics_configured": true,
+  "npm_package_published": false,
+  "mcp_registry_entry_verified": false,
+  "public_endpoints_verified": false,
+  "verification_method": "GitHub API repository metadata plus anonymous raw.githubusercontent.com retrieval"
+}

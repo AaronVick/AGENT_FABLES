@@ -60,6 +60,7 @@
     "freshness.json",
     "contribution-contract.json",
     "adoption-kit.json",
+    "publication-state.json",
     "leaders.json",
     "leaders/",
     "skills/agent-fables-preflight/",

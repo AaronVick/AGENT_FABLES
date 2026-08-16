@@ -32,6 +32,7 @@ const steward = JSON.parse(fs.readFileSync(path.join(root, 'steward.json'), 'utf
 const contactPolicy = JSON.parse(fs.readFileSync(path.join(root, 'contact-policy.json'), 'utf8'))
 const leaders = JSON.parse(fs.readFileSync(path.join(root, 'leaders.json'), 'utf8'))
 const leaderPatternIds = new Set(leaders.topics.flatMap(topic => topic.records.map(record => record.id)))
+const publicationState = JSON.parse(fs.readFileSync(path.join(root, 'publication-state.json'), 'utf8'))
 const leaderFixtures = leaders.topics.flatMap(topic => topic.search_terms.map(query => ({ query, expected: topic.slug })))
 const leaderHits = leaderFixtures.filter(fixture => rankLeaders(leaders, fixture.query, 1)[0]?.slug === fixture.expected).length
 const leaderIndexTokens = Math.ceil(JSON.stringify(leaderIndex(leaders)).length / 4)
@@ -71,7 +72,8 @@ const metrics = {
     outbound_capability: contactPolicy.outbound_capability
   },
   routes: { offline_status: true, offline_verify: true, offline_capabilities: true, offline_discovery: true, offline_thematic_leaders: true, offline_search: true, offline_preflight: true, offline_assess: true, offline_repository_check: true, offline_get: true, offline_memory_card: true, offline_trust: true, offline_steward: true, offline_steward_works: true, offline_design_principles: true, offline_contact_policy: true, offline_tasks: true, offline_cite: true, stdio_mcp: true, http_api: true },
-  publication_status: 'local-only'
+  publication_status: publicationState.git_repository_published ? 'git-public-verified' : 'local-only',
+  ecosystem_distribution_status: publicationState.npm_package_published && publicationState.mcp_registry_entry_verified && publicationState.public_endpoints_verified ? 'verified' : 'not-fully-published'
 }
 metrics.local_agent_routes_pass = metrics.seed.patterns >= metrics.seed.minimum_patterns &&
   metrics.discovery.recall_at_1 >= metrics.discovery.threshold &&
@@ -86,6 +88,6 @@ metrics.local_agent_routes_pass = metrics.seed.patterns >= metrics.seed.minimum_
   metrics.retention.max_approx_tokens <= metrics.retention.threshold && Object.values(metrics.routes).every(Boolean)
 metrics.public_readiness_pass = metrics.local_agent_routes_pass &&
   metrics.exact_signatures.patterns >= metrics.exact_signatures.public_pattern_threshold &&
-  metrics.publication_status !== 'local-only'
+  metrics.publication_status === 'git-public-verified'
 process.stdout.write(`${JSON.stringify(metrics, null, 2)}\n`)
 if (!metrics.local_agent_routes_pass) process.exitCode = 1

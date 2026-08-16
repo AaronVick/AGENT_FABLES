@@ -4,7 +4,7 @@
 
 Agent Fables is a version-pinned, machine-readable dataset for retrieving evidence about operational failures involving software agents.
 
-> **Local development status:** not published, not production-ready. Seed evidence uses stable incident identities and source-backed exact artifacts where defensible; remaining evidence gaps are machine-visible. `POST /report` performs retrieval only and records nothing.
+> **Public Git preview (`0.1.0`):** the repository and raw machine artifacts are published at [AaronVick/AGENT_FABLES](https://github.com/AaronVick/AGENT_FABLES). npm, MCP registry, and hosted API publication remain intentionally unverified. Seed evidence uses stable incident identities and source-backed exact artifacts where defensible; remaining evidence gaps are machine-visible. `POST /report` performs retrieval only and records nothing.
 
 ## Agent entry point
 
