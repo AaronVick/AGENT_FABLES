@@ -19,6 +19,8 @@ const steward = JSON.parse(fs.readFileSync(path.join(root, 'steward.json'), 'utf
 const contactPolicy = JSON.parse(fs.readFileSync(path.join(root, 'contact-policy.json'), 'utf8'))
 const leaders = JSON.parse(fs.readFileSync(path.join(root, 'leaders.json'), 'utf8'))
 const agentEntry = JSON.parse(fs.readFileSync(path.join(root, 'agent-entry.json'), 'utf8'))
+const evidenceCoverage = JSON.parse(fs.readFileSync(path.join(root, 'evidence-coverage.json'), 'utf8'))
+const consumerObligations = JSON.parse(fs.readFileSync(path.join(root, 'consumer-obligations.json'), 'utf8'))
 
 function tokenize(value) {
   return String(value).toLowerCase().split(/[^a-z0-9.+-]+/).filter(token => token.length > 2)
@@ -134,6 +136,36 @@ test('standalone sandbox runtime works without checkout, dependencies, or networ
   } finally {
     fs.rmSync(temporary, { recursive: true })
   }
+})
+
+test('public evidence coverage and false-safety eval are revision-pinned', () => {
+  assert.equal(evidenceCoverage.corpus_revision, index.corpus_revision)
+  assert.equal(evidenceCoverage.overall.primary_source_incident_coverage, 1)
+  assert.equal(evidenceCoverage.patterns.length, index.entry_count)
+  const evaluation = spawnSync(process.execPath, [path.join(root, 'sandbox', 'agent-fables-sandbox.mjs'), 'eval'], { encoding: 'utf8', env: {} })
+  assert.equal(evaluation.status, 0, evaluation.stderr)
+  const report = JSON.parse(evaluation.stdout)
+  assert.equal(report.corpus_revision, index.corpus_revision)
+  assert.equal(report.pass_rate, 1)
+  assert.ok(report.fixtures >= 8)
+  const metrics = JSON.parse(fs.readFileSync(path.join(root, 'metrics-report.json'), 'utf8'))
+  assert.equal(metrics.corpus_revision, index.corpus_revision)
+  assert.equal(metrics.discovery.recall_at_1, 1)
+  assert.equal(metrics.discovery.adversarial_recall_at_1, 1)
+  assert.match(metrics.evaluation_contract.discovery_set.sha256, /^sha256:[a-f0-9]{64}$/)
+  assert.match(metrics.evaluation_contract.adversarial_set.sha256, /^sha256:[a-f0-9]{64}$/)
+  assert.match(metrics.evaluation_contract.false_safety_set.sha256, /^sha256:[a-f0-9]{64}$/)
+})
+
+test('consumer contract and host policy cannot convert evidence into authorization', async () => {
+  assert.equal(consumerObligations.authority, 'none')
+  assert.equal(consumerObligations.receipt_is_authorization, false)
+  assert.equal(consumerObligations.host_acknowledgement.required_value, 'agent-fables-consumer-obligations@1.0.0')
+  const { evaluateAgentFablesReceipt } = await import('../integrations/host-preflight-policy.mjs')
+  const decision = evaluateAgentFablesReceipt({ authority: 'none', authorized: false, risk_flags: [], required_verifications: [], receipt: { authorization: 'not-granted', absence_of_match_means_safe: false } })
+  assert.equal(decision.allow, false)
+  assert.equal(decision.reason, 'agent-fables-never-authorizes')
+  assert.ok(fs.readFileSync(path.join(root, 'integrations', 'host-preflight-policy.mjs'), 'utf8').split('\n').length < 50)
 })
 
 test('confirmation denominators are derived from stable incident identities', () => {

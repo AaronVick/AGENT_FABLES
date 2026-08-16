@@ -1,0 +1,125 @@
+{
+  "schema_version": "1.0.0",
+  "corpus_revision": "sha256:54cf07a080eea49f32c65367d4005525f9c403855d42f741ba325d76ea8ca817",
+  "evaluation_contract": {
+    "ranking_unit": "one expected AF identifier per query",
+    "primary_metric": "top-1 accuracy, equivalent to recall@1 for this single-label frozen set",
+    "discovery_set": {
+      "path": "evals/discovery-queries.yaml",
+      "sha256": "sha256:83c9099b98f8b5ec86b177b02abee36c441cff120ef10c26f5dd7e468a5919fe"
+    },
+    "adversarial_set": {
+      "path": "evals/adversarial-discovery.yaml",
+      "sha256": "sha256:280a4522d6490d05f2cb66eb8b3524e44a9e668ae717f775cce3569907bca4a8"
+    },
+    "false_safety_set": {
+      "path": "evals/false-safety.json",
+      "sha256": "sha256:fd2294700292ed23cad10b87a1cede6d0a27aaf087e291267b2947b0d80f82a8"
+    }
+  },
+  "seed": {
+    "patterns": 15,
+    "incidents": 14,
+    "minimum_patterns": 10
+  },
+  "discovery": {
+    "fixtures": 19,
+    "recall_at_1": 1,
+    "threshold": 0.9,
+    "scope": "local-corpus-retrieval-not-github-ranking",
+    "by_query_kind": {
+      "operation": {
+        "fixtures": 3,
+        "recall_at_1": 1
+      },
+      "identifier": {
+        "fixtures": 2,
+        "recall_at_1": 1
+      },
+      "package-version": {
+        "fixtures": 3,
+        "recall_at_1": 1
+      },
+      "symptom": {
+        "fixtures": 3,
+        "recall_at_1": 1
+      },
+      "exact-artifact": {
+        "fixtures": 8,
+        "recall_at_1": 1
+      }
+    },
+    "adversarial_fixtures": 10,
+    "adversarial_recall_at_1": 1,
+    "adversarial_recall_threshold": 0.8,
+    "thematic_leaders": 8,
+    "leader_pattern_coverage": 1,
+    "leader_pattern_coverage_threshold": 1,
+    "leader_query_fixtures": 51,
+    "leader_query_recall_at_1": 1,
+    "leader_query_recall_threshold": 0.9,
+    "leader_index_approx_tokens": 272,
+    "leader_index_token_threshold": 400,
+    "ranking_status": "unverified-until-publication"
+  },
+  "evidence": {
+    "primary_source_coverage": 1,
+    "threshold": 0.75,
+    "exact_signature_pattern_coverage": 0.9333333333333333,
+    "coverage_artifact": "evidence-coverage.json"
+  },
+  "false_safety": {
+    "fixtures": 8,
+    "pass_rate": 1,
+    "threshold": 1,
+    "sandbox_runnable": true
+  },
+  "utility": {
+    "preflight_approx_tokens": 268,
+    "preflight_threshold": 400,
+    "assessment_approx_tokens": 820,
+    "assessment_threshold": 1000
+  },
+  "retention": {
+    "memory_cards": 15,
+    "max_approx_tokens": 140,
+    "threshold": 150
+  },
+  "exact_signatures": {
+    "count": 16,
+    "patterns": 14,
+    "public_pattern_threshold": 3
+  },
+  "stewardship": {
+    "identity_status": "public",
+    "public_contact_configured": true,
+    "operator_authorization_required": true,
+    "outbound_capability": "not-implemented"
+  },
+  "routes": {
+    "offline_status": true,
+    "offline_verify": true,
+    "offline_capabilities": true,
+    "offline_discovery": true,
+    "offline_thematic_leaders": true,
+    "offline_search": true,
+    "offline_preflight": true,
+    "offline_assess": true,
+    "offline_repository_check": true,
+    "offline_get": true,
+    "offline_memory_card": true,
+    "offline_trust": true,
+    "offline_steward": true,
+    "offline_steward_works": true,
+    "offline_design_principles": true,
+    "offline_contact_policy": true,
+    "offline_tasks": true,
+    "offline_cite": true,
+    "stdio_mcp": true,
+    "http_api": true
+  },
+  "publication_status": "git-public-verified",
+  "ecosystem_distribution_status": "not-fully-published",
+  "local_agent_routes_pass": true,
+  "public_readiness_pass": true
+}

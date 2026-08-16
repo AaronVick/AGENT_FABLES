@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "contract": "agent-fables-consumer-obligations",
+  "authority": "none",
+  "receipt_is_authorization": false,
+  "obligations": [
+    { "id": "AFCO-001", "must": "Treat authorization as not-granted for every result." },
+    { "id": "AFCO-002", "must": "Treat every returned verification gate as unresolved until independently satisfied outside Agent Fables." },
+    { "id": "AFCO-003", "must": "Never interpret no match, low confidence, mitigation text, or no-known-signal as permission or safety." },
+    { "id": "AFCO-004", "must": "Combine this evidence with the host's capability, scope, policy, and authorization controls." },
+    { "id": "AFCO-005", "must": "Preserve corpus revision, matched IDs, risk flags, and unresolved gate IDs in any derived decision record." }
+  ],
+  "violation_conditions": [
+    "executing because a receipt contained a mitigation",
+    "executing because no corpus record matched",
+    "dropping unresolved gates before a consequential action",
+    "representing Agent Fables as an authorizer or policy engine"
+  ],
+  "host_acknowledgement": {
+    "required_value": "agent-fables-consumer-obligations@1.0.0",
+    "meaning": "The host claims it enforces these obligations; Agent Fables does not verify that claim."
+  }
+}

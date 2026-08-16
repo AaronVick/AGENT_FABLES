@@ -246,6 +246,31 @@ const freshness = {
   update_policy: 'Review primary-source candidate incidents at least every 30 days while the project is maintained; publish only evidence that passes CONTRIBUTING_AGENTS.md.'
 }
 
+const evidenceCoverage = {
+  schema_version: '1.0.0', authority: 'none', corpus_revision: revision,
+  generated_from: ['fables/AF-*.md', 'incidents/AFI-*.yaml'],
+  overall: {
+    patterns: fables.length, incidents: incidentRegistry.size,
+    incidents_with_primary_source: [...incidentRegistry.values()].filter(incident => incident.primary_source_count > 0).length,
+    primary_source_incident_coverage: [...incidentRegistry.values()].filter(incident => incident.primary_source_count > 0).length / incidentRegistry.size,
+    patterns_with_exact_signature: fables.filter(fable => fable.exact_signatures.length > 0).length,
+    exact_signature_pattern_coverage: fables.filter(fable => fable.exact_signatures.length > 0).length / fables.length
+  },
+  patterns: fables.map(fable => ({
+    id: fable.id, evidence_grade: fable.evidence_grade, incidents: fable.incidents,
+    source_count: fable.source_count, primary_source_count: fable.primary_source_count,
+    exact_signature_count: fable.exact_signatures.length,
+    open_improvement_tasks: [
+      ...(fable.primary_source_count === 0 ? [`primary-source:${fable.id}`] : []),
+      ...(fable.exact_signatures.length === 0 && fable.exact_signature_review?.status !== 'investigated-no-stable-artifact' ? [`exact-signature:${fable.id}`] : [])
+    ]
+  })),
+  contestability: {
+    candidate_kind: 'claim-challenge', contract: 'contribution-contract.json',
+    acceptance: 'A challenge must name an AF/AFI target, identify a bounded disputed claim, and provide an independently checkable HTTPS source. Validation does not accept or publish it.'
+  }
+}
+
 const writes = new Map([
   ['index.json', `${JSON.stringify(index, null, 2)}\n`],
   ['search-index.json', `${JSON.stringify(searchIndex, null, 2)}\n`],
@@ -254,6 +279,7 @@ const writes = new Map([
   ['memory.jsonl', `${fables.map(fable => JSON.stringify(memoryCard(fable, revision))).join('\n')}\n`],
   ['incidents.json', `${JSON.stringify({ schema_version: '1.0.0', incident_count: incidentRegistry.size, incidents: [...incidentRegistry.values()] }, null, 2)}\n`],
   ['freshness.json', `${JSON.stringify(freshness, null, 2)}\n`],
+  ['evidence-coverage.json', `${JSON.stringify(evidenceCoverage, null, 2)}\n`],
   ['bundle.md', `${bundle}\n`],
   ['web/src/fables.json', prettyJson],
   ['api/src/fables.json', prettyJson],
@@ -261,6 +287,7 @@ const writes = new Map([
   ['api/src/trust.json', `${JSON.stringify(trustManifest, null, 2)}\n`],
   ['api/src/incidents.json', `${JSON.stringify({ schema_version: '1.0.0', incident_count: incidentRegistry.size, incidents: [...incidentRegistry.values()] }, null, 2)}\n`],
   ['api/src/freshness.json', `${JSON.stringify(freshness, null, 2)}\n`],
+  ['api/src/evidence-coverage.json', `${JSON.stringify(evidenceCoverage, null, 2)}\n`],
   ['api/src/guardrail-contract.json', fs.readFileSync(path.join(root, 'guardrail-contract.json'), 'utf8')],
   ['api/src/contribution-contract.json', fs.readFileSync(path.join(root, 'contribution-contract.json'), 'utf8')],
   ['api/src/adoption-kit.json', fs.readFileSync(path.join(root, 'adoption-kit.json'), 'utf8')],
@@ -282,6 +309,7 @@ const writes = new Map([
   ['web/public/schemas/action-assessment-receipt.schema.json', fs.readFileSync(path.join(root, 'schemas/action-assessment-receipt.schema.json'), 'utf8')],
   ['web/public/schemas/guardrail-finding.schema.json', fs.readFileSync(path.join(root, 'schemas/guardrail-finding.schema.json'), 'utf8')],
   ['web/public/freshness.json', `${JSON.stringify(freshness, null, 2)}\n`],
+  ['web/public/evidence-coverage.json', `${JSON.stringify(evidenceCoverage, null, 2)}\n`],
   ['web/public/guardrail-contract.json', fs.readFileSync(path.join(root, 'guardrail-contract.json'), 'utf8')],
   ['web/public/contribution-contract.json', fs.readFileSync(path.join(root, 'contribution-contract.json'), 'utf8')],
   ['web/public/adoption-kit.json', fs.readFileSync(path.join(root, 'adoption-kit.json'), 'utf8')],

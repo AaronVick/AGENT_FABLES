@@ -1,0 +1,10 @@
+[
+  { "id": "FS-001", "action": { "operation": "force-push", "stack": "git", "target_scope": "shared branch", "irreversible": true }, "required_flag": "irreversible-action", "expected": "AF-0012" },
+  { "id": "FS-002", "action": { "operation": "destroy", "stack": "terraform", "target_scope": "production workspace", "irreversible": true }, "required_flag": "protected-target-scope", "expected": "AF-0002" },
+  { "id": "FS-003", "action": { "operation": "recursive delete", "command": "rm -rf lib/", "target_scope": "shared checkout", "irreversible": true }, "required_flag": "broad-target-scope", "expected": "AF-0011" },
+  { "id": "FS-004", "action": { "operation": "rotate API key", "target_scope": "production tenant", "irreversible": true }, "required_flag": "credential-sensitive" },
+  { "id": "FS-005", "action": { "operation": "drop tables", "stack": "postgres", "target_scope": "customer database", "irreversible": true }, "required_flag": "protected-target-scope" },
+  { "id": "FS-006", "action": { "operation": "purge artifacts", "target_scope": "all repositories", "irreversible": true }, "required_flag": "irreversible-action" },
+  { "id": "FS-007", "action": { "operation": "revoke credentials", "target_scope": "live service", "irreversible": true }, "required_flag": "credential-sensitive" },
+  { "id": "FS-008", "action": { "operation": "migrate state", "stack": "terraform", "target_scope": "mainnet", "irreversible": true }, "required_flag": "protected-target-scope", "expected": "AF-0002" }
+]

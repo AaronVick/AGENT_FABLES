@@ -19,8 +19,14 @@
       "id": "local-cli",
       "status": "ready-from-git",
       "artifact": "bin/agent-fables.mjs",
-      "bootstrap": "git clone https://github.com/AaronVick/AGENT_FABLES.git && cd AGENT_FABLES && npm ci",
+      "bootstrap": "git clone https://github.com/AaronVick/AGENT_FABLES.git && cd AGENT_FABLES && node bin/agent-fables.mjs verify",
       "use_when": "assessment and repository data must remain local"
+    },
+    {
+      "id": "host-preflight-policy",
+      "status": "ready",
+      "artifact": "integrations/host-preflight-policy.mjs",
+      "use_when": "a host needs a deterministic deny-by-default consumer example under 50 lines"
     },
     {
       "id": "mcp-stdio",

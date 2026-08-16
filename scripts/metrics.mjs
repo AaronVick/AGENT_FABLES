@@ -1,6 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
+import crypto from 'node:crypto'
 import * as yaml from 'js-yaml'
 import { fileURLToPath } from 'node:url'
 import { decisionCard, rankEntries } from '../lib/retrieval.mjs'
@@ -9,6 +10,7 @@ import { leaderIndex, rankLeaders } from '../lib/leaders.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const corpus = JSON.parse(fs.readFileSync(path.join(root, 'api/src/fables.json'), 'utf8'))
+const index = JSON.parse(fs.readFileSync(path.join(root, 'index.json'), 'utf8'))
 const incidents = JSON.parse(fs.readFileSync(path.join(root, 'incidents.json'), 'utf8')).incidents
 const queries = yaml.load(fs.readFileSync(path.join(root, 'evals/discovery-queries.yaml'), 'utf8'))
 const adversarialQueries = yaml.load(fs.readFileSync(path.join(root, 'evals/adversarial-discovery.yaml'), 'utf8'))
@@ -33,11 +35,23 @@ const contactPolicy = JSON.parse(fs.readFileSync(path.join(root, 'contact-policy
 const leaders = JSON.parse(fs.readFileSync(path.join(root, 'leaders.json'), 'utf8'))
 const leaderPatternIds = new Set(leaders.topics.flatMap(topic => topic.records.map(record => record.id)))
 const publicationState = JSON.parse(fs.readFileSync(path.join(root, 'publication-state.json'), 'utf8'))
+const evidenceCoverage = JSON.parse(fs.readFileSync(path.join(root, 'evidence-coverage.json'), 'utf8'))
+const falseSafety = JSON.parse(fs.readFileSync(path.join(root, 'eval-report.json'), 'utf8'))
 const leaderFixtures = leaders.topics.flatMap(topic => topic.search_terms.map(query => ({ query, expected: topic.slug })))
 const leaderHits = leaderFixtures.filter(fixture => rankLeaders(leaders, fixture.query, 1)[0]?.slug === fixture.expected).length
 const leaderIndexTokens = Math.ceil(JSON.stringify(leaderIndex(leaders)).length / 4)
+const fileSha256 = relativePath => `sha256:${crypto.createHash('sha256').update(fs.readFileSync(path.join(root, relativePath))).digest('hex')}`
 
 const metrics = {
+  schema_version: '1.0.0',
+  corpus_revision: index.corpus_revision,
+  evaluation_contract: {
+    ranking_unit: 'one expected AF identifier per query',
+    primary_metric: 'top-1 accuracy, equivalent to recall@1 for this single-label frozen set',
+    discovery_set: { path: 'evals/discovery-queries.yaml', sha256: fileSha256('evals/discovery-queries.yaml') },
+    adversarial_set: { path: 'evals/adversarial-discovery.yaml', sha256: fileSha256('evals/adversarial-discovery.yaml') },
+    false_safety_set: { path: 'evals/false-safety.json', sha256: fileSha256('evals/false-safety.json') }
+  },
   seed: { patterns: corpus.length, incidents: incidents.length, minimum_patterns: 10 },
   discovery: {
     fixtures: queries.length,
@@ -58,7 +72,12 @@ const metrics = {
     leader_index_token_threshold: 400,
     ranking_status: leaders.ranking_status
   },
-  evidence: { primary_source_coverage: primary / incidents.length, threshold: 0.75 },
+  evidence: {
+    primary_source_coverage: primary / incidents.length, threshold: 0.75,
+    exact_signature_pattern_coverage: evidenceCoverage.overall.exact_signature_pattern_coverage,
+    coverage_artifact: 'evidence-coverage.json'
+  },
+  false_safety: { fixtures: falseSafety.fixtures, pass_rate: falseSafety.pass_rate, threshold: 1, sandbox_runnable: falseSafety.sandbox_runnable },
   utility: {
     preflight_approx_tokens: Math.ceil(preflightFixture.length / 4), preflight_threshold: 400,
     assessment_approx_tokens: Math.ceil(assessmentFixture.length / 4), assessment_threshold: 1000
@@ -83,11 +102,14 @@ metrics.local_agent_routes_pass = metrics.seed.patterns >= metrics.seed.minimum_
   metrics.discovery.leader_query_recall_at_1 >= metrics.discovery.leader_query_recall_threshold &&
   metrics.discovery.leader_index_approx_tokens <= metrics.discovery.leader_index_token_threshold &&
   metrics.evidence.primary_source_coverage >= metrics.evidence.threshold &&
+  metrics.false_safety.pass_rate >= metrics.false_safety.threshold &&
   metrics.utility.preflight_approx_tokens <= metrics.utility.preflight_threshold &&
   metrics.utility.assessment_approx_tokens <= metrics.utility.assessment_threshold &&
   metrics.retention.max_approx_tokens <= metrics.retention.threshold && Object.values(metrics.routes).every(Boolean)
 metrics.public_readiness_pass = metrics.local_agent_routes_pass &&
   metrics.exact_signatures.patterns >= metrics.exact_signatures.public_pattern_threshold &&
   metrics.publication_status === 'git-public-verified'
-process.stdout.write(`${JSON.stringify(metrics, null, 2)}\n`)
+const serialized = `${JSON.stringify(metrics, null, 2)}\n`
+if (process.argv.includes('--write')) fs.writeFileSync(path.join(root, 'metrics-report.json'), serialized)
+process.stdout.write(serialized)
 if (!metrics.local_agent_routes_pass) process.exitCode = 1
