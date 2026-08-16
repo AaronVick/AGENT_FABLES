@@ -86,6 +86,23 @@ before the content question.
   changes substantial enough that this should be a separate, sibling project rather than a corpus
   family inside this one — that is a legitimate, valuable output of this PRD, not a failure of it.
 
+## Implementation note (see prd/07 -- repo state is truth, this is a pointer, not a status claim)
+
+Deliverables 1-2 built: `prd/11-deliverable-1-schema-compatibility-review.md` and
+`prd/11-deliverable-2-worked-example-draft.md`. The worked example cites a real, official source (NTSB
+HAR-19/03) and was NOT force-fit to this PRD's original hypothesis -- the actual mechanism
+(reclassification discarding tracking history) turned out to be `context-degradation`, not the
+`AF-0002`-shaped "stale state" pattern originally guessed, and the draft says so rather than quietly
+substituting a source that would have confirmed the guess. `entry_count` and `npm run check` confirmed
+unaffected -- the draft lives in `prd/`, not `fables/`, and cannot be picked up by the build pipeline.
+
+Deliverable 1's headline conclusion: one new field needed (`harm_domain` or equivalent, composing with
+`reversibility`, never replacing it), everything else generalizes as free text without a schema change
+-- and one real open question the review does not answer: whether decision-time preflight as an
+architectural pattern has a viable analog under real-time control-loop latency at all. Deliverable 3
+(seed content) is unchanged from this PRD's original scope: not started, and this session's evidence
+discipline says it should not be, on the strength of one worked example.
+
 ## Done when
 
 - Deliverable 1's compatibility review exists as a written doc and identifies, specifically, every
