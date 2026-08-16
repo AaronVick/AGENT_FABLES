@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0.0",
   "authority": "none",
-  "corpus_revision": "sha256:38d52e03c5a906b7c061962eb3016d59c186594bc67b8219617ffaca5cfd4372",
-  "first_incident_date": "2025-05-26",
+  "corpus_revision": "sha256:9213c877c74e1fdfc4926d6e18eda9ae9d6a76243ba7e1a2797b0955bcbe742b",
+  "first_incident_date": "2023-09-06",
   "newest_incident_date": "2026-07-27",
   "stale_after": "2026-09-10",
   "maximum_evidence_age_days": 45,

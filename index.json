@@ -1,9 +1,9 @@
 {
   "schema_version": "1.0.0",
-  "corpus_revision": "sha256:38d52e03c5a906b7c061962eb3016d59c186594bc67b8219617ffaca5cfd4372",
+  "corpus_revision": "sha256:9213c877c74e1fdfc4926d6e18eda9ae9d6a76243ba7e1a2797b0955bcbe742b",
   "generated_from": "fables/AF-*.md",
-  "entry_count": 18,
-  "incident_count": 17,
+  "entry_count": 22,
+  "incident_count": 21,
   "entries": [
     {
       "schema_version": "1.0.0",
@@ -1669,6 +1669,330 @@
       ],
       "exact_signatures": [],
       "canonical_url": "https://agentfables.org/af/AF-0018"
+    },
+    {
+      "schema_version": "1.0.0",
+      "id": "AF-0020",
+      "slug": "the-headline-mistaken-for-the-story",
+      "title": "Search snippets synthesized and presented as fully retrieved article content",
+      "status": "seeded",
+      "failure_mode": "verification-omission",
+      "blast_radius": "high",
+      "reversibility": "irreversible",
+      "first_seen": "2024-10-21",
+      "incidents": [
+        "AFI-0018"
+      ],
+      "retrieval_aliases": [
+        "Perplexity fabricated article citation lawsuit",
+        "AI search engine misattributed quotes",
+        "search snippet cited as full document",
+        "second-hand hallucination retrieval agent"
+      ],
+      "stacks": [
+        {
+          "framework": "search-web-synthesis-agent",
+          "versions": [
+            "applies to any agent answering from search_web snippet results without a corresponding fetch_url of the full document"
+          ]
+        }
+      ],
+      "affected_versions": "Any retrieval agent that answers from search_web snippet cards without a corresponding fetch_url of the full source; not tied to one product version",
+      "fixed_in": "n/a (behavioral class, not a patched product defect)",
+      "trigger_conditions": [
+        "agent receives search_web results as snippet cards (title plus a truncated excerpt) with no following fetch_url call for the cited source",
+        "agent composes an answer that quotes, paraphrases, or attributes specific claims beyond what the snippet text itself contains",
+        "no distinction is maintained between a source the agent has a snippet for and a source the agent has actually read"
+      ],
+      "anti_pattern": "Treating a search snippet as the retrieved document and synthesizing claims beyond what the snippet text actually contains.",
+      "mitigation": [
+        "require a fetch_url success (session ledger shape=document) before any claim that exceeds the literal snippet text",
+        "bind each factual claim to a source id whose ledger row is shape=document, not shape=snippet",
+        "when only a snippet is available, state the claim as snippet-level, not as full-article-verified"
+      ],
+      "verification": "Given a claim quoting specific content, confirm a fetch_url call retrieved that page this session; a claim resting only on a snippet must be downgraded or rejected.",
+      "crosswalk": {
+        "owasp_asi": [
+          "ASI09"
+        ]
+      },
+      "exact_signature_review": {
+        "status": "investigated-no-stable-artifact",
+        "reviewed_at": "2026-08-16",
+        "sources": [
+          "https://www.courtlistener.com/docket/69280523/dow-jones-company-inc-v-perplexity-ai-inc/",
+          "https://www.cnbc.com/2024/10/21/murdoch-firms-dow-jones-and-new-york-post-sue-perplexity-ai.html"
+        ],
+        "note": "The docket and coverage confirm the allegation of fabricated and misattributed content, but no single reusable output string is published as a stable artifact — the fabricated attributions are instance-variable by design."
+      },
+      "license": "CC0-1.0",
+      "confirmations": 1,
+      "source_count": 2,
+      "primary_source_count": 1,
+      "evidence_grade": "A-primary-source",
+      "evidence_status": "event-normalized",
+      "provenance": [
+        {
+          "incident_id": "AFI-0018",
+          "url": "https://www.courtlistener.com/docket/69280523/dow-jones-company-inc-v-perplexity-ai-inc/",
+          "kind": "court-docket-primary-record",
+          "authority": "primary"
+        },
+        {
+          "incident_id": "AFI-0018",
+          "url": "https://www.cnbc.com/2024/10/21/murdoch-firms-dow-jones-and-new-york-post-sue-perplexity-ai.html",
+          "kind": "independent-news-coverage",
+          "authority": "secondary"
+        }
+      ],
+      "behavioral_indicators": [
+        "answer contains quotes, figures, or attributed statements absent from the literal snippet text returned by search_web",
+        "no fetch_url call for the cited source appears earlier in the session",
+        "the cited publication's own review of the output finds content it never published"
+      ],
+      "exact_signatures": [],
+      "canonical_url": "https://agentfables.org/af/AF-0020"
+    },
+    {
+      "schema_version": "1.0.0",
+      "id": "AF-0021",
+      "slug": "the-page-that-only-had-a-title",
+      "title": "Fetch reports success while returning near-empty or dropped content, treated as fully read",
+      "status": "seeded",
+      "failure_mode": "verification-omission",
+      "blast_radius": "medium",
+      "reversibility": "partial",
+      "first_seen": "2026-03-21",
+      "incidents": [
+        "AFI-0019"
+      ],
+      "retrieval_aliases": [
+        "fetch_url returns only title tag",
+        "web fetch tool drops content custom elements",
+        "AI tool silently truncates page content",
+        "fetch succeeded but body empty"
+      ],
+      "stacks": [
+        {
+          "framework": "fetch_url-tool",
+          "versions": [
+            "confirmed March 2026 on claude.ai and ChatGPT; not reproducible via curl, Grok, Google's crawler, or Claude Code's WebFetch"
+          ]
+        }
+      ],
+      "affected_versions": "Web fetch tools whose HTML-to-markdown conversion treats unrecognized custom element tags as opaque and skips their children; confirmed on claude.ai and ChatGPT as of March 2026",
+      "fixed_in": "unknown; reported 2026-03-21, no maintainer fix confirmed in the source report",
+      "trigger_conditions": [
+        "fetch_url targets a page whose main content sits inside custom or unrecognized HTML elements (web components)",
+        "the tool's content extraction treats an unrecognized element tag as an opaque block rather than recursing into its children",
+        "the call returns a success-shaped result containing only the page title"
+      ],
+      "anti_pattern": "Treating a nominally successful fetch as a complete document body without checking whether meaningful content was actually extracted.",
+      "mitigation": [
+        "flag fetch_url results under a minimum content-length or structural threshold as an empty download, not a document",
+        "do not answer from an empty-download result; retry, request a different retrieval path, or state the limitation",
+        "track known content-extraction gaps, such as custom-element handling, as a standing empty-download risk class"
+      ],
+      "verification": "Given a fetch_url result under the content-length threshold, confirm it is marked empty-download; no claim may cite that source as a fully read document.",
+      "crosswalk": {
+        "owasp_asi": [
+          "ASI09"
+        ]
+      },
+      "exact_signature_review": {
+        "status": "investigated-no-stable-artifact",
+        "reviewed_at": "2026-08-16",
+        "sources": [
+          "https://github.com/openai/openai-python/issues/3000"
+        ],
+        "note": "The report quotes the mechanism (converter skips unknown element subtrees, returns only the title tag) but the exact dropped content varies by target page; no single stable string qualifies as a cross-instance exact signature."
+      },
+      "license": "CC0-1.0",
+      "confirmations": 1,
+      "source_count": 1,
+      "primary_source_count": 1,
+      "evidence_grade": "A-primary-source",
+      "evidence_status": "event-normalized",
+      "provenance": [
+        {
+          "incident_id": "AFI-0019",
+          "url": "https://github.com/openai/openai-python/issues/3000",
+          "kind": "original-bug-report",
+          "authority": "primary"
+        }
+      ],
+      "behavioral_indicators": [
+        "fetch_url result content length is anomalously short, effectively title-only, relative to a normal page",
+        "agent proceeds to answer or summarize as if the full page content had been retrieved",
+        "the same URL fetched by a different tool or client returns substantially more content"
+      ],
+      "exact_signatures": [],
+      "canonical_url": "https://agentfables.org/af/AF-0021"
+    },
+    {
+      "schema_version": "1.0.0",
+      "id": "AF-0025",
+      "slug": "the-index-that-hadnt-looked-everywhere",
+      "title": "Incomplete or timed-out search results treated as proof of absence",
+      "status": "seeded",
+      "failure_mode": "silent-truncation",
+      "blast_radius": "medium",
+      "reversibility": "partial",
+      "first_seen": "2023-09-06",
+      "incidents": [
+        "AFI-0020"
+      ],
+      "retrieval_aliases": [
+        "incomplete_results true GitHub search assumed no results",
+        "search API timeout treated as complete index",
+        "AI agent said file does not exist search incomplete",
+        "code search missing repositories not indexed"
+      ],
+      "stacks": [
+        {
+          "framework": "github-code-search-api",
+          "versions": [
+            "applies whenever a search response carries incomplete_results=true or targets an unindexed repository"
+          ]
+        }
+      ],
+      "affected_versions": "Any agent issuing a GitHub (or similarly time-limited) search API call and treating a returned or timed-out result set as exhaustive; confirmed real-world case involved unindexed public repositories",
+      "fixed_in": "n/a (documented, intentional API behavior, not a defect)",
+      "trigger_conditions": [
+        "agent issues a search call that returns incomplete_results=true, a documented indexing gap, or a small/zero result count",
+        "agent concludes the searched-for content does not exist based solely on that partial result set",
+        "no distinction is made between not found in an exhaustive index and not found in a partial, timed-out, or unindexed query"
+      ],
+      "anti_pattern": "Treating an incomplete or partial search result set as an exhaustive index, and asserting absence from a query that never claimed completeness.",
+      "mitigation": [
+        "surface incomplete_results, or an equivalent truncation signal, explicitly in the session ledger and require it be checked before any absence claim",
+        "retry or narrow a timed-out query before asserting a negative result",
+        "phrase results from a known-partial search as not found in this search, not as does not exist"
+      ],
+      "verification": "Given a search result with incomplete_results=true, confirm any absence claim is rejected unless a complete or independently re-verified index confirms it.",
+      "crosswalk": {
+        "owasp_asi": [
+          "ASI09"
+        ]
+      },
+      "exact_signature_review": {
+        "status": "investigated-no-stable-artifact",
+        "reviewed_at": "2026-08-16",
+        "sources": [
+          "https://docs.github.com/en/rest/search/search",
+          "https://github.com/orgs/community/discussions/66113"
+        ],
+        "note": "GitHub's documentation and the confirmed community report describe the field and its real-world manifestation, but the API field name incomplete_results is a schema key, not a runtime-emitted string worth hash-pinning; recorded here rather than as a false exact signature."
+      },
+      "license": "CC0-1.0",
+      "confirmations": 1,
+      "source_count": 2,
+      "primary_source_count": 2,
+      "evidence_grade": "A-primary-source",
+      "evidence_status": "event-normalized",
+      "provenance": [
+        {
+          "incident_id": "AFI-0020",
+          "url": "https://docs.github.com/en/rest/search/search",
+          "kind": "vendor-api-documentation",
+          "authority": "primary"
+        },
+        {
+          "incident_id": "AFI-0020",
+          "url": "https://github.com/orgs/community/discussions/66113",
+          "kind": "vendor-staff-confirmed-community-report",
+          "authority": "primary"
+        }
+      ],
+      "behavioral_indicators": [
+        "search response carries incomplete_results=true or an equivalent truncation signal, and the agent's next claim asserts absence",
+        "agent states content is not present, such as no such file, without a retry or an explicit acknowledgment of incompleteness"
+      ],
+      "exact_signatures": [],
+      "canonical_url": "https://agentfables.org/af/AF-0025"
+    },
+    {
+      "schema_version": "1.0.0",
+      "id": "AF-0031",
+      "slug": "the-move-that-was-never-made",
+      "title": "An unconfirmed or failed tool result is treated as a successful one and acted on",
+      "status": "seeded",
+      "failure_mode": "verification-omission",
+      "blast_radius": "catastrophic",
+      "reversibility": "irreversible",
+      "first_seen": "2025-07-23",
+      "incidents": [
+        "AFI-0021"
+      ],
+      "retrieval_aliases": [
+        "Gemini CLI deleted files failed mkdir",
+        "AI agent acted on assumed tool success",
+        "tool use hallucination fake execution",
+        "agent claimed script ran when it did not"
+      ],
+      "stacks": [
+        {
+          "framework": "gemini-cli",
+          "versions": [
+            "reported 2025-07-23"
+          ]
+        }
+      ],
+      "affected_versions": "Gemini CLI as reported 2025-07-23; the underlying pattern (proceeding on an assumed tool result without confirming it) is framework-general",
+      "fixed_in": "unknown; not confirmed in the source report",
+      "trigger_conditions": [
+        "a tool call's actual result (success, failure, or empty) is not independently confirmed before the next step is planned",
+        "a later action is chained on the assumption that an earlier tool call succeeded and produced the state it was meant to produce",
+        "no result row exists, or the result row shows failure or emptiness, for a step the agent's next action requires to have worked"
+      ],
+      "anti_pattern": "Planning the next action on the assumed outcome of a prior tool call instead of its confirmed result.",
+      "mitigation": [
+        "confirm the actual result of a tool call (existence, success, non-empty output) before any step that depends on it",
+        "treat a missing, failed, or empty result row as blocking, not as an implicit success",
+        "avoid chaining destructive operations off an unconfirmed intermediate state"
+      ],
+      "verification": "Given a tool call whose result is failure or empty, confirm the next planned action does not proceed as though it succeeded; it must re-check, retry, or halt instead.",
+      "crosswalk": {
+        "owasp_asi": [
+          "ASI09"
+        ]
+      },
+      "exact_signature_review": {
+        "status": "investigated-no-stable-artifact",
+        "reviewed_at": "2026-08-16",
+        "sources": [
+          "https://github.com/google-gemini/gemini-cli/issues/4586",
+          "https://incidentdatabase.ai/cite/1178/"
+        ],
+        "note": "The GitHub issue and incident-database record confirm the mechanism (a failed mkdir treated as successful, driving a cascade of destructive move commands) but the exact command sequence is instance-specific to that user's filesystem state, not a stable cross-instance artifact."
+      },
+      "license": "CC0-1.0",
+      "confirmations": 1,
+      "source_count": 2,
+      "primary_source_count": 1,
+      "evidence_grade": "A-primary-source",
+      "evidence_status": "event-normalized",
+      "provenance": [
+        {
+          "incident_id": "AFI-0021",
+          "url": "https://incidentdatabase.ai/cite/1178/",
+          "kind": "incident-database-record",
+          "authority": "secondary"
+        },
+        {
+          "incident_id": "AFI-0021",
+          "url": "https://github.com/google-gemini/gemini-cli/issues/4586",
+          "kind": "original-bug-report",
+          "authority": "primary"
+        }
+      ],
+      "behavioral_indicators": [
+        "an action executes against a target (path, resource, destination) that a prior step was supposed to create or confirm, with no verification in between",
+        "agent narrative describes a step as done, ran, or created without a corresponding result row showing success",
+        "a single failed step cascades into repeated destructive actions, each compounding the false premise of the first"
+      ],
+      "exact_signatures": [],
+      "canonical_url": "https://agentfables.org/af/AF-0031"
     }
   ]
 }

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentfables.org/schemas/execution-receipt.schema.json",
+  "title": "Execution receipt",
+  "description": "A record of whether a tool that can produce a side effect or a data result actually ran this session. Any draft sentence matching an execution-claim pattern (ran, computed, fetched, downloaded, confirmed via) requires a matching receipt with executed=true and a result hash; see AF-0031.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["tool", "executed"],
+  "properties": {
+    "tool": { "type": "string", "minLength": 1 },
+    "executed": { "type": "boolean" },
+    "reason": { "type": "string", "description": "Required when executed=false, e.g. 'not_called', 'failed', 'result_unconfirmed'." },
+    "stdout_sha256": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+  },
+  "if": { "properties": { "executed": { "const": false } } },
+  "then": { "required": ["tool", "executed", "reason"] }
+}

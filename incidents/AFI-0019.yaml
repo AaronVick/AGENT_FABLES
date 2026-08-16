@@ -1,0 +1,8 @@
+id: AFI-0019
+title: AI web-fetch tools silently drop page content inside custom HTML elements
+occurred_at: 2026-03-21
+status: publicly-reported
+sources:
+  - url: https://github.com/openai/openai-python/issues/3000
+    kind: original-bug-report
+    authority: primary

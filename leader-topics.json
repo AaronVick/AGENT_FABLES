@@ -144,7 +144,26 @@
       "patterns": [
         "AF-0002",
         "AF-0007",
-        "AF-0018"
+        "AF-0018",
+        "AF-0031"
+      ]
+    },
+    {
+      "slug": "information-integrity",
+      "title": "Retrieval-agent information integrity",
+      "problem": "Evidence that a search/fetch synthesis agent misrepresents what it actually retrieved: snippets as full documents, dropped fetches as reads, partial indexes as proof of absence.",
+      "search_terms": [
+        "search snippet cited as full article",
+        "fetch_url returns empty content cited as read",
+        "incomplete search results treated as absence",
+        "RAG agent misrepresents retrieved source",
+        "AI search engine fabricated citation lawsuit"
+      ],
+      "patterns": [
+        "AF-0016",
+        "AF-0020",
+        "AF-0021",
+        "AF-0025"
       ]
     },
     {

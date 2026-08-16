@@ -1,0 +1,11 @@
+id: AFI-0018
+title: Dow Jones and New York Post sue Perplexity AI over fabricated and misattributed article content
+occurred_at: 2024-10-21
+status: publicly-reported
+sources:
+  - url: https://www.courtlistener.com/docket/69280523/dow-jones-company-inc-v-perplexity-ai-inc/
+    kind: court-docket-primary-record
+    authority: primary
+  - url: https://www.cnbc.com/2024/10/21/murdoch-firms-dow-jones-and-new-york-post-sue-perplexity-ai.html
+    kind: independent-news-coverage
+    authority: secondary

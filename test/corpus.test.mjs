@@ -78,7 +78,7 @@ test('thematic leaders are bounded, revision-pinned, and route only to known rec
   assert.equal(leaders.corpus_revision, index.corpus_revision)
   assert.equal(leaders.ranking_status, 'unverified-until-publication')
   assert.equal(leaders.volume_claim, 'unmeasured-problem-vocabulary')
-  assert.equal(leaders.topics.length, 9)
+  assert.equal(leaders.topics.length, 10)
   for (const topic of leaders.topics) {
     assert.ok(topic.records.length >= 2)
     assert.ok(topic.search_terms.length >= 4)
@@ -306,6 +306,6 @@ test('no exact signature is published without structured source evidence', () =>
 
 test('investigated exact-artifact gaps remain explicit and cannot masquerade as signatures', () => {
   const reviewed = index.entries.filter(entry => entry.exact_signature_review?.status === 'investigated-no-stable-artifact')
-  assert.deepEqual(reviewed.map(entry => entry.id), ['AF-0007', 'AF-0016', 'AF-0017', 'AF-0018'])
+  assert.deepEqual(reviewed.map(entry => entry.id), ['AF-0007', 'AF-0016', 'AF-0017', 'AF-0018', 'AF-0020', 'AF-0021', 'AF-0025', 'AF-0031'])
   assert.ok(reviewed.every(entry => entry.exact_signatures.length === 0 && entry.exact_signature_review.sources.length > 0))
 })

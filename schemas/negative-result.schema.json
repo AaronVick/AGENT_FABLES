@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentfables.org/schemas/negative-result.schema.json",
+  "title": "Negative result",
+  "description": "The only legal way for a retrieval-runtime agent to answer 'not found' or to continue after a search/fetch produced no support for a proposition. Not a citation; carries no authority. See AF-0025 and AF-0036 (AF-0036 is a reserved, not-yet-evidenced ID as of schema_version 1.0.0 -- do not treat its absence from the corpus as invalidating this object).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["kind", "query", "tool", "source_ids_examined", "proposition", "support", "authorized"],
+  "properties": {
+    "kind": { "const": "negative_result" },
+    "query": { "type": "string", "minLength": 1 },
+    "tool": { "enum": ["search_web", "fetch_url", "get_file_contents", "memory_search", "call_external_tool"] },
+    "source_ids_examined": { "type": "array", "items": { "type": "string" } },
+    "proposition": { "type": "string", "minLength": 1 },
+    "support": { "const": "none" },
+    "authorized": { "const": false }
+  }
+}

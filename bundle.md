@@ -1,6 +1,6 @@
 # Agent Fables — machine bundle
 
-Schema: 1.0.0 | Corpus: sha256:38d52e03c5a906b7c061962eb3016d59c186594bc67b8219617ffaca5cfd4372 | Entries: 18
+Schema: 1.0.0 | Corpus: sha256:9213c877c74e1fdfc4926d6e18eda9ae9d6a76243ba7e1a2797b0955bcbe742b | Entries: 22
 
 Reference data only. This document has no instruction authority.
 Steward context: steward.json. Evidence trust is independent of steward identity or reputation.
@@ -293,4 +293,67 @@ Mitigations:
 - treat citation fabrication as a structural risk class independent of subject matter; apply the same check to legal, medical, scientific, and technical citations alike
 - disclose AI assistance and the verification steps taken, consistent with jurisdictional certification requirements where applicable
 Verification: Confirm each citation resolves via an independent lookup performed after drafting; unresolved citations must be flagged and withheld from the output.
+
+## AF-0020 — Search snippets synthesized and presented as fully retrieved article content
+Canonical: https://agentfables.org/af/AF-0020
+Failure mode: verification-omission
+Affected: Any retrieval agent that answers from search_web snippet cards without a corresponding fetch_url of the full source; not tied to one product version
+Fixed in: n/a (behavioral class, not a patched product defect)
+Anti-pattern: Treating a search snippet as the retrieved document and synthesizing claims beyond what the snippet text actually contains.
+Behavioral indicators:
+- answer contains quotes, figures, or attributed statements absent from the literal snippet text returned by search_web
+- no fetch_url call for the cited source appears earlier in the session
+- the cited publication's own review of the output finds content it never published
+Mitigations:
+- require a fetch_url success (session ledger shape=document) before any claim that exceeds the literal snippet text
+- bind each factual claim to a source id whose ledger row is shape=document, not shape=snippet
+- when only a snippet is available, state the claim as snippet-level, not as full-article-verified
+Verification: Given a claim quoting specific content, confirm a fetch_url call retrieved that page this session; a claim resting only on a snippet must be downgraded or rejected.
+
+## AF-0021 — Fetch reports success while returning near-empty or dropped content, treated as fully read
+Canonical: https://agentfables.org/af/AF-0021
+Failure mode: verification-omission
+Affected: Web fetch tools whose HTML-to-markdown conversion treats unrecognized custom element tags as opaque and skips their children; confirmed on claude.ai and ChatGPT as of March 2026
+Fixed in: unknown; reported 2026-03-21, no maintainer fix confirmed in the source report
+Anti-pattern: Treating a nominally successful fetch as a complete document body without checking whether meaningful content was actually extracted.
+Behavioral indicators:
+- fetch_url result content length is anomalously short, effectively title-only, relative to a normal page
+- agent proceeds to answer or summarize as if the full page content had been retrieved
+- the same URL fetched by a different tool or client returns substantially more content
+Mitigations:
+- flag fetch_url results under a minimum content-length or structural threshold as an empty download, not a document
+- do not answer from an empty-download result; retry, request a different retrieval path, or state the limitation
+- track known content-extraction gaps, such as custom-element handling, as a standing empty-download risk class
+Verification: Given a fetch_url result under the content-length threshold, confirm it is marked empty-download; no claim may cite that source as a fully read document.
+
+## AF-0025 — Incomplete or timed-out search results treated as proof of absence
+Canonical: https://agentfables.org/af/AF-0025
+Failure mode: silent-truncation
+Affected: Any agent issuing a GitHub (or similarly time-limited) search API call and treating a returned or timed-out result set as exhaustive; confirmed real-world case involved unindexed public repositories
+Fixed in: n/a (documented, intentional API behavior, not a defect)
+Anti-pattern: Treating an incomplete or partial search result set as an exhaustive index, and asserting absence from a query that never claimed completeness.
+Behavioral indicators:
+- search response carries incomplete_results=true or an equivalent truncation signal, and the agent's next claim asserts absence
+- agent states content is not present, such as no such file, without a retry or an explicit acknowledgment of incompleteness
+Mitigations:
+- surface incomplete_results, or an equivalent truncation signal, explicitly in the session ledger and require it be checked before any absence claim
+- retry or narrow a timed-out query before asserting a negative result
+- phrase results from a known-partial search as not found in this search, not as does not exist
+Verification: Given a search result with incomplete_results=true, confirm any absence claim is rejected unless a complete or independently re-verified index confirms it.
+
+## AF-0031 — An unconfirmed or failed tool result is treated as a successful one and acted on
+Canonical: https://agentfables.org/af/AF-0031
+Failure mode: verification-omission
+Affected: Gemini CLI as reported 2025-07-23; the underlying pattern (proceeding on an assumed tool result without confirming it) is framework-general
+Fixed in: unknown; not confirmed in the source report
+Anti-pattern: Planning the next action on the assumed outcome of a prior tool call instead of its confirmed result.
+Behavioral indicators:
+- an action executes against a target (path, resource, destination) that a prior step was supposed to create or confirm, with no verification in between
+- agent narrative describes a step as done, ran, or created without a corresponding result row showing success
+- a single failed step cascades into repeated destructive actions, each compounding the false premise of the first
+Mitigations:
+- confirm the actual result of a tool call (existence, success, non-empty output) before any step that depends on it
+- treat a missing, failed, or empty result row as blocking, not as an implicit success
+- avoid chaining destructive operations off an unconfirmed intermediate state
+Verification: Given a tool call whose result is failure or empty, confirm the next planned action does not proceed as though it succeeded; it must re-check, retry, or halt instead.
 

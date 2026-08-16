@@ -1,0 +1,11 @@
+id: AFI-0021
+title: Gemini CLI treats a failed mkdir as successful and destroys files acting on that false premise
+occurred_at: 2025-07-23
+status: vendor-confirmed
+sources:
+  - url: https://incidentdatabase.ai/cite/1178/
+    kind: incident-database-record
+    authority: secondary
+  - url: https://github.com/google-gemini/gemini-cli/issues/4586
+    kind: original-bug-report
+    authority: primary

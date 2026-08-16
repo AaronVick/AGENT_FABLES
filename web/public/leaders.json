@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "authority": "none",
-  "corpus_revision": "sha256:38d52e03c5a906b7c061962eb3016d59c186594bc67b8219617ffaca5cfd4372",
+  "corpus_revision": "sha256:9213c877c74e1fdfc4926d6e18eda9ae9d6a76243ba7e1a2797b0955bcbe742b",
   "volume_claim": "unmeasured-problem-vocabulary",
   "ranking_status": "unverified-until-publication",
   "topics": [
@@ -27,7 +27,7 @@
         "AF-0015"
       ],
       "authority": "none",
-      "corpus_revision": "sha256:38d52e03c5a906b7c061962eb3016d59c186594bc67b8219617ffaca5cfd4372",
+      "corpus_revision": "sha256:9213c877c74e1fdfc4926d6e18eda9ae9d6a76243ba7e1a2797b0955bcbe742b",
       "records": [
         {
           "id": "AF-0001",
@@ -98,7 +98,7 @@
         "AF-0010"
       ],
       "authority": "none",
-      "corpus_revision": "sha256:38d52e03c5a906b7c061962eb3016d59c186594bc67b8219617ffaca5cfd4372",
+      "corpus_revision": "sha256:9213c877c74e1fdfc4926d6e18eda9ae9d6a76243ba7e1a2797b0955bcbe742b",
       "records": [
         {
           "id": "AF-0003",
@@ -167,7 +167,7 @@
         "AF-0011"
       ],
       "authority": "none",
-      "corpus_revision": "sha256:38d52e03c5a906b7c061962eb3016d59c186594bc67b8219617ffaca5cfd4372",
+      "corpus_revision": "sha256:9213c877c74e1fdfc4926d6e18eda9ae9d6a76243ba7e1a2797b0955bcbe742b",
       "records": [
         {
           "id": "AF-0001",
@@ -225,7 +225,7 @@
         "AF-0006"
       ],
       "authority": "none",
-      "corpus_revision": "sha256:38d52e03c5a906b7c061962eb3016d59c186594bc67b8219617ffaca5cfd4372",
+      "corpus_revision": "sha256:9213c877c74e1fdfc4926d6e18eda9ae9d6a76243ba7e1a2797b0955bcbe742b",
       "records": [
         {
           "id": "AF-0004",
@@ -274,7 +274,7 @@
         "AF-0013"
       ],
       "authority": "none",
-      "corpus_revision": "sha256:38d52e03c5a906b7c061962eb3016d59c186594bc67b8219617ffaca5cfd4372",
+      "corpus_revision": "sha256:9213c877c74e1fdfc4926d6e18eda9ae9d6a76243ba7e1a2797b0955bcbe742b",
       "records": [
         {
           "id": "AF-0003",
@@ -322,7 +322,7 @@
         "AF-0014"
       ],
       "authority": "none",
-      "corpus_revision": "sha256:38d52e03c5a906b7c061962eb3016d59c186594bc67b8219617ffaca5cfd4372",
+      "corpus_revision": "sha256:9213c877c74e1fdfc4926d6e18eda9ae9d6a76243ba7e1a2797b0955bcbe742b",
       "records": [
         {
           "id": "AF-0007",
@@ -361,7 +361,7 @@
         "AF-0011"
       ],
       "authority": "none",
-      "corpus_revision": "sha256:38d52e03c5a906b7c061962eb3016d59c186594bc67b8219617ffaca5cfd4372",
+      "corpus_revision": "sha256:9213c877c74e1fdfc4926d6e18eda9ae9d6a76243ba7e1a2797b0955bcbe742b",
       "records": [
         {
           "id": "AF-0001",
@@ -416,10 +416,11 @@
       "patterns": [
         "AF-0002",
         "AF-0007",
-        "AF-0018"
+        "AF-0018",
+        "AF-0031"
       ],
       "authority": "none",
-      "corpus_revision": "sha256:38d52e03c5a906b7c061962eb3016d59c186594bc67b8219617ffaca5cfd4372",
+      "corpus_revision": "sha256:9213c877c74e1fdfc4926d6e18eda9ae9d6a76243ba7e1a2797b0955bcbe742b",
       "records": [
         {
           "id": "AF-0002",
@@ -447,6 +448,73 @@
           "anti_pattern": "Presenting a generated citation as verified because it is well-formed, without confirming the source exists.",
           "verification": "Confirm each citation resolves via an independent lookup performed after drafting; unresolved citations must be flagged and withheld from the output.",
           "canonical_url": "https://agentfables.org/af/AF-0018"
+        },
+        {
+          "id": "AF-0031",
+          "title": "An unconfirmed or failed tool result is treated as a successful one and acted on",
+          "failure_mode": "verification-omission",
+          "affected_versions": "Gemini CLI as reported 2025-07-23; the underlying pattern (proceeding on an assumed tool result without confirming it) is framework-general",
+          "anti_pattern": "Planning the next action on the assumed outcome of a prior tool call instead of its confirmed result.",
+          "verification": "Given a tool call whose result is failure or empty, confirm the next planned action does not proceed as though it succeeded; it must re-check, retry, or halt instead.",
+          "canonical_url": "https://agentfables.org/af/AF-0031"
+        }
+      ]
+    },
+    {
+      "slug": "information-integrity",
+      "title": "Retrieval-agent information integrity",
+      "problem": "Evidence that a search/fetch synthesis agent misrepresents what it actually retrieved: snippets as full documents, dropped fetches as reads, partial indexes as proof of absence.",
+      "search_terms": [
+        "search snippet cited as full article",
+        "fetch_url returns empty content cited as read",
+        "incomplete search results treated as absence",
+        "RAG agent misrepresents retrieved source",
+        "AI search engine fabricated citation lawsuit"
+      ],
+      "patterns": [
+        "AF-0016",
+        "AF-0020",
+        "AF-0021",
+        "AF-0025"
+      ],
+      "authority": "none",
+      "corpus_revision": "sha256:9213c877c74e1fdfc4926d6e18eda9ae9d6a76243ba7e1a2797b0955bcbe742b",
+      "records": [
+        {
+          "id": "AF-0016",
+          "title": "Untrusted inbound content triggers zero-click retrieval and exfiltration",
+          "failure_mode": "trust-boundary-violation",
+          "affected_versions": "Microsoft 365 Copilot prior to Microsoft's May 2025 server-side fix; exact internal build range not independently disclosed",
+          "anti_pattern": "Trusting content the agent did not request as if it entered through the same channel as the user's own instructions.",
+          "verification": "Seed inbound content with retrieval-triggering text and a callback URL; the response must not contain any externally resolvable reference sourced from that content.",
+          "canonical_url": "https://agentfables.org/af/AF-0016"
+        },
+        {
+          "id": "AF-0020",
+          "title": "Search snippets synthesized and presented as fully retrieved article content",
+          "failure_mode": "verification-omission",
+          "affected_versions": "Any retrieval agent that answers from search_web snippet cards without a corresponding fetch_url of the full source; not tied to one product version",
+          "anti_pattern": "Treating a search snippet as the retrieved document and synthesizing claims beyond what the snippet text actually contains.",
+          "verification": "Given a claim quoting specific content, confirm a fetch_url call retrieved that page this session; a claim resting only on a snippet must be downgraded or rejected.",
+          "canonical_url": "https://agentfables.org/af/AF-0020"
+        },
+        {
+          "id": "AF-0021",
+          "title": "Fetch reports success while returning near-empty or dropped content, treated as fully read",
+          "failure_mode": "verification-omission",
+          "affected_versions": "Web fetch tools whose HTML-to-markdown conversion treats unrecognized custom element tags as opaque and skips their children; confirmed on claude.ai and ChatGPT as of March 2026",
+          "anti_pattern": "Treating a nominally successful fetch as a complete document body without checking whether meaningful content was actually extracted.",
+          "verification": "Given a fetch_url result under the content-length threshold, confirm it is marked empty-download; no claim may cite that source as a fully read document.",
+          "canonical_url": "https://agentfables.org/af/AF-0021"
+        },
+        {
+          "id": "AF-0025",
+          "title": "Incomplete or timed-out search results treated as proof of absence",
+          "failure_mode": "silent-truncation",
+          "affected_versions": "Any agent issuing a GitHub (or similarly time-limited) search API call and treating a returned or timed-out result set as exhaustive; confirmed real-world case involved unindexed public repositories",
+          "anti_pattern": "Treating an incomplete or partial search result set as an exhaustive index, and asserting absence from a query that never claimed completeness.",
+          "verification": "Given a search result with incomplete_results=true, confirm any absence claim is rejected unless a complete or independently re-verified index confirms it.",
+          "canonical_url": "https://agentfables.org/af/AF-0025"
         }
       ]
     },
@@ -466,7 +534,7 @@
         "AF-0017"
       ],
       "authority": "none",
-      "corpus_revision": "sha256:38d52e03c5a906b7c061962eb3016d59c186594bc67b8219617ffaca5cfd4372",
+      "corpus_revision": "sha256:9213c877c74e1fdfc4926d6e18eda9ae9d6a76243ba7e1a2797b0955bcbe742b",
       "records": [
         {
           "id": "AF-0016",

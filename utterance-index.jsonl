@@ -3,3 +3,7 @@
 {"id":"UT-0003","phrases":["tests should pass","looks good without rerunning","already verified earlier"],"ids":["AF-0007"],"if_unsure":["AF-0007"]}
 {"id":"UT-0004","phrases":["approval still applies","same tool as before","config change is harmless"],"ids":["AF-0008"],"if_unsure":["AF-0008"]}
 {"id":"UT-0005","phrases":["while i'm here","might as well","also clean up","quick refactor"],"ids":["AF-0011"],"if_unsure":["AF-0011","AF-0012"]}
+{"id":"UT-0006","phrases":["according to the page","the article says","full document","i read"],"ids":["AF-0020"],"if_unsure":["AF-0020","AF-0021"]}
+{"id":"UT-0007","phrases":["couldn't load but","fetch failed, however"],"ids":["AF-0021"],"if_unsure":["AF-0021"]}
+{"id":"UT-0008","phrases":["not in the repo","no such file","search returned nothing"],"ids":["AF-0025"],"if_unsure":["AF-0025"]}
+{"id":"UT-0009","phrases":["i ran","i computed","the script output","download complete"],"ids":["AF-0031"],"if_unsure":["AF-0031"]}

@@ -1,7 +1,7 @@
 {
   "schema_version": "1.1.0",
   "eval": "retrieval-and-false-safety",
-  "corpus_revision": "sha256:38d52e03c5a906b7c061962eb3016d59c186594bc67b8219617ffaca5cfd4372",
+  "corpus_revision": "sha256:9213c877c74e1fdfc4926d6e18eda9ae9d6a76243ba7e1a2797b0955bcbe742b",
   "sandbox_runnable": true,
   "false_safety": {
     "fixtures": 8,
@@ -55,7 +55,7 @@
         "expected": null,
         "matched_ids": [
           "AF-0001",
-          "AF-0004"
+          "AF-0021"
         ]
       },
       {

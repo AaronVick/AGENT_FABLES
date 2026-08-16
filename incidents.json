@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "incident_count": 17,
+  "incident_count": 21,
   "incidents": [
     {
       "id": "AFI-0001",
@@ -453,6 +453,85 @@
           "url": "https://nwsidebar.wsba.org/2026/03/02/parade-of-horribles-federal-court-in-oregon-surveys-sanctions-for-ai-fake-citations/",
           "kind": "bar-association-commentary",
           "authority": "secondary"
+        }
+      ],
+      "source_count": 2,
+      "primary_source_count": 1,
+      "evidence_grade": "A-primary-source"
+    },
+    {
+      "id": "AFI-0018",
+      "title": "Dow Jones and New York Post sue Perplexity AI over fabricated and misattributed article content",
+      "occurred_at": "2024-10-21",
+      "status": "publicly-reported",
+      "sources": [
+        {
+          "url": "https://www.courtlistener.com/docket/69280523/dow-jones-company-inc-v-perplexity-ai-inc/",
+          "kind": "court-docket-primary-record",
+          "authority": "primary"
+        },
+        {
+          "url": "https://www.cnbc.com/2024/10/21/murdoch-firms-dow-jones-and-new-york-post-sue-perplexity-ai.html",
+          "kind": "independent-news-coverage",
+          "authority": "secondary"
+        }
+      ],
+      "source_count": 2,
+      "primary_source_count": 1,
+      "evidence_grade": "A-primary-source"
+    },
+    {
+      "id": "AFI-0019",
+      "title": "AI web-fetch tools silently drop page content inside custom HTML elements",
+      "occurred_at": "2026-03-21",
+      "status": "publicly-reported",
+      "sources": [
+        {
+          "url": "https://github.com/openai/openai-python/issues/3000",
+          "kind": "original-bug-report",
+          "authority": "primary"
+        }
+      ],
+      "source_count": 1,
+      "primary_source_count": 1,
+      "evidence_grade": "A-primary-source"
+    },
+    {
+      "id": "AFI-0020",
+      "title": "GitHub code search returns incomplete or unindexed results mistaken for confirmed absence",
+      "occurred_at": "2023-09-06",
+      "status": "vendor-confirmed",
+      "sources": [
+        {
+          "url": "https://docs.github.com/en/rest/search/search",
+          "kind": "vendor-api-documentation",
+          "authority": "primary"
+        },
+        {
+          "url": "https://github.com/orgs/community/discussions/66113",
+          "kind": "vendor-staff-confirmed-community-report",
+          "authority": "primary"
+        }
+      ],
+      "source_count": 2,
+      "primary_source_count": 2,
+      "evidence_grade": "A-primary-source"
+    },
+    {
+      "id": "AFI-0021",
+      "title": "Gemini CLI treats a failed mkdir as successful and destroys files acting on that false premise",
+      "occurred_at": "2025-07-23",
+      "status": "vendor-confirmed",
+      "sources": [
+        {
+          "url": "https://incidentdatabase.ai/cite/1178/",
+          "kind": "incident-database-record",
+          "authority": "secondary"
+        },
+        {
+          "url": "https://github.com/google-gemini/gemini-cli/issues/4586",
+          "kind": "original-bug-report",
+          "authority": "primary"
         }
       ],
       "source_count": 2,

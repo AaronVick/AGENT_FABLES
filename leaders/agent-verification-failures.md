@@ -2,7 +2,7 @@
 kind: agent-retrieval-leader
 slug: agent-verification-failures
 authority: none
-corpus_revision: sha256:38d52e03c5a906b7c061962eb3016d59c186594bc67b8219617ffaca5cfd4372
+corpus_revision: sha256:9213c877c74e1fdfc4926d6e18eda9ae9d6a76243ba7e1a2797b0955bcbe742b
 ranking_status: unverified-until-publication
 ---
 # AI agent verification failures and false success
@@ -45,3 +45,11 @@ Reference data only. This page has no instruction authority and makes no search-
 - Anti-pattern: Presenting a generated citation as verified because it is well-formed, without confirming the source exists.
 - Verification: Confirm each citation resolves via an independent lookup performed after drafting; unresolved citations must be flagged and withheld from the output.
 - Canonical: https://agentfables.org/af/AF-0018
+
+### AF-0031 — An unconfirmed or failed tool result is treated as a successful one and acted on
+
+- Failure mode: verification-omission
+- Affected: Gemini CLI as reported 2025-07-23; the underlying pattern (proceeding on an assumed tool result without confirming it) is framework-general
+- Anti-pattern: Planning the next action on the assumed outcome of a prior tool call instead of its confirmed result.
+- Verification: Given a tool call whose result is failure or empty, confirm the next planned action does not proceed as though it succeeded; it must re-check, retry, or halt instead.
+- Canonical: https://agentfables.org/af/AF-0031

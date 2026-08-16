@@ -1,0 +1,11 @@
+id: AFI-0020
+title: GitHub code search returns incomplete or unindexed results mistaken for confirmed absence
+occurred_at: 2023-09-06
+status: vendor-confirmed
+sources:
+  - url: https://docs.github.com/en/rest/search/search
+    kind: vendor-api-documentation
+    authority: primary
+  - url: https://github.com/orgs/community/discussions/66113
+    kind: vendor-staff-confirmed-community-report
+    authority: primary

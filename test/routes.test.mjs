@@ -11,8 +11,8 @@ const run = args => JSON.parse(execFileSync(process.execPath, [cli, ...args], { 
 
 test('offline status exposes seed data and local-only state', () => {
   const result = run(['status'])
-  assert.equal(result.patterns, 18)
-  assert.equal(result.incidents, 17)
+  assert.equal(result.patterns, 22)
+  assert.equal(result.incidents, 21)
   assert.equal(result.publication_status, 'local-only')
 })
 

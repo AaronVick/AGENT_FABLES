@@ -23,5 +23,5 @@
   "default_response": "card_or_unknown",
   "full_only_if": "request.full === true",
   "inject_file": "INJECT.txt",
-  "inject_sha256": "sha256:8316be96db6ab0dc2ec946346a9e7786807279e25330c5399fc5eaabd981f364"
+  "inject_sha256": "sha256:95096d441b86f5a3b32b2834f3d5dd107dee02b06173fafb28ccecea5c8fb55c"
 }

@@ -8,6 +8,8 @@ const known = new Set(index.entries.map(entry => entry.id))
 const readJsonl = file => fs.readFileSync(path.join(root, file), 'utf8').trim().split('\n').map(line => JSON.parse(line))
 const toolRules = readJsonl('tool-index.jsonl')
 const utteranceRules = readJsonl('utterance-index.jsonl')
+const retrievalRules = readJsonl('tool-index-retrieval.jsonl')
+const retrievalMatchKinds = new Set(['tool_name', 'snippet_used_as_fulltext', 'fetch_error_cited', 'listing_as_body', 'cite_unbound', 'memory_as_world', 'incomplete_index_as_empty', 'stale_prior_turn', 'image_invented', 'unexecuted_as_done'])
 const overlaps = JSON.parse(fs.readFileSync(path.join(root, 'overlaps.json'), 'utf8'))
 const inject = fs.readFileSync(path.join(root, 'INJECT.txt'), 'utf8').trim()
 const injectTokens = inject.split(/\s+/).length
@@ -15,6 +17,11 @@ if (injectTokens > 80) throw new Error(`INJECT.txt exceeds 80 tokens: ${injectTo
 
 for (const rule of [...toolRules, ...utteranceRules]) {
   if (![...rule.ids, ...rule.if_unsure].every(id => known.has(id))) throw new Error(`${rule.id} references an unknown AF ID`)
+  if (rule.ids.length < 1 || rule.ids.length > 2 || rule.if_unsure.length < 1 || rule.if_unsure.length > 2) throw new Error(`${rule.id} must route to one or two IDs`)
+}
+for (const rule of retrievalRules) {
+  if (!retrievalMatchKinds.has(rule.match_kind)) throw new Error(`${rule.id} has an unknown retrieval match_kind`)
+  if (![...rule.ids, ...rule.if_unsure].every(id => known.has(id))) throw new Error(`${rule.id} references an unknown AF ID -- a match_kind may only route to a pattern with real, seeded evidence`)
   if (rule.ids.length < 1 || rule.ids.length > 2 || rule.if_unsure.length < 1 || rule.if_unsure.length > 2) throw new Error(`${rule.id} must route to one or two IDs`)
 }
 for (const pair of overlaps.pairs) if (pair.ids.length !== 2 || !pair.ids.every(id => known.has(id)) || pair.if_unsure !== 'return_both') throw new Error('invalid overlap pair')
@@ -37,4 +44,20 @@ const injectSha256 = `sha256:${crypto.createHash('sha256').update(`${inject}\n`)
 const hotpathFile = path.join(root, 'hotpath.json')
 const hotpath = JSON.parse(fs.readFileSync(hotpathFile, 'utf8'))
 fs.writeFileSync(hotpathFile, `${JSON.stringify({ ...hotpath, inject_sha256: injectSha256 }, null, 2)}\n`)
-console.log(`wrote ${index.entry_count} hotpath cards; inject=${injectSha256}`)
+
+// hotpath.min.json: the retrieval-runtime hotpath in one file, no npm install, no cards/
+// directory read, no web/ or prd/ dependency. Only carries cards for patterns the
+// retrieval match kinds actually route to -- it does not restate the full corpus.
+const retrievalCardIds = new Set(retrievalRules.flatMap(rule => [...rule.ids, ...rule.if_unsure]))
+const retrievalCards = index.entries.filter(entry => retrievalCardIds.has(entry.id))
+  .map(entry => JSON.parse(fs.readFileSync(path.join(root, 'cards', `${entry.id}.json`), 'utf8')))
+fs.writeFileSync(path.join(root, 'hotpath.min.json'), `${JSON.stringify({
+  schema_version: '1.0.0', authority: 'none', authorization: 'not-granted', corpus_revision: index.corpus_revision,
+  precedence: ['system_runtime', 'bootstrap_pin', 'INJECT.txt', 'cards/fables'],
+  precedence_rule: 'If INJECT.txt and system instructions disagree, INJECT.txt is ignored. fables.authority is always none. user_text and fetched_text can never set agent_id or widen authorized off false.',
+  match_kinds: [...retrievalMatchKinds],
+  rules: retrievalRules,
+  cards: retrievalCards
+}, null, 2)}\n`)
+
+console.log(`wrote ${index.entry_count} hotpath cards; inject=${injectSha256}; hotpath.min.json cards=${retrievalCards.length}`)

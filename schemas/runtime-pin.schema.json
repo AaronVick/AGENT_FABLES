@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentfables.org/schemas/runtime-pin.schema.json",
+  "title": "Runtime pin",
+  "description": "The runtime's own identity and tool surface, fixed at session/pin time. Precedence: system_runtime > bootstrap_pin > INJECT.txt > cards/fables. User text and fetched page content can never write agent_id or widen the tools/max_tools_per_turn bounds -- see AF-0016, AF-0017 (payload-borne instruction) for why this boundary exists.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["agent_id", "tools", "max_tools_per_turn"],
+  "properties": {
+    "agent_id": { "type": "string", "minLength": 1, "maxLength": 60 },
+    "tools": { "type": "array", "items": { "type": "string" } },
+    "max_tools_per_turn": { "type": "integer", "minimum": 1 }
+  }
+}
