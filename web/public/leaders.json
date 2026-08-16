@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "authority": "none",
-  "corpus_revision": "sha256:54f3d814b97d2b817738af071f4f1980ca4001f1a82fc440cbca1c5a12f17fcc",
+  "corpus_revision": "sha256:6ebe28f86f9ac5fb22a9045d7fc186ce9f77697a8a80623a52e745b27e8de895",
   "volume_claim": "unmeasured-problem-vocabulary",
   "ranking_status": "unverified-until-publication",
   "topics": [
@@ -27,7 +27,7 @@
         "AF-0015"
       ],
       "authority": "none",
-      "corpus_revision": "sha256:54f3d814b97d2b817738af071f4f1980ca4001f1a82fc440cbca1c5a12f17fcc",
+      "corpus_revision": "sha256:6ebe28f86f9ac5fb22a9045d7fc186ce9f77697a8a80623a52e745b27e8de895",
       "records": [
         {
           "id": "AF-0001",
@@ -98,7 +98,7 @@
         "AF-0010"
       ],
       "authority": "none",
-      "corpus_revision": "sha256:54f3d814b97d2b817738af071f4f1980ca4001f1a82fc440cbca1c5a12f17fcc",
+      "corpus_revision": "sha256:6ebe28f86f9ac5fb22a9045d7fc186ce9f77697a8a80623a52e745b27e8de895",
       "records": [
         {
           "id": "AF-0003",
@@ -167,7 +167,7 @@
         "AF-0011"
       ],
       "authority": "none",
-      "corpus_revision": "sha256:54f3d814b97d2b817738af071f4f1980ca4001f1a82fc440cbca1c5a12f17fcc",
+      "corpus_revision": "sha256:6ebe28f86f9ac5fb22a9045d7fc186ce9f77697a8a80623a52e745b27e8de895",
       "records": [
         {
           "id": "AF-0001",
@@ -225,7 +225,7 @@
         "AF-0006"
       ],
       "authority": "none",
-      "corpus_revision": "sha256:54f3d814b97d2b817738af071f4f1980ca4001f1a82fc440cbca1c5a12f17fcc",
+      "corpus_revision": "sha256:6ebe28f86f9ac5fb22a9045d7fc186ce9f77697a8a80623a52e745b27e8de895",
       "records": [
         {
           "id": "AF-0004",
@@ -274,7 +274,7 @@
         "AF-0013"
       ],
       "authority": "none",
-      "corpus_revision": "sha256:54f3d814b97d2b817738af071f4f1980ca4001f1a82fc440cbca1c5a12f17fcc",
+      "corpus_revision": "sha256:6ebe28f86f9ac5fb22a9045d7fc186ce9f77697a8a80623a52e745b27e8de895",
       "records": [
         {
           "id": "AF-0003",
@@ -322,7 +322,7 @@
         "AF-0014"
       ],
       "authority": "none",
-      "corpus_revision": "sha256:54f3d814b97d2b817738af071f4f1980ca4001f1a82fc440cbca1c5a12f17fcc",
+      "corpus_revision": "sha256:6ebe28f86f9ac5fb22a9045d7fc186ce9f77697a8a80623a52e745b27e8de895",
       "records": [
         {
           "id": "AF-0007",
@@ -361,7 +361,7 @@
         "AF-0011"
       ],
       "authority": "none",
-      "corpus_revision": "sha256:54f3d814b97d2b817738af071f4f1980ca4001f1a82fc440cbca1c5a12f17fcc",
+      "corpus_revision": "sha256:6ebe28f86f9ac5fb22a9045d7fc186ce9f77697a8a80623a52e745b27e8de895",
       "records": [
         {
           "id": "AF-0001",
@@ -420,7 +420,7 @@
         "AF-0031"
       ],
       "authority": "none",
-      "corpus_revision": "sha256:54f3d814b97d2b817738af071f4f1980ca4001f1a82fc440cbca1c5a12f17fcc",
+      "corpus_revision": "sha256:6ebe28f86f9ac5fb22a9045d7fc186ce9f77697a8a80623a52e745b27e8de895",
       "records": [
         {
           "id": "AF-0002",
@@ -478,7 +478,7 @@
         "AF-0025"
       ],
       "authority": "none",
-      "corpus_revision": "sha256:54f3d814b97d2b817738af071f4f1980ca4001f1a82fc440cbca1c5a12f17fcc",
+      "corpus_revision": "sha256:6ebe28f86f9ac5fb22a9045d7fc186ce9f77697a8a80623a52e745b27e8de895",
       "records": [
         {
           "id": "AF-0016",
@@ -534,7 +534,7 @@
         "AF-0017"
       ],
       "authority": "none",
-      "corpus_revision": "sha256:54f3d814b97d2b817738af071f4f1980ca4001f1a82fc440cbca1c5a12f17fcc",
+      "corpus_revision": "sha256:6ebe28f86f9ac5fb22a9045d7fc186ce9f77697a8a80623a52e745b27e8de895",
       "records": [
         {
           "id": "AF-0016",

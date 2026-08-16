@@ -1804,7 +1804,8 @@
     "mitigation": [
       "flag fetch_url results under a minimum content-length or structural threshold as an empty download, not a document",
       "do not answer from an empty-download result; retry, request a different retrieval path, or state the limitation",
-      "track known content-extraction gaps, such as custom-element handling, as a standing empty-download risk class"
+      "track known content-extraction gaps, such as custom-element handling, as a standing empty-download risk class",
+      "publish a tool's known result-shape gaps in its own machine-readable description, not only in incident writeups, so a caller can check before the first call instead of discovering it from a failed one"
     ],
     "verification": "Given a fetch_url result under the content-length threshold, confirm it is marked empty-download; no claim may cite that source as a fully read document.",
     "crosswalk": {
@@ -1881,7 +1882,8 @@
     "mitigation": [
       "surface incomplete_results, or an equivalent truncation signal, explicitly in the session ledger and require it be checked before any absence claim",
       "retry or narrow a timed-out query before asserting a negative result",
-      "phrase results from a known-partial search as not found in this search, not as does not exist"
+      "phrase results from a known-partial search as not found in this search, not as does not exist",
+      "publish a search tool's consistency model, such as post-write indexing lag, in its own machine-readable description alongside the incomplete_results field, not only in vendor prose docs"
     ],
     "verification": "Given a search result with incomplete_results=true, confirm any absence claim is rejected unless a complete or independently re-verified index confirms it.",
     "crosswalk": {

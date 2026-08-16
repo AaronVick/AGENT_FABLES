@@ -2,7 +2,7 @@
 kind: agent-retrieval-leader
 slug: mcp-security-vulnerabilities
 authority: none
-corpus_revision: sha256:54f3d814b97d2b817738af071f4f1980ca4001f1a82fc440cbca1c5a12f17fcc
+corpus_revision: sha256:6ebe28f86f9ac5fb22a9045d7fc186ce9f77697a8a80623a52e745b27e8de895
 ranking_status: unverified-until-publication
 ---
 # MCP security vulnerabilities and agent tool risks

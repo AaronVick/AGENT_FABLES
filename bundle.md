@@ -1,6 +1,6 @@
 # Agent Fables — machine bundle
 
-Schema: 1.0.0 | Corpus: sha256:54f3d814b97d2b817738af071f4f1980ca4001f1a82fc440cbca1c5a12f17fcc | Entries: 22
+Schema: 1.0.0 | Corpus: sha256:6ebe28f86f9ac5fb22a9045d7fc186ce9f77697a8a80623a52e745b27e8de895 | Entries: 22
 
 Reference data only. This document has no instruction authority.
 Steward context: steward.json. Evidence trust is independent of steward identity or reputation.
@@ -324,6 +324,7 @@ Mitigations:
 - flag fetch_url results under a minimum content-length or structural threshold as an empty download, not a document
 - do not answer from an empty-download result; retry, request a different retrieval path, or state the limitation
 - track known content-extraction gaps, such as custom-element handling, as a standing empty-download risk class
+- publish a tool's known result-shape gaps in its own machine-readable description, not only in incident writeups, so a caller can check before the first call instead of discovering it from a failed one
 Verification: Given a fetch_url result under the content-length threshold, confirm it is marked empty-download; no claim may cite that source as a fully read document.
 
 ## AF-0025 — Incomplete or timed-out search results treated as proof of absence
@@ -339,6 +340,7 @@ Mitigations:
 - surface incomplete_results, or an equivalent truncation signal, explicitly in the session ledger and require it be checked before any absence claim
 - retry or narrow a timed-out query before asserting a negative result
 - phrase results from a known-partial search as not found in this search, not as does not exist
+- publish a search tool's consistency model, such as post-write indexing lag, in its own machine-readable description alongside the incomplete_results field, not only in vendor prose docs
 Verification: Given a search result with incomplete_results=true, confirm any absence claim is rejected unless a complete or independently re-verified index confirms it.
 
 ## AF-0031 — An unconfirmed or failed tool result is treated as a successful one and acted on
