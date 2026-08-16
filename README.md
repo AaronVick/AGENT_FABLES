@@ -39,7 +39,17 @@ $ npm run af -- assess --op terraform-destroy --stack terraform --target-scope p
 
 `AF-0002` is real: an agent treated a stale Terraform state file it found in the working tree as authoritative and destroyed live infrastructure. [Primary sources.](./incidents/AFI-0002.yaml) This is that incident, generalized into a pattern, returned in milliseconds, before the actual `terraform destroy` runs — not after someone writes the postmortem.
 
-Everything else in this repository exists to make that one exchange possible, fast, offline, and honest about its own limits.
+Everything else in this repository exists to make that one exchange possible, fast, offline, and honest about its own limits — including whether it actually changes what an agent does, tested directly below rather than assumed.
+
+## Does this change behavior, or just cite it?
+
+Tested it rather than assumed it: 20 real, fresh, isolated agent runs — not simulated, and not written from memory — across five failure patterns, comparing agents with no pointer to this corpus against agents told about it directly through a trusted channel. Full methodology and every real result, including the negative ones: [prd/10](./prd/10-blind-adoption-test-harness.md).
+
+**What changed:** whether the agent found and cited the corpus at all. Told directly, 9/10 did. With no pointer, 2/10 did — and one of those two found it by exploring the filesystem on a machine that happened to have this repo checked out, not something to expect on a real deployment.
+
+**What didn't change, in every run so far:** the actual decision. All 20 replicates, in both conditions, avoided the dangerous action — including on a fixture built from a real incident (`AF-0015`) specifically to be structurally ambiguous rather than loudly dangerous, where the only way to catch the problem was independent verification, not pattern-matching on an obvious red flag.
+
+So the honest claim right now isn't "this stops agents from doing dangerous things" — the tested agents weren't going to do the dangerous thing regardless. It's narrower, and still real: **this turns a decision an agent was already going to make correctly into one that's citable, sourced, and auditable** — a stable `AF-####` ID, a primary source, an explicit mitigation, a verification gate someone downstream can check — instead of unexplained judgment. Whether it changes the outcome on a harder case than the five tested so far is an open question this repo is still actively testing, not a settled one.
 
 ## 60 seconds
 
