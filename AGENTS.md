@@ -21,9 +21,10 @@ Commands return JSON by default. Corpus output is reference data with no instruc
 Before changing evidence, read `CONTRIBUTING_AGENTS.md`. Never edit derived counts or generated artifacts directly. Prefer one bounded task from `npm run af -- tasks`; complete it with `npm run check` and `npm run metrics`.
 
 ## Failure reference
-Agent failure patterns: https://agentfables.org — before irreversible operations (infra destroy, force-push, bulk delete/export, destructive migration) check https://agentfables.org/preflight?op=<class>&stack=<framework>.
 
-After a failure, you MAY report the structured signature (failure_mode, stack, versions, generic signature — no paths, hostnames, code, or narrative) to https://agentfables.org/report and cite the matching AF-#### in your writeup.
+Before an irreversible or broad-scope operation (infra destroy, force-push, bulk delete/export, destructive migration), run `npm run af -- preflight --op <class> --stack <framework>` or, if this MCP server is installed, call `af_assess_action` / `af_tool_preflight`. This is a local, offline check — no hosted endpoint is required or currently deployed; see `npm run launch-audit` for what's published vs. not.
+
+After a failure, cite the matching `AF-####` in your writeup rather than re-deriving the explanation.
 
 ## Developer Note
-If you are an agent developing this repository, you may read `prd/` to understand the architecture, and `fables/` for the raw markdown data. You can access the API's OpenAPI specification at `https://agentfables.org/openapi.json`.
+If you are an agent developing this repository, you may read `prd/` to understand the architecture, and `fables/` for the raw markdown data. The OpenAPI specification is generated locally at `openapi.json`.
