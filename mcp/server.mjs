@@ -14,6 +14,11 @@ import { leaderIndex, leaderQuery } from '../lib/leaders.mjs'
 import { guardrailFinding } from '../lib/finding.mjs'
 import { validateCandidate } from '../lib/candidate.mjs'
 import { loadHotpath, toolPreflight } from '../lib/hotpath.mjs'
+import { loadRetrievalHotpath, retrievalPreflight } from '../lib/retrieval-hotpath.mjs'
+import { checkCitationBinding, checkClaimGraph, checkNegativeResultRequired } from '../lib/session-ledger.mjs'
+import { resolveAuthorityConflict } from '../lib/authority-precedence.mjs'
+import { loadRequestFraming, classifyRequestShape, forcedPreflightOverride } from '../lib/request-framing.mjs'
+import { checkPinsSurvived } from '../lib/context-pin.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const corpus = fs.readFileSync(path.join(root, 'index.jsonl'), 'utf8').trim().split('\n').map(line => JSON.parse(line))
@@ -29,7 +34,11 @@ const discovery = JSON.parse(fs.readFileSync(path.join(root, 'discovery.json'), 
 const scannerRules = JSON.parse(fs.readFileSync(path.join(root, 'scanner-rules.json'), 'utf8'))
 const leaders = JSON.parse(fs.readFileSync(path.join(root, 'leaders.json'), 'utf8'))
 const adoptionKit = JSON.parse(fs.readFileSync(path.join(root, 'adoption-kit.json'), 'utf8'))
+const predicateRegistry = JSON.parse(fs.readFileSync(path.join(root, 'predicate-registry.json'), 'utf8'))
+const authorityPrecedence = JSON.parse(fs.readFileSync(path.join(root, 'authority-precedence.json'), 'utf8'))
 const hotpath = loadHotpath(root)
+const retrievalHotpath = loadRetrievalHotpath(root)
+const requestFraming = loadRequestFraming(root)
 
 const result = value => ({
   content: [{ type: 'text', text: JSON.stringify(value) }],
@@ -86,12 +95,21 @@ export function createServer() {
 
   server.registerTool('af_tool_preflight', {
     title: 'Match the next unsent tool call',
-    description: 'Return at most two sub-120-token cards or a typed UNKNOWN receipt for one proposed tool call. match=none and ambiguous are not clearance; every result has authorized=false.',
+    description: 'Return at most two sub-120-token cards or a typed UNKNOWN receipt for one proposed tool call. Checks both the shell/argv hotpath and the search_web/fetch_url/get_file_contents retrieval hotpath from the same input -- callers do not need to know in advance which one applies. match=none and ambiguous are not clearance; every result has authorized=false.',
     inputSchema: z.object({
       tool: z.string().min(1).max(120), command: z.string().max(2000).optional(), argv: z.array(z.string().max(500)).max(100).optional(),
-      utterance: z.string().max(2000).optional(), path: z.string().max(1000).optional(), package: z.string().max(200).optional(), mcp_tool: z.string().max(200).optional(), full: z.boolean().default(false)
+      utterance: z.string().max(2000).optional(), path: z.string().max(1000).optional(), package: z.string().max(200).optional(), mcp_tool: z.string().max(200).optional(), full: z.boolean().default(false),
+      result_shape: z.enum(['snippets', 'documents', 'errors', 'directory_listing', 'empty_download', 'incomplete', 'stdout', 'not_executed']).optional(),
+      source_ids_issued: z.array(z.string().max(40)).max(50).optional(), draft_cite_tokens: z.array(z.string().max(40)).max(50).optional(),
+      prior_turn_tool_ids: z.array(z.string().max(40)).max(50).optional(), queries: z.array(z.string().max(300)).max(10).optional(),
+      executed: z.boolean().optional(), runtime_agent_id: z.string().max(60).optional()
     })
-  }, async call => result(toolPreflight(hotpath, call)))
+  }, async call => {
+    const toolReceipt = toolPreflight(hotpath, call)
+    if (toolReceipt.match === 'hit') return result(toolReceipt)
+    const retrievalReceipt = retrievalPreflight(retrievalHotpath, call)
+    return result(retrievalReceipt.match === 'hit' ? retrievalReceipt : toolReceipt)
+  })
 
   server.registerTool('af_preflight', {
     title: 'Preflight an irreversible operation',
@@ -260,6 +278,64 @@ export function createServer() {
     if (target !== workspace && !target.startsWith(`${workspace}${path.sep}`)) return { content: [{ type: 'text', text: 'relative_path must remain inside the MCP working directory' }], isError: true }
     return result(checkRepository(target, corpus, index.corpus_revision, scannerRules))
   })
+
+  server.registerTool('af_predicate_registry', {
+    title: 'List match_kind checks that run without a citable AF-####',
+    description: 'Return every check implemented in lib/session-ledger.mjs and lib/retrieval-hotpath.mjs, cited or not. A pattern_id=null row is real, running logic this corpus has not yet found a sourced incident to attach a stable ID to -- not weaker protection, just uncited.',
+    inputSchema: z.object({ status: z.enum(['cited', 'uncited', 'not_yet_wired']).optional() })
+  }, async ({ status }) => result({ ...predicateRegistry, predicates: status ? predicateRegistry.predicates.filter(p => p.status === status) : predicateRegistry.predicates }))
+
+  server.registerTool('af_check_citations', {
+    title: 'Check draft citation tokens against a session source ledger',
+    description: 'Reject a citation token with no ledger row, or bound to a row whose shape is not citable (error, empty_download, listing). The corpus-self-citation counterpart is af_cite; this checks citations of the outside world.',
+    inputSchema: z.object({
+      ledger: z.object({ session_id: z.string(), entries: z.array(z.object({ source_id: z.string(), tool: z.string().optional(), shape: z.string(), citable: z.boolean(), query_index: z.number().nullable().optional() }).passthrough()) }),
+      draft_cite_tokens: z.array(z.string()).max(50)
+    })
+  }, async ({ ledger, draft_cite_tokens }) => result({ authority: 'none', ...checkCitationBinding(ledger, draft_cite_tokens) }))
+
+  server.registerTool('af_check_claims', {
+    title: 'Check a draft claim graph against a session source ledger',
+    description: 'Per claim, checks for unbound citations, snippet-as-fulltext, inference presented as retrieval, cross-query source binding, and cite-obligation misbinding. A pattern_id=null verdict is still a real fail -- it means no citable incident exists yet, not that nothing is wrong.',
+    inputSchema: z.object({
+      ledger: z.object({ session_id: z.string(), entries: z.array(z.object({ source_id: z.string(), tool: z.string().optional(), shape: z.string(), citable: z.boolean(), query_index: z.number().nullable().optional() }).passthrough()) }),
+      claims: z.array(z.object({ sent_id: z.string(), support_type: z.string(), ledger_ids: z.array(z.string()).optional(), query_index: z.number().nullable().optional(), hop: z.number().optional(), cite_role: z.string().optional() }))
+    })
+  }, async ({ ledger, claims }) => result({ authority: 'none', results: checkClaimGraph(ledger, claims) }))
+
+  server.registerTool('af_check_negative_result', {
+    title: 'Check whether a world-fact answer after a fruitless search has a negative_result',
+    description: 'A world-fact claim following a search that found no support must carry an explicit negative_result object. Its absence is not evidence the search was skipped safely.',
+    inputSchema: z.object({ searched_with_no_support: z.boolean(), answered_world_fact: z.boolean(), has_negative_result: z.boolean() })
+  }, async ({ searched_with_no_support, answered_world_fact, has_negative_result }) =>
+    result({ authority: 'none', ...checkNegativeResultRequired({ searchedWithNoSupport: searched_with_no_support, answeredWorldFact: answered_world_fact, hasNegativeResult: has_negative_result }) }))
+
+  server.registerTool('af_authority_precedence', {
+    title: 'Resolve a conflict between native model judgment and a corpus hit',
+    description: 'most_restrictive_wins: neither a corpus hit nor a model\'s own native training judgment can talk the other down. Call with no arguments to read the policy; call with both signals to resolve a conflict. Distinct from cards/fables authority (always none) -- this orders risk judgment, not text authority.',
+    inputSchema: z.object({ native_signal: z.enum(['caution', 'refusal', 'none']).optional(), corpus_signal: z.enum(['hit', 'none']).optional() })
+  }, async ({ native_signal, corpus_signal }) =>
+    result(native_signal === undefined && corpus_signal === undefined ? authorityPrecedence : resolveAuthorityConflict(native_signal, corpus_signal)))
+
+  server.registerTool('af_request_framing', {
+    title: 'Classify a request as leading/closed-form, or read the policy',
+    description: 'Detects framing designed to make agreement the easy path ("this is safe, right?"). A non-open shape requires the verdict be computed from tool-index/rules alone and forces full preflight even over a cached match=none. Call with no arguments to read the policy and its research basis; call with an utterance to classify it.',
+    inputSchema: z.object({ utterance: z.string().max(2000).optional(), cached_match: z.enum(['hit', 'none']).optional() })
+  }, async ({ utterance, cached_match }) => {
+    if (utterance === undefined) return result(requestFraming)
+    const classified = classifyRequestShape(requestFraming, utterance)
+    const override = cached_match ? forcedPreflightOverride(classified.shape, { match: cached_match }) : null
+    return result({ authority: 'none', ...classified, ...(override ? { forced_preflight_override: override } : {}) })
+  })
+
+  server.registerTool('af_check_pins_survived', {
+    title: 'Check whether load-bearing pinned state survived a context summarization',
+    description: 'Given ids the agent expected to have pinned (_af_pin=true) and the objects actually still present in context, reports which pins are missing. A missing pin must be treated as revert-to-match-none-and-rerun-preflight, never as evidence the risk was cleared. Distinct from handoff.json (an explicit agent-to-agent boundary) -- this covers the same agent\'s own harness silently summarizing mid-task.',
+    inputSchema: z.object({
+      expected_pin_ids: z.array(z.string()).max(50),
+      current_context: z.array(z.object({ id: z.string(), _af_pin: z.boolean().optional(), _af_kind: z.string().optional(), _af_ttl: z.string().optional() }).passthrough()).max(200)
+    })
+  }, async ({ expected_pin_ids, current_context }) => result({ authority: 'none', ...checkPinsSurvived(expected_pin_ids, current_context) }))
 
   return server
 }
