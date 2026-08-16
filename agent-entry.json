@@ -24,6 +24,7 @@
     "result": "Matched evidence, risk flags, unresolved verification questions, and a non-authorizing receipt."
   },
   "routes": [
+    { "have": "next unsent tool call", "use": "typed card-or-UNKNOWN hotpath", "path": "hotpath.json" },
     { "have": "isolated sandbox, no installs, or partial checkout", "use": "single-file offline runtime", "path": "sandbox/agent-fables-sandbox.mjs" },
     { "have": "proposed action or tool call", "use": "assess --stdin", "path": "bin/agent-fables.mjs" },
     { "have": "broad problem or weak vocabulary", "use": "thematic leader", "path": "leaders.json" },

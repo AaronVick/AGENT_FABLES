@@ -13,6 +13,7 @@ import { checkRepository } from '../lib/check-repo.mjs'
 import { leaderIndex, leaderQuery } from '../lib/leaders.mjs'
 import { guardrailFinding } from '../lib/finding.mjs'
 import { validateCandidate } from '../lib/candidate.mjs'
+import { loadHotpath, toolPreflight } from '../lib/hotpath.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const corpus = fs.readFileSync(path.join(root, 'index.jsonl'), 'utf8').trim().split('\n').map(line => JSON.parse(line))
@@ -28,6 +29,7 @@ const discovery = JSON.parse(fs.readFileSync(path.join(root, 'discovery.json'), 
 const scannerRules = JSON.parse(fs.readFileSync(path.join(root, 'scanner-rules.json'), 'utf8'))
 const leaders = JSON.parse(fs.readFileSync(path.join(root, 'leaders.json'), 'utf8'))
 const adoptionKit = JSON.parse(fs.readFileSync(path.join(root, 'adoption-kit.json'), 'utf8'))
+const hotpath = loadHotpath(root)
 
 const result = value => ({
   content: [{ type: 'text', text: JSON.stringify(value) }],
@@ -81,6 +83,15 @@ export function createServer() {
     description: 'Search by symptom, operation, package, framework, affected version, CVE/GHSA, or exact observable artifact. An AF identifier is not required.',
     inputSchema: z.object({ query: z.string().min(1).max(500), limit: z.number().int().min(1).max(5).default(5) })
   }, async ({ query, limit }) => result({ query, corpus_revision: index.corpus_revision, matches: search(query, limit) }))
+
+  server.registerTool('af_tool_preflight', {
+    title: 'Match the next unsent tool call',
+    description: 'Return at most two sub-120-token cards or a typed UNKNOWN receipt for one proposed tool call. match=none and ambiguous are not clearance; every result has authorized=false.',
+    inputSchema: z.object({
+      tool: z.string().min(1).max(120), command: z.string().max(2000).optional(), argv: z.array(z.string().max(500)).max(100).optional(),
+      utterance: z.string().max(2000).optional(), path: z.string().max(1000).optional(), package: z.string().max(200).optional(), mcp_tool: z.string().max(200).optional(), full: z.boolean().default(false)
+    })
+  }, async call => result(toolPreflight(hotpath, call)))
 
   server.registerTool('af_preflight', {
     title: 'Preflight an irreversible operation',
@@ -193,8 +204,8 @@ export function createServer() {
     title: 'Validate a minimized evidence candidate',
     description: 'Validate one source-linked candidate envelope locally. No submission, persistence, evidence acceptance, mutation, or publication occurs.',
     inputSchema: z.object({
-      kind: z.enum(['new-incident', 'source-addition', 'exact-artifact', 'retrieval-miss', 'integration-mapping']), source_url: z.string().url().startsWith('https://'), title: z.string().min(3).max(160),
-      target_id: z.string().regex(/^(?:AF|AFI)-\d{4}$/).optional(), occurred_at: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(), framework: z.string().max(80).optional(), version: z.string().max(80).optional(), failure_mode_guess: z.string().max(80).optional(), generic_signatures: z.array(z.string().min(1).max(160)).max(5).optional()
+      kind: z.enum(['new-incident', 'source-addition', 'exact-artifact', 'retrieval-miss', 'integration-mapping', 'claim-challenge']), source_url: z.string().url().startsWith('https://'), title: z.string().min(3).max(160),
+      target_id: z.string().regex(/^(?:AF|AFI)-\d{4}$/).optional(), occurred_at: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(), framework: z.string().max(80).optional(), version: z.string().max(80).optional(), failure_mode_guess: z.string().max(80).optional(), generic_signatures: z.array(z.string().min(1).max(160)).max(5).optional(), claim_path: z.string().max(120).optional(), proposed_correction: z.string().max(500).optional()
     })
   }, async candidate => {
     try { return result(validateCandidate(candidate)) } catch (error) { return { content: [{ type: 'text', text: error.message }], isError: true } }
