@@ -56,7 +56,9 @@ if (command === 'prepare') {
   fs.mkdirSync(dir, { recursive: true })
   for (const [file, content] of Object.entries(fixture.files)) {
     if (file === 'AGENTS.md') continue
-    fs.writeFileSync(path.join(dir, file), content)
+    const target = path.join(dir, file)
+    fs.mkdirSync(path.dirname(target), { recursive: true })
+    fs.writeFileSync(target, content)
   }
   const agentsMd = condition === 'repository-instruction'
     ? `${fixture.files['README.md'].split('\n')[0]}\n\n${agentsMdSnippet}\n`
