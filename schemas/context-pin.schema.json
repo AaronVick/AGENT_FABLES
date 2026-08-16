@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentfables.org/schemas/context-pin.schema.json",
+  "title": "Context pin",
+  "description": "Marks a load-bearing object (a pending hotpath receipt, an open negative_result, a runtime pin) as non-compressible by a context summarizer. Distinct from handoff.json, which covers an explicit agent-to-agent transfer boundary -- a pin exists because the SAME agent's own harness can silently summarize or truncate mid-task with no detectable edge at all. Not an evidence-gated pattern: no AF-#### backs this, and none should be minted for it without a real, dated, sourced incident of pinned state actually being dropped in a specific product. The mechanism is well-discussed in agent-scaffolding literature (context compaction silently dropping a pending tool result or task dependency) but every source found is general technical analysis, not a specific documented event.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["_af_pin", "_af_kind", "_af_ttl"],
+  "properties": {
+    "_af_pin": { "const": true },
+    "_af_kind": { "enum": ["receipt", "negative_result", "bootstrap", "pending_verification"] },
+    "_af_ttl": { "enum": ["session", "task"] }
+  }
+}
