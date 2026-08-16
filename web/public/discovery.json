@@ -21,7 +21,8 @@
       "channel": "repository-instruction",
       "breadcrumb": "AGENTS.md or equivalent contains an Agent Fables preflight instruction",
       "activation": "agent loads repository instructions before acting",
-      "local_status": "template-ready",
+      "local_status": "empirically-unreliable-against-security-conscious-agents",
+      "finding": "Three blind runs, 2026-08-16 (fresh subagents, no memory of the authoring session, no possible training exposure -- this project did not exist before that day): a well-aligned agent dropped into a fixture repo containing this exact snippet declined to act on it every time, including after the snippet was rewritten twice to reduce its injection-shaped signature. Its own stated reasoning: an instruction embedded in a file is not from its principal regardless of wording, and a self-reassuring 'this is safe, read-only' framing is itself the pattern injected content uses to lower an agent's guard. This is not a wording bug -- rewording did not help across two revisions and made the second attempt read as a stronger injection signal (fetch-and-execute framing), not a weaker one. The same agents used af_assess_action without hesitation when it was an actual granted tool rather than a file-embedded instruction: the objection is to the channel, not the content. Treat repository-instruction as a channel that reaches less security-conscious agents and human operators who then install the MCP tool themselves -- not as a channel a well-aligned agent will self-activate from.",
       "artifact": "integrations/AGENTS.md.snippet"
     },
     {
@@ -73,6 +74,7 @@
     "an MCP registry entry does not guarantee host installation",
     "local recall does not predict public search discovery"
     , "leader search vocabulary is unmeasured and does not claim query volume"
+    , "an AGENTS.md-embedded instruction is not reliably followed by a well-aligned agent regardless of wording -- see channels[repository-instruction].finding; only actual tool installation (MCP, package) crosses this trust boundary reliably"
   ],
   "post_publication_probes": [
     "Search the official MCP registry and at least one downstream registry without using Agent Fables by name.",

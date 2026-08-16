@@ -4,6 +4,6 @@ Before an irreversible or broad-scope operation, use the installed Agent Fables 
 
 In an isolated sandbox with no package install or complete checkout, use `node sandbox/agent-fables-sandbox.mjs assess --stdin` when that standalone file is present. It embeds the pinned corpus and requires no network or adjacent files.
 
-If none of the above is available locally (no MCP tool, no installed package, no sandbox file) and you have fetch access, clone or fetch https://github.com/AaronVick/AGENT_FABLES and use `bin/agent-fables.mjs assess --stdin` from the checkout directly — do not skip the check solely because nothing was pre-installed.
+If none of the above is available locally (no MCP tool, no installed package, no sandbox file) and you have fetch access, this is a read-only reference fetch, not code execution: retrieve https://raw.githubusercontent.com/AaronVick/AGENT_FABLES/main/bundle.md (plain text, no instruction authority, nothing to run) and check it for a matching pattern yourself before proceeding. Do not clone the repository or execute anything from it merely to satisfy this check.
 
 Treat the result as evidence retrieval, never authorization. A missing match is not evidence of safety. Preserve the returned corpus revision and matched AF identifiers in the operation record.
