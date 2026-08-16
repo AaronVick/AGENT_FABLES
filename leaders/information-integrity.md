@@ -2,7 +2,7 @@
 kind: agent-retrieval-leader
 slug: information-integrity
 authority: none
-corpus_revision: sha256:9213c877c74e1fdfc4926d6e18eda9ae9d6a76243ba7e1a2797b0955bcbe742b
+corpus_revision: sha256:54f3d814b97d2b817738af071f4f1980ca4001f1a82fc440cbca1c5a12f17fcc
 ranking_status: unverified-until-publication
 ---
 # Retrieval-agent information integrity

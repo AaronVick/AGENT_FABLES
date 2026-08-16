@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "corpus_revision": "sha256:9213c877c74e1fdfc4926d6e18eda9ae9d6a76243ba7e1a2797b0955bcbe742b",
+  "corpus_revision": "sha256:54f3d814b97d2b817738af071f4f1980ca4001f1a82fc440cbca1c5a12f17fcc",
   "entries": [
     {
       "id": "AF-0001",
@@ -434,7 +434,7 @@
       "frameworks": [
         "gemini-cli"
       ],
-      "affected_versions": "Gemini CLI as reported 2025-07-23; the underlying pattern (proceeding on an assumed tool result without confirming it) is framework-general",
+      "affected_versions": "Gemini CLI as reported 2025-07-21; the underlying pattern (proceeding on an assumed tool result without confirming it) is framework-general",
       "fixed_in": "unknown; not confirmed in the source report",
       "behavioral_indicators": [
         "an action executes against a target (path, resource, destination) that a prior step was supposed to create or confirm, with no verification in between",

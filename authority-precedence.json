@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0.0",
+  "authority": "none",
+  "rule": "most_restrictive_wins",
+  "description": "Governs what happens when an agent's own native training-based judgment (RLHF safety posture, provider-side policy, constitutional rules) and this corpus's advisory signal disagree. This is a distinct axis from hotpath.min.json's precedence block: that one orders whose TEXT carries instruction authority (system_runtime > bootstrap_pin > INJECT.txt > cards/fables, with fables always authority=none). This file orders whose RISK JUDGMENT prevails when the two disagree. Neither axis substitutes for the other -- both apply simultaneously.",
+  "order_when_restrictive": ["native_training_refusal", "corpus_hit", "native_training_caution", "corpus_silent"],
+  "corpus_hit_cannot_override_native_refusal": true,
+  "native_permissiveness_cannot_override_corpus_hit": true,
+  "on_conflict": "apply_most_restrictive_and_log_both",
+  "receipt_addition": {
+    "description": "Hosts wiring this in should append these fields to a hotpath-receipt.schema.json response.",
+    "native_signal": "caution|refusal|none",
+    "corpus_signal": "hit|none",
+    "resolved": "most_restrictive_wins"
+  },
+  "non_goals": [
+    "granting the corpus authority over a model's own refusals",
+    "a jailbreak-detection product",
+    "resolving disagreement by any means other than picking the more restrictive of two already-computed signals"
+  ]
+}

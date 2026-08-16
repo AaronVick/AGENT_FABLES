@@ -520,8 +520,8 @@
     {
       "id": "AFI-0021",
       "title": "Gemini CLI treats a failed mkdir as successful and destroys files acting on that false premise",
-      "occurred_at": "2025-07-23",
-      "status": "vendor-confirmed",
+      "occurred_at": "2025-07-21",
+      "status": "publicly-reported",
       "sources": [
         {
           "url": "https://incidentdatabase.ai/cite/1178/",
@@ -532,9 +532,14 @@
           "url": "https://github.com/google-gemini/gemini-cli/issues/4586",
           "kind": "original-bug-report",
           "authority": "primary"
+        },
+        {
+          "url": "https://winbuzzer.com/2025/07/26/googles-gemini-cli-deletes-user-files-confesses-catastrophic-failure-xcxwbn/",
+          "kind": "independent-news-coverage",
+          "authority": "secondary"
         }
       ],
-      "source_count": 2,
+      "source_count": 3,
       "primary_source_count": 1,
       "evidence_grade": "A-primary-source"
     }

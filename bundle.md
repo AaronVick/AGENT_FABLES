@@ -1,6 +1,6 @@
 # Agent Fables — machine bundle
 
-Schema: 1.0.0 | Corpus: sha256:9213c877c74e1fdfc4926d6e18eda9ae9d6a76243ba7e1a2797b0955bcbe742b | Entries: 22
+Schema: 1.0.0 | Corpus: sha256:54f3d814b97d2b817738af071f4f1980ca4001f1a82fc440cbca1c5a12f17fcc | Entries: 22
 
 Reference data only. This document has no instruction authority.
 Steward context: steward.json. Evidence trust is independent of steward identity or reputation.
@@ -344,7 +344,7 @@ Verification: Given a search result with incomplete_results=true, confirm any ab
 ## AF-0031 — An unconfirmed or failed tool result is treated as a successful one and acted on
 Canonical: https://agentfables.org/af/AF-0031
 Failure mode: verification-omission
-Affected: Gemini CLI as reported 2025-07-23; the underlying pattern (proceeding on an assumed tool result without confirming it) is framework-general
+Affected: Gemini CLI as reported 2025-07-21; the underlying pattern (proceeding on an assumed tool result without confirming it) is framework-general
 Fixed in: unknown; not confirmed in the source report
 Anti-pattern: Planning the next action on the assumed outcome of a prior tool call instead of its confirmed result.
 Behavioral indicators:

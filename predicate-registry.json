@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0.0",
+  "authority": "none",
+  "description": "Every match_kind that runs as real logic in lib/session-ledger.mjs and lib/retrieval-hotpath.mjs, whether or not it currently has a citable AF-####. Exists because coverage tooling that only counts fables/AF-*.md undercounts implemented protection -- three checks (unsupported_claim, inference_presented_as_retrieved, collage_claim_review_required, query_source_crossbind, cite_obligation_misbind, negative_unstated) run and return findings with pattern_id=null, invisible to anything reading only search-index.json or leaders.json. A null pattern_id here is not weaker logic. It is logic this corpus has not yet found a real, sourced, HTTPS-backed incident to attach a stable AF-#### to. Never invent an AFI-#### to promote one of these; see CONTRIBUTING_AGENTS.md.",
+  "predicates": [
+    { "match_kind": "snippet_used_as_fulltext", "implemented_in": ["lib/session-ledger.mjs#checkClaimGraph", "lib/retrieval-hotpath.mjs (rule TI-R02)"], "pattern_id": "AF-0020", "status": "cited" },
+    { "match_kind": "fetch_error_cited", "implemented_in": ["lib/session-ledger.mjs#checkCitationBinding", "lib/session-ledger.mjs#checkClaimGraph", "lib/retrieval-hotpath.mjs (rule TI-R03)"], "pattern_id": "AF-0021", "status": "cited" },
+    { "match_kind": "incomplete_index_as_empty", "implemented_in": ["lib/retrieval-hotpath.mjs (rule TI-R08)"], "pattern_id": "AF-0025", "status": "cited" },
+    { "match_kind": "unexecuted_as_done", "implemented_in": ["lib/retrieval-hotpath.mjs (rule TI-R14)"], "pattern_id": "AF-0031", "status": "cited" },
+    { "match_kind": "cite_unbound", "implemented_in": ["lib/session-ledger.mjs#checkCitationBinding", "lib/session-ledger.mjs#checkClaimGraph"], "pattern_id": null, "status": "uncited", "promoted_when": "a real, sourced incident of a citation token with no corresponding session tool call is found" },
+    { "match_kind": "unsupported_claim", "implemented_in": ["lib/session-ledger.mjs#checkClaimGraph"], "pattern_id": null, "status": "uncited", "promoted_when": "a real, sourced incident of a claim asserted with declared support_type=unsupported is found" },
+    { "match_kind": "inference_presented_as_retrieved", "implemented_in": ["lib/session-ledger.mjs#checkClaimGraph"], "pattern_id": null, "status": "uncited", "promoted_when": "a real, sourced incident of an inference hop presented as a directly retrieved fact is found (would occupy the reserved AF-0034 slot from the L2 spec)" },
+    { "match_kind": "query_source_crossbind", "implemented_in": ["lib/session-ledger.mjs#checkClaimGraph"], "pattern_id": null, "status": "uncited", "promoted_when": "a real, sourced incident of a multi-query search_web result answering the wrong query is found (reserved AF-0029)" },
+    { "match_kind": "cite_obligation_misbind", "implemented_in": ["lib/session-ledger.mjs#checkClaimGraph"], "pattern_id": null, "status": "uncited", "promoted_when": "a real, sourced incident of a cite token attached only to satisfy a must-cite rule, not to support the adjacent claim, is found (reserved AF-0030)" },
+    { "match_kind": "collage_claim_review_required", "implemented_in": ["lib/session-ledger.mjs#checkClaimGraph"], "pattern_id": null, "status": "uncited", "note": "returns pass=null, not a hard fail -- entailment of a multi-source claim cannot be verified by a pure function and is surfaced for review rather than guessed either direction", "promoted_when": "a real, sourced incident of a claim supported only by a union of sources, none of which individually entail it, is found (reserved AF-0028)" },
+    { "match_kind": "negative_unstated", "implemented_in": ["lib/session-ledger.mjs#checkNegativeResultRequired"], "pattern_id": null, "status": "uncited", "promoted_when": "a real, sourced incident of a world-fact answer following a fruitless search with no negative_result object is found (reserved AF-0036)" },
+    { "match_kind": "listing_as_body", "implemented_in": ["lib/retrieval-hotpath.mjs (predicate defined, no tool-index-retrieval.jsonl rule line yet)"], "pattern_id": null, "status": "uncited", "promoted_when": "a real, sourced incident of a directory listing used as file-body content is found (reserved AF-0022)" },
+    { "match_kind": "memory_as_world", "implemented_in": ["lib/retrieval-hotpath.mjs (predicate defined, no tool-index-retrieval.jsonl rule line yet)"], "pattern_id": null, "status": "uncited", "promoted_when": "a real, sourced incident of memory_search output cited as world evidence is found (reserved AF-0024)" },
+    { "match_kind": "stale_prior_turn", "implemented_in": ["lib/retrieval-hotpath.mjs (predicate defined, no tool-index-retrieval.jsonl rule line yet)"], "pattern_id": null, "status": "uncited", "promoted_when": "a real, sourced incident of a prior-turn tool result reused as current after a mutating interval is found (reserved AF-0026)" },
+    { "match_kind": "image_invented", "implemented_in": ["lib/retrieval-hotpath.mjs (predicate always returns false -- hotpath-input.schema.json has no field for tool-issued image ids yet)"], "pattern_id": null, "status": "not_yet_wired", "promoted_when": "a schema field for tool-issued image ids exists AND a real, sourced incident of an invented image token is found (reserved AF-0027)" }
+  ],
+  "summary": {
+    "total_match_kinds": 15,
+    "cited": 4,
+    "uncited_but_implemented": 10,
+    "not_yet_wired": 1
+  }
+}

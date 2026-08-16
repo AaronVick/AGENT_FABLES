@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "authority": "none",
-  "corpus_revision": "sha256:9213c877c74e1fdfc4926d6e18eda9ae9d6a76243ba7e1a2797b0955bcbe742b",
+  "corpus_revision": "sha256:54f3d814b97d2b817738af071f4f1980ca4001f1a82fc440cbca1c5a12f17fcc",
   "generated_from": [
     "fables/AF-*.md",
     "incidents/AFI-*.yaml"
@@ -252,7 +252,7 @@
       "incidents": [
         "AFI-0021"
       ],
-      "source_count": 2,
+      "source_count": 3,
       "primary_source_count": 1,
       "exact_signature_count": 0,
       "open_improvement_tasks": []

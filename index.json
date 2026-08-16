@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "corpus_revision": "sha256:9213c877c74e1fdfc4926d6e18eda9ae9d6a76243ba7e1a2797b0955bcbe742b",
+  "corpus_revision": "sha256:54f3d814b97d2b817738af071f4f1980ca4001f1a82fc440cbca1c5a12f17fcc",
   "generated_from": "fables/AF-*.md",
   "entry_count": 22,
   "incident_count": 21,
@@ -1920,7 +1920,7 @@
       "failure_mode": "verification-omission",
       "blast_radius": "catastrophic",
       "reversibility": "irreversible",
-      "first_seen": "2025-07-23",
+      "first_seen": "2025-07-21",
       "incidents": [
         "AFI-0021"
       ],
@@ -1934,11 +1934,11 @@
         {
           "framework": "gemini-cli",
           "versions": [
-            "reported 2025-07-23"
+            "reported 2025-07-21"
           ]
         }
       ],
-      "affected_versions": "Gemini CLI as reported 2025-07-23; the underlying pattern (proceeding on an assumed tool result without confirming it) is framework-general",
+      "affected_versions": "Gemini CLI as reported 2025-07-21; the underlying pattern (proceeding on an assumed tool result without confirming it) is framework-general",
       "fixed_in": "unknown; not confirmed in the source report",
       "trigger_conditions": [
         "a tool call's actual result (success, failure, or empty) is not independently confirmed before the next step is planned",
@@ -1962,13 +1962,14 @@
         "reviewed_at": "2026-08-16",
         "sources": [
           "https://github.com/google-gemini/gemini-cli/issues/4586",
-          "https://incidentdatabase.ai/cite/1178/"
+          "https://incidentdatabase.ai/cite/1178/",
+          "https://winbuzzer.com/2025/07/26/googles-gemini-cli-deletes-user-files-confesses-catastrophic-failure-xcxwbn/"
         ],
-        "note": "The GitHub issue and incident-database record confirm the mechanism (a failed mkdir treated as successful, driving a cascade of destructive move commands) but the exact command sequence is instance-specific to that user's filesystem state, not a stable cross-instance artifact."
+        "note": "The GitHub issue (#4586) is the original report but its own visible body is thin -- the affected user references a full command log as an attachment rather than reproducing it in the issue text. The detailed mechanism (a failed mkdir treated as successful, driving a cascade of destructive move commands) is confirmed by the incident-database record and independent news coverage, not by the issue body directly. No single reusable command string qualifies as a stable, hash-pinnable exact signature regardless."
       },
       "license": "CC0-1.0",
       "confirmations": 1,
-      "source_count": 2,
+      "source_count": 3,
       "primary_source_count": 1,
       "evidence_grade": "A-primary-source",
       "evidence_status": "event-normalized",
@@ -1984,6 +1985,12 @@
           "url": "https://github.com/google-gemini/gemini-cli/issues/4586",
           "kind": "original-bug-report",
           "authority": "primary"
+        },
+        {
+          "incident_id": "AFI-0021",
+          "url": "https://winbuzzer.com/2025/07/26/googles-gemini-cli-deletes-user-files-confesses-catastrophic-failure-xcxwbn/",
+          "kind": "independent-news-coverage",
+          "authority": "secondary"
         }
       ],
       "behavioral_indicators": [
