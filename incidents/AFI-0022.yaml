@@ -1,0 +1,8 @@
+id: AFI-0022
+title: Newly pushed repository content not yet indexed by GitHub code search, mistaken for absence
+occurred_at: 2024-06-27
+status: publicly-reported
+sources:
+  - url: https://github.com/orgs/community/discussions/129971
+    kind: vendor-staff-confirmed-community-report
+    authority: primary

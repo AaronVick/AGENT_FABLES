@@ -39,7 +39,14 @@ test('every match_kind in retrievalPreflight\'s dispatch table is either registe
   }
 })
 
-test('the four cited predicates match the four fables this session actually sourced', () => {
+test('the cited predicates match the fables this session actually sourced', () => {
   const cited = registry.predicates.filter(p => p.status === 'cited').map(p => p.pattern_id).sort()
-  assert.deepEqual(cited, ['AF-0020', 'AF-0021', 'AF-0025', 'AF-0031'])
+  assert.deepEqual(cited, ['AF-0020', 'AF-0021', 'AF-0025', 'AF-0031', 'AF-0032'])
+})
+
+test('fetch_error_cited is legitimately duplicated by tool, not accidentally', () => {
+  const rows = registry.predicates.filter(p => p.match_kind === 'fetch_error_cited')
+  assert.equal(rows.length, 2)
+  assert.deepEqual(rows.map(r => r.tool).sort(), ['fetch_url', 'get_file_contents'])
+  assert.deepEqual(rows.map(r => r.pattern_id).sort(), ['AF-0021', 'AF-0032'])
 })

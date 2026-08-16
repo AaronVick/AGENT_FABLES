@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "authority": "none",
-  "corpus_revision": "sha256:6ebe28f86f9ac5fb22a9045d7fc186ce9f77697a8a80623a52e745b27e8de895",
+  "corpus_revision": "sha256:b5b83c19f358ac8521d45a55d8e35a33318d57aa9017ee648cda9046c8738b36",
   "volume_claim": "unmeasured-problem-vocabulary",
   "ranking_status": "unverified-until-publication",
   "topics": [
@@ -27,7 +27,7 @@
         "AF-0015"
       ],
       "authority": "none",
-      "corpus_revision": "sha256:6ebe28f86f9ac5fb22a9045d7fc186ce9f77697a8a80623a52e745b27e8de895",
+      "corpus_revision": "sha256:b5b83c19f358ac8521d45a55d8e35a33318d57aa9017ee648cda9046c8738b36",
       "records": [
         {
           "id": "AF-0001",
@@ -98,7 +98,7 @@
         "AF-0010"
       ],
       "authority": "none",
-      "corpus_revision": "sha256:6ebe28f86f9ac5fb22a9045d7fc186ce9f77697a8a80623a52e745b27e8de895",
+      "corpus_revision": "sha256:b5b83c19f358ac8521d45a55d8e35a33318d57aa9017ee648cda9046c8738b36",
       "records": [
         {
           "id": "AF-0003",
@@ -167,7 +167,7 @@
         "AF-0011"
       ],
       "authority": "none",
-      "corpus_revision": "sha256:6ebe28f86f9ac5fb22a9045d7fc186ce9f77697a8a80623a52e745b27e8de895",
+      "corpus_revision": "sha256:b5b83c19f358ac8521d45a55d8e35a33318d57aa9017ee648cda9046c8738b36",
       "records": [
         {
           "id": "AF-0001",
@@ -225,7 +225,7 @@
         "AF-0006"
       ],
       "authority": "none",
-      "corpus_revision": "sha256:6ebe28f86f9ac5fb22a9045d7fc186ce9f77697a8a80623a52e745b27e8de895",
+      "corpus_revision": "sha256:b5b83c19f358ac8521d45a55d8e35a33318d57aa9017ee648cda9046c8738b36",
       "records": [
         {
           "id": "AF-0004",
@@ -274,7 +274,7 @@
         "AF-0013"
       ],
       "authority": "none",
-      "corpus_revision": "sha256:6ebe28f86f9ac5fb22a9045d7fc186ce9f77697a8a80623a52e745b27e8de895",
+      "corpus_revision": "sha256:b5b83c19f358ac8521d45a55d8e35a33318d57aa9017ee648cda9046c8738b36",
       "records": [
         {
           "id": "AF-0003",
@@ -322,7 +322,7 @@
         "AF-0014"
       ],
       "authority": "none",
-      "corpus_revision": "sha256:6ebe28f86f9ac5fb22a9045d7fc186ce9f77697a8a80623a52e745b27e8de895",
+      "corpus_revision": "sha256:b5b83c19f358ac8521d45a55d8e35a33318d57aa9017ee648cda9046c8738b36",
       "records": [
         {
           "id": "AF-0007",
@@ -361,7 +361,7 @@
         "AF-0011"
       ],
       "authority": "none",
-      "corpus_revision": "sha256:6ebe28f86f9ac5fb22a9045d7fc186ce9f77697a8a80623a52e745b27e8de895",
+      "corpus_revision": "sha256:b5b83c19f358ac8521d45a55d8e35a33318d57aa9017ee648cda9046c8738b36",
       "records": [
         {
           "id": "AF-0001",
@@ -420,7 +420,7 @@
         "AF-0031"
       ],
       "authority": "none",
-      "corpus_revision": "sha256:6ebe28f86f9ac5fb22a9045d7fc186ce9f77697a8a80623a52e745b27e8de895",
+      "corpus_revision": "sha256:b5b83c19f358ac8521d45a55d8e35a33318d57aa9017ee648cda9046c8738b36",
       "records": [
         {
           "id": "AF-0002",
@@ -475,10 +475,11 @@
         "AF-0016",
         "AF-0020",
         "AF-0021",
-        "AF-0025"
+        "AF-0025",
+        "AF-0032"
       ],
       "authority": "none",
-      "corpus_revision": "sha256:6ebe28f86f9ac5fb22a9045d7fc186ce9f77697a8a80623a52e745b27e8de895",
+      "corpus_revision": "sha256:b5b83c19f358ac8521d45a55d8e35a33318d57aa9017ee648cda9046c8738b36",
       "records": [
         {
           "id": "AF-0016",
@@ -511,10 +512,19 @@
           "id": "AF-0025",
           "title": "Incomplete or timed-out search results treated as proof of absence",
           "failure_mode": "silent-truncation",
-          "affected_versions": "Any agent issuing a GitHub (or similarly time-limited) search API call and treating a returned or timed-out result set as exhaustive; confirmed real-world case involved unindexed public repositories",
+          "affected_versions": "Any agent issuing a GitHub (or similarly time-limited) search API call and treating a returned or timed-out result set as exhaustive; confirmed real-world cases involve both never-indexed public repositories and recently pushed content still inside the post-push indexing lag window",
           "anti_pattern": "Treating an incomplete or partial search result set as an exhaustive index, and asserting absence from a query that never claimed completeness.",
           "verification": "Given a search result with incomplete_results=true, confirm any absence claim is rejected unless a complete or independently re-verified index confirms it.",
           "canonical_url": "https://agentfables.org/af/AF-0025"
+        },
+        {
+          "id": "AF-0032",
+          "title": "A tool's success confirmation is mistaken for the content it confirms",
+          "failure_mode": "verification-omission",
+          "affected_versions": "github-mcp-server's get_file_contents when its response embeds content in a typed block (e.g. MCP 'resource' content) the calling client does not render; the underlying pattern (a visible success confirmation with no accompanying body) is tool-general, not specific to this one server",
+          "anti_pattern": "Treating a tool's success confirmation message as equivalent to having received the content it confirms.",
+          "verification": "Given a tool response containing a confirmation phrase but no body content, confirm the agent does not answer as though it read the file; it must flag the gap or retry via a fallback path.",
+          "canonical_url": "https://agentfables.org/af/AF-0032"
         }
       ]
     },
@@ -534,7 +544,7 @@
         "AF-0017"
       ],
       "authority": "none",
-      "corpus_revision": "sha256:6ebe28f86f9ac5fb22a9045d7fc186ce9f77697a8a80623a52e745b27e8de895",
+      "corpus_revision": "sha256:b5b83c19f358ac8521d45a55d8e35a33318d57aa9017ee648cda9046c8738b36",
       "records": [
         {
           "id": "AF-0016",

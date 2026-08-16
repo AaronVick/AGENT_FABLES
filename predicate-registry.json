@@ -1,10 +1,11 @@
 {
   "schema_version": "1.0.0",
   "authority": "none",
-  "description": "Every match_kind that runs as real logic in lib/session-ledger.mjs and lib/retrieval-hotpath.mjs, whether or not it currently has a citable AF-####. Exists because coverage tooling that only counts fables/AF-*.md undercounts implemented protection -- three checks (unsupported_claim, inference_presented_as_retrieved, collage_claim_review_required, query_source_crossbind, cite_obligation_misbind, negative_unstated) run and return findings with pattern_id=null, invisible to anything reading only search-index.json or leaders.json. A null pattern_id here is not weaker logic. It is logic this corpus has not yet found a real, sourced, HTTPS-backed incident to attach a stable AF-#### to. Never invent an AFI-#### to promote one of these; see CONTRIBUTING_AGENTS.md.",
+  "description": "Every match_kind that runs as real logic in lib/session-ledger.mjs and lib/retrieval-hotpath.mjs, whether or not it currently has a citable AF-####. Exists because coverage tooling that only counts fables/AF-*.md undercounts implemented protection -- ten rows run and return findings with pattern_id=null, invisible to anything reading only search-index.json or leaders.json. A null pattern_id here is not weaker logic. It is logic this corpus has not yet found a real, sourced, HTTPS-backed incident to attach a stable AF-#### to. Never invent an AFI-#### to promote one of these; see CONTRIBUTING_AGENTS.md. Note fetch_error_cited appears twice, once per tool (fetch_url -> AF-0021, get_file_contents -> AF-0032): same anti-pattern, same predicate, genuinely distinct incidents and mechanisms, so two citations rather than a forced merge.",
   "predicates": [
     { "match_kind": "snippet_used_as_fulltext", "implemented_in": ["lib/session-ledger.mjs#checkClaimGraph", "lib/retrieval-hotpath.mjs (rule TI-R02)"], "pattern_id": "AF-0020", "status": "cited" },
-    { "match_kind": "fetch_error_cited", "implemented_in": ["lib/session-ledger.mjs#checkCitationBinding", "lib/session-ledger.mjs#checkClaimGraph", "lib/retrieval-hotpath.mjs (rule TI-R03)"], "pattern_id": "AF-0021", "status": "cited" },
+    { "match_kind": "fetch_error_cited", "tool": "fetch_url", "implemented_in": ["lib/session-ledger.mjs#checkCitationBinding", "lib/session-ledger.mjs#checkClaimGraph", "lib/retrieval-hotpath.mjs (rule TI-R03)"], "pattern_id": "AF-0021", "status": "cited" },
+    { "match_kind": "fetch_error_cited", "tool": "get_file_contents", "implemented_in": ["lib/retrieval-hotpath.mjs (rule TI-R20)"], "pattern_id": "AF-0032", "status": "cited", "note": "same match_kind and predicate function as the fetch_url row above, scoped to a different tool -- the response-integrity anti-pattern is identical, the underlying mechanism (HTML-converter content drop vs unparsed MCP resource block) is not, hence two incidents rather than one" },
     { "match_kind": "incomplete_index_as_empty", "implemented_in": ["lib/retrieval-hotpath.mjs (rule TI-R08)"], "pattern_id": "AF-0025", "status": "cited" },
     { "match_kind": "unexecuted_as_done", "implemented_in": ["lib/retrieval-hotpath.mjs (rule TI-R14)"], "pattern_id": "AF-0031", "status": "cited" },
     { "match_kind": "cite_unbound", "implemented_in": ["lib/session-ledger.mjs#checkCitationBinding", "lib/session-ledger.mjs#checkClaimGraph"], "pattern_id": null, "status": "uncited", "promoted_when": "a real, sourced incident of a citation token with no corresponding session tool call is found" },
@@ -20,8 +21,8 @@
     { "match_kind": "image_invented", "implemented_in": ["lib/retrieval-hotpath.mjs (predicate always returns false -- hotpath-input.schema.json has no field for tool-issued image ids yet)"], "pattern_id": null, "status": "not_yet_wired", "promoted_when": "a schema field for tool-issued image ids exists AND a real, sourced incident of an invented image token is found (reserved AF-0027)" }
   ],
   "summary": {
-    "total_match_kinds": 15,
-    "cited": 4,
+    "total_match_kinds": 16,
+    "cited": 5,
     "uncited_but_implemented": 10,
     "not_yet_wired": 1
   }

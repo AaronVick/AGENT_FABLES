@@ -1,0 +1,8 @@
+id: AFI-0023
+title: github-mcp-server get_file_contents returns an unparsed resource block, leaving only a confirmation message visible
+occurred_at: 2025-06-29
+status: publicly-reported
+sources:
+  - url: https://github.com/github/github-mcp-server/issues/607
+    kind: original-bug-report
+    authority: primary

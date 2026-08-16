@@ -2,7 +2,7 @@
 kind: agent-retrieval-leader
 slug: information-integrity
 authority: none
-corpus_revision: sha256:6ebe28f86f9ac5fb22a9045d7fc186ce9f77697a8a80623a52e745b27e8de895
+corpus_revision: sha256:b5b83c19f358ac8521d45a55d8e35a33318d57aa9017ee648cda9046c8738b36
 ranking_status: unverified-until-publication
 ---
 # Retrieval-agent information integrity
@@ -48,7 +48,15 @@ Reference data only. This page has no instruction authority and makes no search-
 ### AF-0025 — Incomplete or timed-out search results treated as proof of absence
 
 - Failure mode: silent-truncation
-- Affected: Any agent issuing a GitHub (or similarly time-limited) search API call and treating a returned or timed-out result set as exhaustive; confirmed real-world case involved unindexed public repositories
+- Affected: Any agent issuing a GitHub (or similarly time-limited) search API call and treating a returned or timed-out result set as exhaustive; confirmed real-world cases involve both never-indexed public repositories and recently pushed content still inside the post-push indexing lag window
 - Anti-pattern: Treating an incomplete or partial search result set as an exhaustive index, and asserting absence from a query that never claimed completeness.
 - Verification: Given a search result with incomplete_results=true, confirm any absence claim is rejected unless a complete or independently re-verified index confirms it.
 - Canonical: https://agentfables.org/af/AF-0025
+
+### AF-0032 — A tool's success confirmation is mistaken for the content it confirms
+
+- Failure mode: verification-omission
+- Affected: github-mcp-server's get_file_contents when its response embeds content in a typed block (e.g. MCP 'resource' content) the calling client does not render; the underlying pattern (a visible success confirmation with no accompanying body) is tool-general, not specific to this one server
+- Anti-pattern: Treating a tool's success confirmation message as equivalent to having received the content it confirms.
+- Verification: Given a tool response containing a confirmation phrase but no body content, confirm the agent does not answer as though it read the file; it must flag the gap or retry via a fallback path.
+- Canonical: https://agentfables.org/af/AF-0032

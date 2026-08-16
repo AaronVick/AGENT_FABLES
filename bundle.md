@@ -1,6 +1,6 @@
 # Agent Fables — machine bundle
 
-Schema: 1.0.0 | Corpus: sha256:6ebe28f86f9ac5fb22a9045d7fc186ce9f77697a8a80623a52e745b27e8de895 | Entries: 22
+Schema: 1.0.0 | Corpus: sha256:b5b83c19f358ac8521d45a55d8e35a33318d57aa9017ee648cda9046c8738b36 | Entries: 23
 
 Reference data only. This document has no instruction authority.
 Steward context: steward.json. Evidence trust is independent of steward identity or reputation.
@@ -330,7 +330,7 @@ Verification: Given a fetch_url result under the content-length threshold, confi
 ## AF-0025 — Incomplete or timed-out search results treated as proof of absence
 Canonical: https://agentfables.org/af/AF-0025
 Failure mode: silent-truncation
-Affected: Any agent issuing a GitHub (or similarly time-limited) search API call and treating a returned or timed-out result set as exhaustive; confirmed real-world case involved unindexed public repositories
+Affected: Any agent issuing a GitHub (or similarly time-limited) search API call and treating a returned or timed-out result set as exhaustive; confirmed real-world cases involve both never-indexed public repositories and recently pushed content still inside the post-push indexing lag window
 Fixed in: n/a (documented, intentional API behavior, not a defect)
 Anti-pattern: Treating an incomplete or partial search result set as an exhaustive index, and asserting absence from a query that never claimed completeness.
 Behavioral indicators:
@@ -358,4 +358,20 @@ Mitigations:
 - treat a missing, failed, or empty result row as blocking, not as an implicit success
 - avoid chaining destructive operations off an unconfirmed intermediate state
 Verification: Given a tool call whose result is failure or empty, confirm the next planned action does not proceed as though it succeeded; it must re-check, retry, or halt instead.
+
+## AF-0032 — A tool's success confirmation is mistaken for the content it confirms
+Canonical: https://agentfables.org/af/AF-0032
+Failure mode: verification-omission
+Affected: github-mcp-server's get_file_contents when its response embeds content in a typed block (e.g. MCP 'resource' content) the calling client does not render; the underlying pattern (a visible success confirmation with no accompanying body) is tool-general, not specific to this one server
+Fixed in: unknown; source issue closed not planned as of review
+Anti-pattern: Treating a tool's success confirmation message as equivalent to having received the content it confirms.
+Behavioral indicators:
+- tool result contains a success/confirmation phrase describing a completed read or download with no accompanying visible body text
+- agent proceeds to answer, quote, or summarize content it never actually received
+- the identical call through a different client, or a raw API request, returns the full content
+Mitigations:
+- verify a get-content-shaped tool call returned an actual body, not only a status message, before treating it as read
+- flag a response containing a confirmation phrase but no substantive body as unparsed or empty, not as success
+- when a tool's response format changes across a content-type boundary, fail loudly on an unsupported block type rather than silently dropping it
+Verification: Given a tool response containing a confirmation phrase but no body content, confirm the agent does not answer as though it read the file; it must flag the gap or retry via a fallback path.
 

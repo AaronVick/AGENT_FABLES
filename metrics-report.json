@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "corpus_revision": "sha256:6ebe28f86f9ac5fb22a9045d7fc186ce9f77697a8a80623a52e745b27e8de895",
+  "corpus_revision": "sha256:b5b83c19f358ac8521d45a55d8e35a33318d57aa9017ee648cda9046c8738b36",
   "evaluation_contract": {
     "ranking_unit": "one expected AF identifier per query",
     "primary_metric": "top-1 accuracy, equivalent to recall@1 for this single-label frozen set",
@@ -26,8 +26,8 @@
     }
   },
   "seed": {
-    "patterns": 22,
-    "incidents": 21,
+    "patterns": 23,
+    "incidents": 23,
     "minimum_patterns": 10
   },
   "discovery": {
@@ -77,7 +77,7 @@
   "evidence": {
     "primary_source_coverage": 1,
     "threshold": 0.75,
-    "exact_signature_pattern_coverage": 0.6363636363636364,
+    "exact_signature_pattern_coverage": 0.6521739130434783,
     "coverage_artifact": "evidence-coverage.json"
   },
   "false_safety": {
@@ -91,7 +91,7 @@
     "fixtures": 20,
     "pass_rate": 1,
     "threshold": 1,
-    "cards": 22,
+    "cards": 23,
     "card_limit": 2,
     "unknown_is_typed": true
   },
@@ -102,13 +102,13 @@
     "assessment_threshold": 1000
   },
   "retention": {
-    "memory_cards": 22,
+    "memory_cards": 23,
     "max_approx_tokens": 140,
     "threshold": 150
   },
   "exact_signatures": {
-    "count": 16,
-    "patterns": 14,
+    "count": 17,
+    "patterns": 15,
     "public_pattern_threshold": 3
   },
   "stewardship": {

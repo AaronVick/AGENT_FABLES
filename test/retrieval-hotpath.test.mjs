@@ -112,3 +112,9 @@ test('checkNegativeResultRequired fails a world-fact answer after a fruitless se
   const compliant = checkNegativeResultRequired({ searchedWithNoSupport: true, answeredWorldFact: true, hasNegativeResult: true })
   assert.equal(compliant.pass, true)
 })
+
+test('get_file_contents returning an empty/confirmation-only body routes to AF-0032, distinct from AF-0021', () => {
+  const data = loadRetrievalHotpath(root)
+  const receipt = retrievalPreflight(data, { tool: 'get_file_contents', result_shape: 'empty_download', draft_cite_tokens: ['file:1'] })
+  assert.deepEqual(receipt.cards.map(c => c.id), ['AF-0032'])
+})

@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "incident_count": 21,
+  "incident_count": 23,
   "incidents": [
     {
       "id": "AFI-0001",
@@ -540,6 +540,38 @@
         }
       ],
       "source_count": 3,
+      "primary_source_count": 1,
+      "evidence_grade": "A-primary-source"
+    },
+    {
+      "id": "AFI-0022",
+      "title": "Newly pushed repository content not yet indexed by GitHub code search, mistaken for absence",
+      "occurred_at": "2024-06-27",
+      "status": "publicly-reported",
+      "sources": [
+        {
+          "url": "https://github.com/orgs/community/discussions/129971",
+          "kind": "vendor-staff-confirmed-community-report",
+          "authority": "primary"
+        }
+      ],
+      "source_count": 1,
+      "primary_source_count": 1,
+      "evidence_grade": "A-primary-source"
+    },
+    {
+      "id": "AFI-0023",
+      "title": "github-mcp-server get_file_contents returns an unparsed resource block, leaving only a confirmation message visible",
+      "occurred_at": "2025-06-29",
+      "status": "publicly-reported",
+      "sources": [
+        {
+          "url": "https://github.com/github/github-mcp-server/issues/607",
+          "kind": "original-bug-report",
+          "authority": "primary"
+        }
+      ],
+      "source_count": 1,
       "primary_source_count": 1,
       "evidence_grade": "A-primary-source"
     }

@@ -1,9 +1,9 @@
 {
   "schema_version": "1.0.0",
-  "corpus_revision": "sha256:6ebe28f86f9ac5fb22a9045d7fc186ce9f77697a8a80623a52e745b27e8de895",
+  "corpus_revision": "sha256:b5b83c19f358ac8521d45a55d8e35a33318d57aa9017ee648cda9046c8738b36",
   "generated_from": "fables/AF-*.md",
-  "entry_count": 22,
-  "incident_count": 21,
+  "entry_count": 23,
+  "incident_count": 23,
   "entries": [
     {
       "schema_version": "1.0.0",
@@ -1841,13 +1841,15 @@
       "reversibility": "partial",
       "first_seen": "2023-09-06",
       "incidents": [
-        "AFI-0020"
+        "AFI-0020",
+        "AFI-0022"
       ],
       "retrieval_aliases": [
         "incomplete_results true GitHub search assumed no results",
         "search API timeout treated as complete index",
         "AI agent said file does not exist search incomplete",
-        "code search missing repositories not indexed"
+        "code search missing repositories not indexed",
+        "newly pushed code not found in search index lag"
       ],
       "stacks": [
         {
@@ -1857,7 +1859,7 @@
           ]
         }
       ],
-      "affected_versions": "Any agent issuing a GitHub (or similarly time-limited) search API call and treating a returned or timed-out result set as exhaustive; confirmed real-world case involved unindexed public repositories",
+      "affected_versions": "Any agent issuing a GitHub (or similarly time-limited) search API call and treating a returned or timed-out result set as exhaustive; confirmed real-world cases involve both never-indexed public repositories and recently pushed content still inside the post-push indexing lag window",
       "fixed_in": "n/a (documented, intentional API behavior, not a defect)",
       "trigger_conditions": [
         "agent issues a search call that returns incomplete_results=true, a documented indexing gap, or a small/zero result count",
@@ -1887,9 +1889,9 @@
         "note": "GitHub's documentation and the confirmed community report describe the field and its real-world manifestation, but the API field name incomplete_results is a schema key, not a runtime-emitted string worth hash-pinning; recorded here rather than as a false exact signature."
       },
       "license": "CC0-1.0",
-      "confirmations": 1,
-      "source_count": 2,
-      "primary_source_count": 2,
+      "confirmations": 2,
+      "source_count": 3,
+      "primary_source_count": 3,
       "evidence_grade": "A-primary-source",
       "evidence_status": "event-normalized",
       "provenance": [
@@ -1902,6 +1904,12 @@
         {
           "incident_id": "AFI-0020",
           "url": "https://github.com/orgs/community/discussions/66113",
+          "kind": "vendor-staff-confirmed-community-report",
+          "authority": "primary"
+        },
+        {
+          "incident_id": "AFI-0022",
+          "url": "https://github.com/orgs/community/discussions/129971",
           "kind": "vendor-staff-confirmed-community-report",
           "authority": "primary"
         }
@@ -2002,6 +2010,81 @@
       ],
       "exact_signatures": [],
       "canonical_url": "https://agentfables.org/af/AF-0031"
+    },
+    {
+      "schema_version": "1.0.0",
+      "id": "AF-0032",
+      "slug": "the-confirmation-that-wasnt-the-content",
+      "title": "A tool's success confirmation is mistaken for the content it confirms",
+      "status": "seeded",
+      "failure_mode": "verification-omission",
+      "blast_radius": "medium",
+      "reversibility": "partial",
+      "first_seen": "2025-06-29",
+      "incidents": [
+        "AFI-0023"
+      ],
+      "retrieval_aliases": [
+        "get_file_contents resource content type not supported",
+        "MCP tool returns confirmation not file content",
+        "successfully downloaded text file no body",
+        "GitHub MCP server file read fails silently"
+      ],
+      "stacks": [
+        {
+          "framework": "github-mcp-server",
+          "versions": [
+            "confirmed 2025-06-29 when the response embeds file content in a resource-type block a calling client does not parse; closed by maintainers as not planned"
+          ]
+        }
+      ],
+      "affected_versions": "github-mcp-server's get_file_contents when its response embeds content in a typed block (e.g. MCP 'resource' content) the calling client does not render; the underlying pattern (a visible success confirmation with no accompanying body) is tool-general, not specific to this one server",
+      "fixed_in": "unknown; source issue closed not planned as of review",
+      "trigger_conditions": [
+        "a tool's response separates a human-readable confirmation (\"successfully downloaded...\") from the actual content, in a typed block the calling client may not support",
+        "the client renders the confirmation text but silently drops the unparsed content block",
+        "the agent treats the visible confirmation as evidence the content was received and is available to use"
+      ],
+      "anti_pattern": "Treating a tool's success confirmation message as equivalent to having received the content it confirms.",
+      "mitigation": [
+        "verify a get-content-shaped tool call returned an actual body, not only a status message, before treating it as read",
+        "flag a response containing a confirmation phrase but no substantive body as unparsed or empty, not as success",
+        "when a tool's response format changes across a content-type boundary, fail loudly on an unsupported block type rather than silently dropping it"
+      ],
+      "verification": "Given a tool response containing a confirmation phrase but no body content, confirm the agent does not answer as though it read the file; it must flag the gap or retry via a fallback path.",
+      "crosswalk": {
+        "owasp_asi": [
+          "ASI09"
+        ]
+      },
+      "exact_signatures": [
+        {
+          "text": "successfully downloaded text file",
+          "source": "https://github.com/github/github-mcp-server/issues/607",
+          "text_sha256": "sha256:d720f2a287b0f299b230bb1f3034263250d71b1c22f8eb214774a63a96046f98",
+          "kind": "tool-response-confirmation-text"
+        }
+      ],
+      "license": "CC0-1.0",
+      "confirmations": 1,
+      "source_count": 1,
+      "primary_source_count": 1,
+      "evidence_grade": "A-primary-source",
+      "evidence_status": "event-normalized",
+      "provenance": [
+        {
+          "incident_id": "AFI-0023",
+          "url": "https://github.com/github/github-mcp-server/issues/607",
+          "kind": "original-bug-report",
+          "authority": "primary"
+        }
+      ],
+      "behavioral_indicators": [
+        "tool result contains a success/confirmation phrase describing a completed read or download with no accompanying visible body text",
+        "agent proceeds to answer, quote, or summarize content it never actually received",
+        "the identical call through a different client, or a raw API request, returns the full content"
+      ],
+      "canonical_url": "https://agentfables.org/af/AF-0032"
     }
   ]
 }

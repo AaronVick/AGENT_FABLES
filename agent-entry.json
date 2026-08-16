@@ -7,10 +7,10 @@
   "authorization": "not-granted",
   "no_match_means_safe": false,
   "network_required_for_local_routes": false,
-  "corpus_revision": "sha256:6ebe28f86f9ac5fb22a9045d7fc186ce9f77697a8a80623a52e745b27e8de895",
+  "corpus_revision": "sha256:b5b83c19f358ac8521d45a55d8e35a33318d57aa9017ee648cda9046c8738b36",
   "counts": {
-    "patterns": 22,
-    "incidents": 21
+    "patterns": 23,
+    "incidents": 23
   },
   "repository_contents": {
     "owner": "AaronVick",

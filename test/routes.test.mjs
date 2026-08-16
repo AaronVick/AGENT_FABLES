@@ -11,8 +11,8 @@ const run = args => JSON.parse(execFileSync(process.execPath, [cli, ...args], { 
 
 test('offline status exposes seed data and local-only state', () => {
   const result = run(['status'])
-  assert.equal(result.patterns, 22)
-  assert.equal(result.incidents, 21)
+  assert.equal(result.patterns, 23)
+  assert.equal(result.incidents, 23)
   assert.equal(result.publication_status, 'local-only')
 })
 
@@ -20,7 +20,7 @@ test('offline verification recomputes corpus and exact artifact integrity', () =
   const result = run(['verify'])
   assert.equal(result.verified, true)
   assert.equal(result.corpus_revision, result.computed_revision)
-  assert.equal(result.counts.exact_artifacts, 16)
+  assert.equal(result.counts.exact_artifacts, 17)
   assert.equal(result.checks.memory_cards_match_corpus, true)
   assert.equal(result.checks.memory_cards_within_budget, true)
   assert.equal(result.checks.thematic_leaders_match_corpus, true)
@@ -237,8 +237,8 @@ test('metrics distinguish working local routes from public readiness', () => {
   assert.equal(result.public_readiness_pass, true)
   assert.equal(result.publication_status, 'git-public-verified')
   assert.equal(result.ecosystem_distribution_status, 'not-fully-published')
-  assert.equal(result.exact_signatures.count, 16)
-  assert.equal(result.exact_signatures.patterns, 14)
+  assert.equal(result.exact_signatures.count, 17)
+  assert.equal(result.exact_signatures.patterns, 15)
   assert.equal(result.stewardship.identity_status, 'public')
   assert.equal(result.stewardship.operator_authorization_required, true)
   assert.equal(result.routes.offline_steward, true)
