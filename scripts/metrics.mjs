@@ -1,6 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
+import crypto from 'node:crypto'
 import * as yaml from 'js-yaml'
 import { fileURLToPath } from 'node:url'
 import { decisionCard, rankEntries } from '../lib/retrieval.mjs'
@@ -9,6 +10,7 @@ import { leaderIndex, rankLeaders } from '../lib/leaders.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const corpus = JSON.parse(fs.readFileSync(path.join(root, 'api/src/fables.json'), 'utf8'))
+const index = JSON.parse(fs.readFileSync(path.join(root, 'index.json'), 'utf8'))
 const incidents = JSON.parse(fs.readFileSync(path.join(root, 'incidents.json'), 'utf8')).incidents
 const queries = yaml.load(fs.readFileSync(path.join(root, 'evals/discovery-queries.yaml'), 'utf8'))
 const adversarialQueries = yaml.load(fs.readFileSync(path.join(root, 'evals/adversarial-discovery.yaml'), 'utf8'))
@@ -38,8 +40,18 @@ const falseSafety = JSON.parse(fs.readFileSync(path.join(root, 'eval-report.json
 const leaderFixtures = leaders.topics.flatMap(topic => topic.search_terms.map(query => ({ query, expected: topic.slug })))
 const leaderHits = leaderFixtures.filter(fixture => rankLeaders(leaders, fixture.query, 1)[0]?.slug === fixture.expected).length
 const leaderIndexTokens = Math.ceil(JSON.stringify(leaderIndex(leaders)).length / 4)
+const fileSha256 = relativePath => `sha256:${crypto.createHash('sha256').update(fs.readFileSync(path.join(root, relativePath))).digest('hex')}`
 
 const metrics = {
+  schema_version: '1.0.0',
+  corpus_revision: index.corpus_revision,
+  evaluation_contract: {
+    ranking_unit: 'one expected AF identifier per query',
+    primary_metric: 'top-1 accuracy, equivalent to recall@1 for this single-label frozen set',
+    discovery_set: { path: 'evals/discovery-queries.yaml', sha256: fileSha256('evals/discovery-queries.yaml') },
+    adversarial_set: { path: 'evals/adversarial-discovery.yaml', sha256: fileSha256('evals/adversarial-discovery.yaml') },
+    false_safety_set: { path: 'evals/false-safety.json', sha256: fileSha256('evals/false-safety.json') }
+  },
   seed: { patterns: corpus.length, incidents: incidents.length, minimum_patterns: 10 },
   discovery: {
     fixtures: queries.length,
@@ -97,5 +109,7 @@ metrics.local_agent_routes_pass = metrics.seed.patterns >= metrics.seed.minimum_
 metrics.public_readiness_pass = metrics.local_agent_routes_pass &&
   metrics.exact_signatures.patterns >= metrics.exact_signatures.public_pattern_threshold &&
   metrics.publication_status === 'git-public-verified'
-process.stdout.write(`${JSON.stringify(metrics, null, 2)}\n`)
+const serialized = `${JSON.stringify(metrics, null, 2)}\n`
+if (process.argv.includes('--write')) fs.writeFileSync(path.join(root, 'metrics-report.json'), serialized)
+process.stdout.write(serialized)
 if (!metrics.local_agent_routes_pass) process.exitCode = 1

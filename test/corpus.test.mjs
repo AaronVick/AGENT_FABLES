@@ -148,6 +148,13 @@ test('public evidence coverage and false-safety eval are revision-pinned', () =>
   assert.equal(report.corpus_revision, index.corpus_revision)
   assert.equal(report.pass_rate, 1)
   assert.ok(report.fixtures >= 8)
+  const metrics = JSON.parse(fs.readFileSync(path.join(root, 'metrics-report.json'), 'utf8'))
+  assert.equal(metrics.corpus_revision, index.corpus_revision)
+  assert.equal(metrics.discovery.recall_at_1, 1)
+  assert.equal(metrics.discovery.adversarial_recall_at_1, 1)
+  assert.match(metrics.evaluation_contract.discovery_set.sha256, /^sha256:[a-f0-9]{64}$/)
+  assert.match(metrics.evaluation_contract.adversarial_set.sha256, /^sha256:[a-f0-9]{64}$/)
+  assert.match(metrics.evaluation_contract.false_safety_set.sha256, /^sha256:[a-f0-9]{64}$/)
 })
 
 test('consumer contract and host policy cannot convert evidence into authorization', async () => {
