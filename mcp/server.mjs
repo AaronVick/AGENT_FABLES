@@ -19,6 +19,9 @@ import { checkCitationBinding, checkClaimGraph, checkNegativeResultRequired } fr
 import { resolveAuthorityConflict } from '../lib/authority-precedence.mjs'
 import { loadRequestFraming, classifyRequestShape, forcedPreflightOverride } from '../lib/request-framing.mjs'
 import { checkPinsSurvived } from '../lib/context-pin.mjs'
+import { loadToolAliases, normalizeToolName } from '../lib/tool-normalize.mjs'
+import { computeCoverage } from '../lib/coverage.mjs'
+import { buildDelegationRecord, requiresIndependentResolution } from '../lib/delegation-scope.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const corpus = fs.readFileSync(path.join(root, 'index.jsonl'), 'utf8').trim().split('\n').map(line => JSON.parse(line))
@@ -36,6 +39,8 @@ const leaders = JSON.parse(fs.readFileSync(path.join(root, 'leaders.json'), 'utf
 const adoptionKit = JSON.parse(fs.readFileSync(path.join(root, 'adoption-kit.json'), 'utf8'))
 const predicateRegistry = JSON.parse(fs.readFileSync(path.join(root, 'predicate-registry.json'), 'utf8'))
 const authorityPrecedence = JSON.parse(fs.readFileSync(path.join(root, 'authority-precedence.json'), 'utf8'))
+const delegationScope = JSON.parse(fs.readFileSync(path.join(root, 'delegation-scope.json'), 'utf8'))
+const toolAliases = loadToolAliases(root)
 const hotpath = loadHotpath(root)
 const retrievalHotpath = loadRetrievalHotpath(root)
 const requestFraming = loadRequestFraming(root)
@@ -105,9 +110,12 @@ export function createServer() {
       executed: z.boolean().optional(), runtime_agent_id: z.string().max(60).optional()
     })
   }, async call => {
-    const toolReceipt = toolPreflight(hotpath, call)
+    // Normalized once, at the boundary -- the rule files stay exact-match on canonical
+    // names (bash, fetch_url, ...) and never need to learn a vendor's synonym directly.
+    const normalized = { ...call, tool: normalizeToolName(toolAliases, call.tool) }
+    const toolReceipt = toolPreflight(hotpath, normalized)
     if (toolReceipt.match === 'hit') return result(toolReceipt)
-    const retrievalReceipt = retrievalPreflight(retrievalHotpath, call)
+    const retrievalReceipt = retrievalPreflight(retrievalHotpath, normalized)
     return result(retrievalReceipt.match === 'hit' ? retrievalReceipt : toolReceipt)
   })
 
@@ -336,6 +344,27 @@ export function createServer() {
       current_context: z.array(z.object({ id: z.string(), _af_pin: z.boolean().optional(), _af_kind: z.string().optional(), _af_ttl: z.string().optional() }).passthrough()).max(200)
     })
   }, async ({ expected_pin_ids, current_context }) => result({ authority: 'none', ...checkPinsSurvived(expected_pin_ids, current_context) }))
+
+  server.registerTool('af_coverage_check', {
+    title: 'Distinguish evaluated-no-match from never-considered for a tool',
+    description: 'af_tool_preflight match=none does not say whether this corpus has ever written a rule for that tool at all. This does: no_coverage means the corpus has no opinion whatsoever (silence, not evidence); evaluated_no_match means real rules exist for this tool and none fired for this call (a stronger, but still not conclusive, signal). Applies the same lesson AF-0025 documents about incomplete search results to this corpus\'s own preflight output.',
+    inputSchema: z.object({ tool: z.string().min(1).max(120) })
+  }, async ({ tool }) => {
+    const normalizedTool = normalizeToolName(toolAliases, tool)
+    return result({ authority: 'none', tool: normalizedTool, ...computeCoverage(hotpath.toolRules, retrievalHotpath.rules, normalizedTool) })
+  })
+
+  server.registerTool('af_delegation_scope', {
+    title: 'Build or read the subagent delegation-scope contract',
+    description: 'A parent agent\'s authority-precedence or request-framing resolution never authorizes a spawned subagent\'s different action -- the child must independently resolve its own checks. Call with no arguments to read the policy; call with child_agent_id and child_task to build a delegation record for a spawned subagent.',
+    inputSchema: z.object({ parent_agent_id: z.string().max(120).optional(), child_agent_id: z.string().max(120).optional(), parent_resolution: z.record(z.string(), z.unknown()).optional(), child_task: z.string().max(500).optional() })
+  }, async ({ parent_agent_id, child_agent_id, parent_resolution, child_task }) => {
+    if (child_agent_id === undefined && child_task === undefined) return result(delegationScope)
+    try {
+      const record = buildDelegationRecord(parent_agent_id, child_agent_id, parent_resolution, child_task)
+      return result({ ...record, requires_independent_resolution: requiresIndependentResolution(record) })
+    } catch (error) { return { content: [{ type: 'text', text: error.message }], isError: true } }
+  })
 
   return server
 }

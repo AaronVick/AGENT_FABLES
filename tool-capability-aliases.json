@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0.0",
+  "authority": "none",
+  "description": "Every rule file in this corpus (tool-index.jsonl, tool-index-retrieval.jsonl, utterance-index.jsonl) matches on an exact, literal tool name (bash, fetch_url, get_file_contents, search_web, sql_query, mcp_config_update, write_file, memory_search, call_external_tool). That is a real blind spot, not a hypothetical one: every agent harness names its own tools, and the vocabulary is not standardized across vendors. An agent whose framework calls its browser tool 'browse' or 'web_fetch' instead of 'fetch_url' gets zero preflight coverage for the exact same underlying failure mode (AF-0021), not because the pattern doesn't apply to it, but because the string didn't match. This file maps common alias names to the canonical tool name the rule files actually key on. Normalization happens at the calling layer (see lib/tool-normalize.mjs) -- the rule files and their matchers are never edited to add synonyms, so canonical names stay a single source of truth and this list can grow without touching matching logic.",
+  "canonical_tools": ["bash", "fetch_url", "get_file_contents", "search_web", "sql_query", "mcp_config_update", "write_file", "memory_search", "call_external_tool"],
+  "aliases": {
+    "bash": ["sh", "shell", "terminal", "run_command", "execute_command", "run_shell_command"],
+    "fetch_url": ["browse", "web_fetch", "http_get", "fetch", "browse_page", "read_url", "url_fetch"],
+    "get_file_contents": ["read_file", "cat_file", "view_file", "file_read", "read"],
+    "search_web": ["web_search", "google_search", "search", "internet_search", "browser_search"],
+    "sql_query": ["execute_sql", "run_query", "query_database", "db_query"],
+    "write_file": ["create_file", "save_file", "edit_file", "file_write"],
+    "memory_search": ["recall", "search_memory", "memory_lookup", "long_term_memory_search"],
+    "call_external_tool": ["execute_python", "run_code", "code_interpreter", "invoke_tool", "run_tool"]
+  },
+  "non_goals": [
+    "renaming or reshaping any rule file -- aliases are resolved before matching, never baked into tool-index.jsonl/tool-index-retrieval.jsonl/utterance-index.jsonl",
+    "a complete enumeration of every framework's tool names -- this grows as gaps are found, same as the corpus itself"
+  ]
+}

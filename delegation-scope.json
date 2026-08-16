@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0.0",
+  "authority": "none",
+  "rule": "resolutions_never_inherit_as_clearance",
+  "description": "Not an evidence-gated pattern -- no incident backs this, same as authority-precedence.json and request-framing-independence.json. Addresses a gap specific to how agents actually work now, not how a single agent in a single session works: subagent spawning is routine (this session's own harness has an Agent tool for exactly that). Nothing in this corpus's prior design said what a spawned subagent inherits from the agent that spawned it. Without an explicit rule, the default behavior of any system is whatever falls out of how context happens to get passed -- an ordering artifact, not a policy, same failure shape authority-precedence.json already named for native-vs-corpus conflicts.",
+  "contract": {
+    "parent_resolution_binding_on_child": false,
+    "child_must_independently_resolve": true,
+    "restrictive_outcomes_do_not_expire_at_a_delegation_boundary": true
+  },
+  "worked_example": {
+    "unsafe_default": "Parent agent's authority-precedence check on 'delete this file' resolves to blocked. Parent spawns a subagent whose task is phrased differently but accomplishes the same deletion. Subagent has never itself resolved authority-precedence, sees no block in its own context, and proceeds -- the block was real but scoped to a receipt object, not to the action, and delegation silently dropped it.",
+    "this_contract": "A parent's resolution is passed to a child only as context (visible_to_child), never as authorization. The child is required to independently run its own authority-precedence and request-framing checks against its own action before proceeding, regardless of what its parent already resolved."
+  },
+  "non_goals": [
+    "detecting whether a child's task is semantically the same action a parent was blocked on -- that requires judgment no pure function has; this contract only prevents the one thing that IS mechanically enforceable, reuse of a resolution object as pre-computed clearance",
+    "an evidence-gated AF-#### pattern; promote to one only if a real, dated, sourced incident of a subagent bypassing a parent's resolution via delegation is found",
+    "coordinating or communicating between parent and child agents -- this repo has no runtime component that does that"
+  ]
+}

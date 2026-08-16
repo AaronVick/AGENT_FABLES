@@ -17,7 +17,7 @@ test('MCP server exposes only bounded read-only tools', async () => {
   await withClient(async client => {
     const { tools } = await client.listTools()
     const names = tools.map(tool => tool.name).sort()
-    assert.deepEqual(names, ['af_adoption', 'af_assess_action', 'af_authority_precedence', 'af_capabilities', 'af_check_citations', 'af_check_claims', 'af_check_negative_result', 'af_check_pins_survived', 'af_check_repository', 'af_cite', 'af_contact_policy', 'af_design_principles', 'af_discovery', 'af_finding', 'af_get', 'af_launch_audit', 'af_leaders', 'af_memory_card', 'af_predicate_registry', 'af_preflight', 'af_request_framing', 'af_search', 'af_status', 'af_steward', 'af_steward_works', 'af_tasks', 'af_tool_preflight', 'af_trust', 'af_validate_candidate', 'af_verify'])
+    assert.deepEqual(names, ['af_adoption', 'af_assess_action', 'af_authority_precedence', 'af_capabilities', 'af_check_citations', 'af_check_claims', 'af_check_negative_result', 'af_check_pins_survived', 'af_check_repository', 'af_cite', 'af_contact_policy', 'af_coverage_check', 'af_delegation_scope', 'af_design_principles', 'af_discovery', 'af_finding', 'af_get', 'af_launch_audit', 'af_leaders', 'af_memory_card', 'af_predicate_registry', 'af_preflight', 'af_request_framing', 'af_search', 'af_status', 'af_steward', 'af_steward_works', 'af_tasks', 'af_tool_preflight', 'af_trust', 'af_validate_candidate', 'af_verify'])
     assert.ok(names.every(name => !/report|write|create|update|delete|publish|send/.test(name)))
   })
 })
@@ -181,5 +181,35 @@ test('MCP pin-survival check flags a dropped receipt instead of treating absence
     } })
     assert.equal(result.structuredContent.all_survived, false)
     assert.deepEqual(result.structuredContent.missing_ids, ['n1'])
+  })
+})
+
+test('MCP tool preflight normalizes a vendor-specific tool name to the canonical one before matching', async () => {
+  await withClient(async client => {
+    const aliasedHit = await client.callTool({ name: 'af_tool_preflight', arguments: { tool: 'browse', result_shape: 'errors', draft_cite_tokens: ['w:1'] } })
+    assert.equal(aliasedHit.structuredContent.match, 'hit')
+    assert.equal(aliasedHit.structuredContent.cards[0].id, 'AF-0021', 'browse should resolve to fetch_url and hit the same pattern')
+  })
+})
+
+test('MCP coverage check distinguishes no_coverage from evaluated_no_match', async () => {
+  await withClient(async client => {
+    const covered = await client.callTool({ name: 'af_coverage_check', arguments: { tool: 'bash' } })
+    assert.equal(covered.structuredContent.coverage, 'evaluated_no_match')
+    const aliasedCovered = await client.callTool({ name: 'af_coverage_check', arguments: { tool: 'shell' } })
+    assert.equal(aliasedCovered.structuredContent.coverage, 'evaluated_no_match')
+    assert.equal(aliasedCovered.structuredContent.tool, 'bash')
+    const uncovered = await client.callTool({ name: 'af_coverage_check', arguments: { tool: 'some_tool_nobody_wrote_a_rule_for' } })
+    assert.equal(uncovered.structuredContent.coverage, 'no_coverage')
+  })
+})
+
+test('MCP delegation scope never marks a parent resolution as binding on a spawned subagent', async () => {
+  await withClient(async client => {
+    const policy = await client.callTool({ name: 'af_delegation_scope', arguments: {} })
+    assert.equal(policy.structuredContent.rule, 'resolutions_never_inherit_as_clearance')
+    const record = await client.callTool({ name: 'af_delegation_scope', arguments: { parent_agent_id: 'p1', child_agent_id: 'c1', child_task: 'summarize this repo', parent_resolution: { outcome: 'blocked' } } })
+    assert.equal(record.structuredContent.parent_resolution_binding_on_child, false)
+    assert.equal(record.structuredContent.requires_independent_resolution, true)
   })
 })
